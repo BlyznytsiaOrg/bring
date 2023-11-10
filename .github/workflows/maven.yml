@@ -33,7 +33,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn clean install
+      run: ./mvnw clean install
 
   sonar:
 
@@ -48,7 +48,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Sonar Check
-        run: mvn clean test jacoco:report -Dmaven.test.failure.ignore=true sonar:sonar -Dsonar.branch.name=${BRANCH_NAME}
+        run: ./mvnw clean test jacoco:report -Dmaven.test.failure.ignore=true sonar:sonar -Dsonar.branch.name=${BRANCH_NAME}
 
 
   publishArtifact:
@@ -64,5 +64,5 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: PublishArtifact
-        run: mvn clean deploy
+        run: ./mvnw clean deploy
 
