@@ -65,6 +65,14 @@
     <sonar.host.url>${env.SONAR_HOST}</sonar.host.url>
   </properties>
 
+  <distributionManagement>
+    <repository>
+      <id>repsy</id>
+      <name>My Private Maven Repository on Repsy</name>
+      <url>https://repo.repsy.io/mvn/levik/bring</url>
+    </repository>
+  </distributionManagement>
+
   <profiles>
     <profile>
       <id>sonar</id>

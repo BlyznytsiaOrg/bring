@@ -1,0 +1,9 @@
+<settings>
+    <servers>
+        <server>
+            <id>repsy</id>
+            <username>${{ secrets.REPO_USERNAME }}</username>
+            <password>${{ secrets.REPO_PASSWORD }}</password>
+        </server>
+    </servers>
+</settings>
