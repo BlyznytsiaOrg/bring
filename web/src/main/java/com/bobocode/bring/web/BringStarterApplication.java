@@ -10,7 +10,7 @@ import org.apache.catalina.startup.Tomcat;
 public class BringStarterApplication {
 
     public static final String BRING_CONTEXT = "BRING_CONTEXT";
-    public static void run(String basePackage) {
+    public static BringApplicationContext run(String basePackage) {
         BringApplicationContext bringApplicationContext = new BringApplicationContext(basePackage);
 
         TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory(9090);
@@ -26,5 +26,7 @@ public class BringStarterApplication {
 
         context.getServletContext().getServletRegistrations().entrySet()
                 .forEach(entry -> System.out.println(entry.getKey() + " - " + entry.getValue()));
+
+        return bringApplicationContext;
     }
 }
