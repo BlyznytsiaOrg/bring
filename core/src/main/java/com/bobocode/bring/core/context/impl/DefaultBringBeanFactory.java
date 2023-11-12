@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
 
-public abstract class AbstractBringBeanFactory implements BringBeanFactory {
+public class DefaultBringBeanFactory implements BringBeanFactory {
 
     private final Map<String, Object> beansNameToObject = new HashMap<>();
     private final Map<String, List<Object>> interfaceNameToImplementations = new HashMap<>();

@@ -1,4 +1,4 @@
-package com.bobocode.bring.core.bpp.impl.schedule;
+package com.bobocode.bring.core.bpp.impl;
 
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.anotation.ScheduledTask;
@@ -21,7 +21,7 @@ public class ScheduleBeanPostProcessor implements BeanPostProcessor {
     }
 
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) {
+    public Object postProcessInitialization(Object bean, String beanName) {
         Class<?> beanClass = bean.getClass();
 
         for (Method method : beanClass.getMethods()) {
@@ -37,7 +37,7 @@ public class ScheduleBeanPostProcessor implements BeanPostProcessor {
             }
         }
 
-        return BeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName);
+        return BeanPostProcessor.super.postProcessInitialization(bean, beanName);
     }
 
     private void invokeTaskMethod(Object bean, Method method, String taskName) {

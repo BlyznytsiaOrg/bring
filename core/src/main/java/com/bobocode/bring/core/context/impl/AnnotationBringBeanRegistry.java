@@ -22,7 +22,7 @@ import java.util.*;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.setField;
 
-public class AnnotationBringBeanRegistry extends AbstractBringBeanFactory implements BeanRegistry {
+public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory implements BeanRegistry {
 
     private static final String SET_METHOD_START_PREFIX = "set";
 
@@ -204,9 +204,5 @@ public class AnnotationBringBeanRegistry extends AbstractBringBeanFactory implem
 
     protected Reflections getReflections() {
         return reflections;
-    }
-
-    protected List<Class<? extends Annotation>> getCreatedBeanAnnotations() {
-        return createdBeanAnnotations;
     }
 }
