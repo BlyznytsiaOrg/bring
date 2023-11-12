@@ -14,4 +14,5 @@ public class ServiceBeanNameAnnotationResolver implements AnnotationResolver {
         String value = clazz.getAnnotation(Service.class).value();
         return value.isEmpty() ? clazz.getSimpleName() : value;
     }
+    
 }
