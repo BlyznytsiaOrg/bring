@@ -66,9 +66,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
         currentlyCreatingBeans.add(beanName);
 
-        if (clazz.isInterface()) {
-            registerImplementations(clazz);
-        } else if (Objects.nonNull(beanDefinition.getMethod())) {
+        if (Objects.nonNull(beanDefinition.getMethod())) {
             registerConfigurationBean(beanName, beanDefinition);
         } else {
             findAutowiredConstructor(clazz)
@@ -121,7 +119,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         return this.getAllBeanDefinitionNames();
     }
 
-    private <T> void registerImplementations(Class<T> interfaceType) {
+    private <T> void registerImplementations(String beanName, Class<T> interfaceType) {
         if (interfaceType.isAssignableFrom(List.class)) {
             registerListImplementations(interfaceType);
             return;
@@ -143,8 +141,8 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
                     throw new NoUniqueBeanException(implementation);
                 }
                 
-                String beanName = beanNames.get(0);
-                BeanDefinition beanDefinition = getBeanDefinitions().get(beanName);
+                String implementationBeanName = beanNames.get(0);
+                BeanDefinition beanDefinition = getBeanDefinitions().get(implementationBeanName);
                 registerBean(beanName, beanDefinition);
             }
         }
@@ -201,7 +199,17 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             return existingBean;
         }
 
-        registerBean(beanName, getBeanDefinitions().get(beanName));
+        BeanDefinition beanDefinition = getBeanDefinitions().get(beanName);
+
+        if (Objects.isNull(beanDefinition)) {
+            //TODO this is like workaround need to think how to populate bean definition for interface & dependencies
+            if (beanType.isInterface()) {
+                registerImplementations(beanName, beanType);
+            }
+        } else {
+            registerBean(beanName, beanDefinition);
+        }
+
 
         Object object = getSingletonObjects().get(beanName);
         if (Objects.isNull(object)){

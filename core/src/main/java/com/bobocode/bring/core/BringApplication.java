@@ -1,7 +1,6 @@
 package com.bobocode.bring.core;
 
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * The {@code BringApplication} class provides a simple entry point to initialize and run a BringApplicationContext.
