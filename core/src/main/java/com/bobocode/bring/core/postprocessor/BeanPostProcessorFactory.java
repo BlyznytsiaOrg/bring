@@ -2,6 +2,7 @@ package com.bobocode.bring.core.postprocessor;
 
 import com.bobocode.bring.core.postprocessor.impl.ScheduleBeanPostProcessor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +33,7 @@ import java.util.List;
  * @see ScheduleBeanPostProcessor
  */
 @Getter
+@Slf4j
 public class BeanPostProcessorFactory {
 
     /**
@@ -50,5 +52,7 @@ public class BeanPostProcessorFactory {
         this.beanPostProcessors = Arrays.asList(
                 new ScheduleBeanPostProcessor()
         );
+
+        log.info("Register BeanPostProcessors {}", Arrays.toString(beanPostProcessors.toArray()));
     }
 }

@@ -63,6 +63,8 @@ public class ClassPathScannerFactory {
                 new ServiceClassPathScanner(reflections),
                 new ConfigurationClassPathScanner(reflections)
         );
+
+        log.info("Register ClassPathScannerFactory {}", Arrays.toString(classPathScanners.toArray()));
     }
 
     public void register(ClassPathScanner classPathScanner) {
