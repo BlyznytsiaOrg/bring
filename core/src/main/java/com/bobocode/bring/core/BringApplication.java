@@ -74,9 +74,5 @@ public class BringApplication {
 
         return context;
     }
-
-    public static void main(String[] args) {
-        BringApplication.run(BringApplication.class);
-    }
     
 }
