@@ -1,5 +1,6 @@
 package com.bobocode.bring.core.context.impl;
 
+import com.bobocode.bring.core.BringApplication;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
 import com.bobocode.bring.testdata.di.negative.contract.Barista;
 import org.junit.jupiter.api.Disabled;
@@ -21,7 +22,7 @@ class BringApplicationContextNegativeCasesTest {
         // when
         Executable executable = () -> {
             //given
-            var bringApplicationContext = new BringApplicationContext(DEMO_PACKAGE + ".contract");
+            var bringApplicationContext = BringApplication.run(DEMO_PACKAGE + ".contract");
             bringApplicationContext.getBean(Barista.class);
         };
 

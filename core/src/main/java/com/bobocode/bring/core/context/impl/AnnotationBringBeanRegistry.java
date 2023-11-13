@@ -2,15 +2,21 @@ package com.bobocode.bring.core.context.impl;
 
 import com.bobocode.bring.core.anotation.Autowired;
 import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.anotation.Configuration;
 import com.bobocode.bring.core.anotation.Service;
 import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
 import com.bobocode.bring.core.anotation.resolver.impl.ComponentBeanNameAnnotationResolver;
+import com.bobocode.bring.core.anotation.resolver.impl.ConfigurationBeanNameAnnotationResolver;
 import com.bobocode.bring.core.anotation.resolver.impl.InterfaceBeanNameAnnotationResolver;
 import com.bobocode.bring.core.anotation.resolver.impl.ServiceBeanNameAnnotationResolver;
+import com.bobocode.bring.core.context.BeanDefinitionRegistry;
 import com.bobocode.bring.core.context.BeanRegistry;
+import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.CyclicBeanException;
 import com.bobocode.bring.core.exception.NoConstructorWithAutowiredAnnotationBeanException;
+import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
+import com.bobocode.bring.core.utils.ReflectionUtils;
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
 
@@ -22,7 +28,7 @@ import java.util.*;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.setField;
 
-public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory implements BeanRegistry {
+public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory implements BeanRegistry, BeanDefinitionRegistry {
 
     private static final String SET_METHOD_START_PREFIX = "set";
 
@@ -31,11 +37,12 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     private final List<AnnotationResolver> annotationResolvers = List.of(
             new ComponentBeanNameAnnotationResolver(),
             new ServiceBeanNameAnnotationResolver(),
-            new InterfaceBeanNameAnnotationResolver()
+            new InterfaceBeanNameAnnotationResolver(),
+            new ConfigurationBeanNameAnnotationResolver()
     );
 
     private final List<Class<? extends Annotation>> createdBeanAnnotations = List.of(
-            Component.class, Service.class
+            Component.class, Service.class, Configuration.class
     );
 
     private final Set<String> currentlyCreatingBeans = new HashSet<>();
@@ -45,21 +52,24 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     }
 
     @Override
-    public <T> void registerBean(Class<T> clazz) {
-        String beanName = resolveBeanName(clazz);
-
+    public void registerBean(String beanName, BeanDefinition beanDefinition) {
+        Class<?> clazz = beanDefinition.getBeanClass();
+        
         if (currentlyCreatingBeans.contains(beanName)) {
             throw new CyclicBeanException(currentlyCreatingBeans);
         }
 
-        if (getBeansNameToObject().containsKey(beanName)) {
-            return; // Bean with this name already created, no need to create it again.
+        if (getSingletonObjects().containsKey(beanName)) {
+            // Bean with this name already created, no need to create it again.
+            return;
         }
 
         currentlyCreatingBeans.add(beanName);
 
         if (clazz.isInterface()) {
             registerImplementations(clazz);
+        } else if (Objects.nonNull(beanDefinition.getMethod())) {
+            registerConfigurationBean(beanName, beanDefinition);
         } else {
             findAutowiredConstructor(clazz)
                     .map(constructorToUse -> createBeanUsingConstructor(constructorToUse, beanName))
@@ -69,6 +79,46 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         }
 
         currentlyCreatingBeans.clear();
+    }
+
+    @SneakyThrows
+    private Object registerConfigurationBean(String beanName, BeanDefinition beanDefinition) {
+        Object configObj = getSingletonObjects().get(beanDefinition.getFactoryBeanName());
+        List<String> methodParamNames = ReflectionUtils.getMethodParameterNames(beanDefinition.getMethod());
+
+        List<Object> methodObjs = new ArrayList<>();
+        methodParamNames.forEach(paramName -> {
+            Object o = getSingletonObjects().get(paramName);
+            if (Objects.nonNull(o)) {
+                methodObjs.add(o);
+            } else {
+                BeanDefinition bd = Optional.ofNullable(getBeanDefinitions().get(paramName))
+                        .orElseThrow(() -> new NoSuchBeanException(beanDefinition.getBeanClass()));
+                Object newObj = registerConfigurationBean(bd.getFactoryMethodName(), bd);
+                methodObjs.add(newObj);
+            }
+        });
+
+        Object obj = beanDefinition.getMethod().invoke(configObj, methodObjs.toArray());
+
+        getSingletonObjects().put(beanName, obj);
+
+        return obj;
+    }
+
+    @Override
+    public void registerBeanDefinition(BeanDefinition beanDefinition) {
+        addBeanDefinition(resolveBeanName(beanDefinition.getBeanClass()), beanDefinition);
+    }
+
+    @Override
+    public BeanDefinition getBeanDefinition(String beanName) {
+        return getBeanDefinitionByName(beanName);
+    }
+
+    @Override
+    public List<String> getBeanDefinitionNames() {
+        return this.getAllBeanDefinitionNames();
     }
 
     private <T> void registerImplementations(Class<T> interfaceType) {
@@ -86,7 +136,16 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
                     .anyMatch(createdBeanAnnotations::contains);
 
             if (hasRequiredAnnotation) {
-                registerBean(implementation);
+                List<String> beanNames = Optional.ofNullable(getTypeToBeanNames().get(implementation))
+                        .orElseThrow(() -> new NoSuchBeanException(implementation));
+                
+                if (beanNames.size() != 1) {
+                    throw new NoUniqueBeanException(implementation);
+                }
+                
+                String beanName = beanNames.get(0);
+                BeanDefinition beanDefinition = getBeanDefinitions().get(beanName);
+                registerBean(beanName, beanDefinition);
             }
         }
 
@@ -133,27 +192,18 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
         addBean(beanName, bean);
 
-        return constructor;
+        return bean;
     }
 
     private Object getOrCreateBean(String beanName, Class<?> beanType) {
-        Object existingBean = getBeansNameToObject().get(beanName);
+        Object existingBean = getSingletonObjects().get(beanName);
         if (existingBean != null) {
             return existingBean;
         }
 
-        List<Object> implementations = getInterfaceNameToImplementations(beanName);
-        if (!implementations.isEmpty()) {
-            if (implementations.size() == 1) {
-                return implementations.get(0);
-            }
+        registerBean(beanName, getBeanDefinitions().get(beanName));
 
-            throw new NoUniqueBeanException(beanType.getPackageName() + "." + beanName, implementations);
-        }
-
-        registerBean(beanType);
-
-        Object object = getBeansNameToObject().get(beanName);
+        Object object = getSingletonObjects().get(beanName);
         if (Objects.isNull(object)){
             return getOrCreateBean(beanName, beanType);
         }
@@ -162,7 +212,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     }
 
     private void injectDependencies(Class<?> clazz, String beanName) {
-        Object bean = getBeansNameToObject().get(beanName);
+        Object bean = getSingletonObjects().get(beanName);
 
         Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Autowired.class))
@@ -205,4 +255,5 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     protected Reflections getReflections() {
         return reflections;
     }
+    
 }

@@ -1,6 +1,6 @@
-package com.bobocode.bring.core.bpp;
+package com.bobocode.bring.core.postprocessor;
 
-import com.bobocode.bring.core.bpp.impl.ScheduleBeanPostProcessor;
+import com.bobocode.bring.core.postprocessor.impl.ScheduleBeanPostProcessor;
 
 import java.util.Arrays;
 import java.util.List;
