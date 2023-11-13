@@ -14,6 +14,11 @@
 
   <url>https://maven.apache.org</url>
 
+  <properties>
+    <jakarta.servlet.jsp.api.version>3.1.1</jakarta.servlet.jsp.api.version>
+    <tomcat.embed.version>10.1.13</tomcat.embed.version>
+    <jakarta.annotation.api.version>2.1.1</jakarta.annotation.api.version>
+  </properties>
 
   <dependencies>
 
@@ -25,16 +30,30 @@
     </dependency>
 
     <dependency>
+      <groupId>jakarta.servlet.jsp</groupId>
+      <artifactId>jakarta.servlet.jsp-api</artifactId>
+      <version>${jakarta.servlet.jsp.api.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-jasper</artifactId>
+      <version>${tomcat.embed.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
-      <version>2.1.1</version>
+      <version>${jakarta.annotation.api.version}</version>
       <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-core</artifactId>
-      <version>10.1.13</version>
+      <version>${tomcat.embed.version}</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>
@@ -47,13 +66,13 @@
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-el</artifactId>
-      <version>10.1.13</version>
+      <version>${tomcat.embed.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-websocket</artifactId>
-      <version>10.1.13</version>
+      <version>${tomcat.embed.version}</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>

@@ -6,17 +6,19 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 public class DispatcherServlet extends HttpServlet {
     public static final String BRING_CONTEXT = "BRING_CONTEXT";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        System.out.println("I am in init() method  of DispatcherServlet");
+        log.info("Initializing Bring Servlet " + this.getClass().getSimpleName()
+                + "'" + config.getServletName() + "'");
     }
 
     @Override

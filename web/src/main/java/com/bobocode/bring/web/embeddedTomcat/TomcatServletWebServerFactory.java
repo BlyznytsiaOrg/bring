@@ -56,10 +56,12 @@ public class TomcatServletWebServerFactory implements ServletWebServerFactory {
         return this.port;
     }
 
+    @Override
     public String getContextPath() {
         return contextPath;
     }
 
+    @Override
     public Context getContext() {
         return context;
     }
