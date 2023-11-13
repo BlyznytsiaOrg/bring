@@ -1,5 +1,6 @@
 package com.bobocode.bring.core.context.impl;
 
+import com.bobocode.bring.core.BringApplication;
 import com.bobocode.bring.testdata.di.positive.contract.Barista;
 import com.bobocode.bring.testdata.di.positive.setter.A;
 import com.bobocode.bring.testdata.di.positive.setter.B;
@@ -16,7 +17,7 @@ class BringApplicationContextHappyCasesTest {
     @Test
     void shouldFoundOneInterfaceAndInjectIt() {
         //given
-        var bringApplicationContext = new BringApplicationContext(TEST_DATA_PACKAGE + ".contract");
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".contract");
         String expectedMessage = "Barista is preparing a drink: Making a delicious latte!";
 
         //when
@@ -30,7 +31,7 @@ class BringApplicationContextHappyCasesTest {
     @Test
     void shouldInjectConstructorDependencyIfYouHaveOneAndForgetToAddAutowired() {
         // given
-        var bringApplicationContext = new BringApplicationContext(TEST_DATA_PACKAGE +".constructor");
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".constructor");
 
         // when
         var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.constructor.A.class);
@@ -47,7 +48,7 @@ class BringApplicationContextHappyCasesTest {
     @Test
     void shouldInjectDependencyWhenYouHaveMultipleConstructorButOneOfItWasMarketAsAutowired() {
         // given
-        var bringApplicationContext = new BringApplicationContext(TEST_DATA_PACKAGE +".secondconstructor");
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".secondconstructor");
 
         // when
         var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.secondconstructor.A.class);
@@ -64,7 +65,7 @@ class BringApplicationContextHappyCasesTest {
     @Test
     void shouldInjectDependencyViaField() {
         // given
-        var bringApplicationContext = new BringApplicationContext(TEST_DATA_PACKAGE +".field");
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".field");
 
         // when
         var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.field.A.class);
@@ -81,7 +82,7 @@ class BringApplicationContextHappyCasesTest {
     @Test
     void shouldInjectDependencyViaSetter() {
         // given
-        var bringApplicationContext = new BringApplicationContext(TEST_DATA_PACKAGE + ".setter");
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".setter");
 
         // when
         var aBean = bringApplicationContext.getBean(A.class);

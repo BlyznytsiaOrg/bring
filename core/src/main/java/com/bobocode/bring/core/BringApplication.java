@@ -16,5 +16,15 @@ public class BringApplication {
         
         return context;
     }
+
+    public static BringApplicationContext run(String basePackage) {
+        // Create context: register Bean definitions
+        BringApplicationContext context = new BringApplicationContext(basePackage);
+
+        // Invoke Bean Post Processors, create Bean objects
+        context.refresh();
+
+        return context;
+    }
     
 }
