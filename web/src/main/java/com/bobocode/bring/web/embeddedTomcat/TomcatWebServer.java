@@ -3,12 +3,15 @@ package com.bobocode.bring.web.embeddedTomcat;
 import com.bobocode.bring.web.server.ConnectorStartFailedException;
 import com.bobocode.bring.web.server.WebServer;
 import com.bobocode.bring.web.server.WebServerException;
+import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleState;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class TomcatWebServer implements WebServer {
     private static final Log logger = LogFactory.getLog(TomcatWebServer.class);
@@ -74,7 +77,8 @@ public class TomcatWebServer implements WebServer {
             }
             checkThatConnectorsHaveStarted();
             this.started = true;
-            logger.info("Tomcat started on port(s): " + getPortsDescription(true));
+            logger.info("Tomcat started on port(s): " + getPortsDescription(true) + " with context path '"
+                    + getContextPath() + "'");
         }
     }
 
@@ -101,6 +105,14 @@ public class TomcatWebServer implements WebServer {
             ports.append(port).append(" (").append(connector.getScheme()).append(')');
         }
         return ports.toString();
+    }
+
+    private String getContextPath() {
+        return Arrays.stream(this.tomcat.getHost().findChildren())
+                .filter(Context.class::isInstance)
+                .map(Context.class::cast)
+                .map(Context::getPath)
+                .collect(Collectors.joining(" "));
     }
 
     @Override

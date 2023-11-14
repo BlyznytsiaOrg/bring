@@ -8,12 +8,11 @@ public class WebServerConfiguration {
 
     //    @Bean
     public TomcatServletWebServerFactory tomcatServletWebServerFactory() {
-        return new TomcatServletWebServerFactory();
+        return new TomcatServletWebServerFactory(9090, "/app");
     }
 
     //    @Bean
     public DispatcherServlet dispatcherServlet() {
         return new DispatcherServlet();
     }
-
 }
