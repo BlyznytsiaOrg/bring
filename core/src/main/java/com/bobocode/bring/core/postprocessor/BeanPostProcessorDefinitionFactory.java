@@ -2,7 +2,9 @@ package com.bobocode.bring.core.postprocessor;
 
 import com.bobocode.bring.core.postprocessor.impl.ConfigurationClassPostProcessor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,6 +32,7 @@ import java.util.List;
  * @see ConfigurationClassPostProcessor
  */
 @Getter
+@Slf4j
 public class BeanPostProcessorDefinitionFactory {
 
     /**
@@ -48,5 +51,7 @@ public class BeanPostProcessorDefinitionFactory {
         beanFactoryPostProcessors = List.of(
                 new ConfigurationClassPostProcessor()
         );
+
+        log.info("Register BeanFactoryPostProcessors {}", Arrays.toString(beanFactoryPostProcessors.toArray()));
     }
 }
