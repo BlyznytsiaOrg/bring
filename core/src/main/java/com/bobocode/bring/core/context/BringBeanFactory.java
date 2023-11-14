@@ -13,4 +13,5 @@ public interface BringBeanFactory {
     <T> Map<String, T> getBeans(Class<T> type) throws BeansException;
 
     <T> Map<String, T> getAllBeans();
+
 }
