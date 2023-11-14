@@ -1,9 +1,9 @@
-package data.configuration;
+package com.bobocode.bring.testdata.di.positive.configuration.configuration;
 
 import com.bobocode.bring.core.anotation.Bean;
 import com.bobocode.bring.core.anotation.Configuration;
-import data.client.RestClient;
-import data.service.BringService;
+import com.bobocode.bring.testdata.di.positive.configuration.client.RestClient;
+import com.bobocode.bring.testdata.di.positive.configuration.service.BringService;
 
 @Configuration
 public class TestConfiguration {
