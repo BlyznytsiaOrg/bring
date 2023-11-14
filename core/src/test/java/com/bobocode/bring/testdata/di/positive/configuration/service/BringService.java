@@ -1,6 +1,6 @@
-package data.service;
+package com.bobocode.bring.testdata.di.positive.configuration.service;
 
-import data.client.RestClient;
+import com.bobocode.bring.testdata.di.positive.configuration.client.RestClient;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

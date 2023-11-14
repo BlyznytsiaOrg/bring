@@ -24,6 +24,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.setField;
@@ -82,7 +83,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     @SneakyThrows
     private Object registerConfigurationBean(String beanName, BeanDefinition beanDefinition) {
         Object configObj = getSingletonObjects().get(beanDefinition.getFactoryBeanName());
-        List<String> methodParamNames = ReflectionUtils.getMethodParameterNames(beanDefinition.getMethod());
+        List<String> methodParamNames = ReflectionUtils.getParameterNames(beanDefinition.getMethod());
 
         List<Object> methodObjs = new ArrayList<>();
         methodParamNames.forEach(paramName -> {
@@ -173,12 +174,14 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
     @SneakyThrows
     private Object createBeanUsingConstructor(Constructor<?> constructor, String beanName) {
-        Class<?>[] parameterTypes = constructor.getParameterTypes();
-        Object[] dependencies = new Object[parameterTypes.length];
+        Parameter[] parameters = constructor.getParameters();
+        Object[] dependencies = new Object[parameters.length];
 
-        for (int i = 0; i < parameterTypes.length; i++) {
-            String dependencyBeanName = resolveBeanName(parameterTypes[i]);
-            Object dependencyObject = getOrCreateBean(dependencyBeanName, parameterTypes[i]);
+        List<String> names = ReflectionUtils.getParameterNames(constructor);
+
+        for (int i = 0; i < parameters.length; i++) {
+            String dependencyBeanName = findBeanNameForParamInConstructor(parameters[i], names);
+            Object dependencyObject = getOrCreateBean(dependencyBeanName);
             dependencies[i] = dependencyObject;
         }
 
@@ -192,8 +195,25 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
         return bean;
     }
+    
+    private String findBeanNameForParamInConstructor(Parameter parameter, List<String> constructorParamNames) {
+        Class<?> clazz = parameter.getType();
+        String paramName = constructorParamNames.get(ReflectionUtils.extractParameterPosition(parameter));
+        List<String> beanNames = Optional.ofNullable(getTypeToBeanNames().get(clazz)).orElse(Collections.emptyList());
+        
+        if (beanNames.isEmpty()) {
+            throw new NoSuchBeanException(clazz);
+        } else if (beanNames.size() == 1) {
+            return beanNames.get(0);
+        } else {
+            return beanNames.stream()
+                    .filter(name -> Objects.equals(name, paramName))
+                    .findFirst()
+                    .orElseThrow(() -> new NoSuchBeanException(clazz));
+        }
+    }
 
-    private Object getOrCreateBean(String beanName, Class<?> beanType) {
+    private Object getOrCreateBean(String beanName) {
         Object existingBean = getSingletonObjects().get(beanName);
         if (existingBean != null) {
             return existingBean;
@@ -213,7 +233,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
         Object object = getSingletonObjects().get(beanName);
         if (Objects.isNull(object)){
-            return getOrCreateBean(beanName, beanType);
+            return getOrCreateBean(beanName);
         }
 
         return object;
@@ -236,7 +256,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         if (isAutowiredSetterMethod(method)) {
             Class<?> dependencyType = method.getParameterTypes()[0];
             String dependencyBeanName = resolveBeanName(dependencyType);
-            Object dependencyObject = getOrCreateBean(dependencyBeanName, dependencyType);
+            Object dependencyObject = getOrCreateBean(dependencyBeanName);
             method.invoke(bean, dependencyObject);
         }
     }
@@ -244,7 +264,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     @SneakyThrows
     private void injectDependencyViaField(Field field, Object bean) {
         String dependencyBeanName = resolveBeanName(field.getType());
-        Object dependencyObject = getOrCreateBean(dependencyBeanName, field.getType());
+        Object dependencyObject = getOrCreateBean(dependencyBeanName);
         setField(field, bean, dependencyObject);
     }
 
