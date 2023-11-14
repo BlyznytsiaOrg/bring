@@ -5,7 +5,7 @@ import com.bobocode.bring.core.anotation.Service;
 
 @Service
 public class Barista {
-    private Drink drink;
+    private final Drink drink;
 
     @Autowired
     public Barista(Drink drink) {
@@ -13,7 +13,7 @@ public class Barista {
     }
 
     public String prepareDrink() {
-        final String[] message = {"Barista is preparing a drink: " + drink};
+        final String[] message = {"Barista is preparing a drink: " + drink.make()};
         //drinks.forEach(drink -> message[0] += drink.make() + " ");
 
         return message[0];

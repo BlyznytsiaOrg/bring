@@ -4,7 +4,6 @@ import com.bobocode.bring.core.BringApplication;
 import com.bobocode.bring.testdata.di.positive.contract.Barista;
 import com.bobocode.bring.testdata.di.positive.setter.A;
 import com.bobocode.bring.testdata.di.positive.setter.B;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +13,6 @@ class BringApplicationContextHappyCasesTest {
 
     private static final String TEST_DATA_PACKAGE = "com.bobocode.bring.testdata.di.positive";
 
-    @Disabled
     @DisplayName("Should found one interface and inject it")
     @Test
     void shouldFoundOneInterfaceAndInjectIt() {
