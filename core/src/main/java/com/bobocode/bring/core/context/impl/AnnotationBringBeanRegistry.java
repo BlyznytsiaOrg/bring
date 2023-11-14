@@ -215,7 +215,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             return beanNames.get(0);
         } else {
             return beanNames.stream()
-                    .filter(name -> Objects.equals(name, paramName))
+                    .filter(name -> name.equalsIgnoreCase(paramName))
                     .findFirst()
                     .orElseThrow(() -> new NoSuchBeanException(clazz));
         }

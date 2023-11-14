@@ -1,11 +1,18 @@
 package com.bobocode.bring.core.context.impl;
 
 import com.bobocode.bring.core.BringApplication;
+import com.bobocode.bring.testdata.di.positive.configuration.client.RestClient;
+import com.bobocode.bring.testdata.di.positive.configuration.configuration.TestConfiguration;
+import com.bobocode.bring.testdata.di.positive.configuration.service.BringService;
+import com.bobocode.bring.testdata.di.positive.constructor.BringBeansService;
 import com.bobocode.bring.testdata.di.positive.contract.Barista;
 import com.bobocode.bring.testdata.di.positive.setter.A;
 import com.bobocode.bring.testdata.di.positive.setter.B;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -93,6 +100,52 @@ class BringApplicationContextHappyCasesTest {
         assertThat(bBean).isNotNull();
         assertThat(bBean.getA()).isNotNull();
         assertThat(bBean.getA()).isEqualTo(aBean);
+    }
+
+    @DisplayName("Should inject interface bean implementation taking into account constructor parameter name")
+    @Test
+    void shouldInjectInterfaceBeanImplementation() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".contract2");
+        
+        // when
+        var bean = bringApplicationContext
+                .getBean(com.bobocode.bring.testdata.di.positive.contract2.Barista.class);
+        
+        // then
+        assertThat(bean).isNotNull();
+        assertThat(bean.getDrink().make()).isEqualTo("Making a delicious latte!");
+    }
+
+    @DisplayName("All beans from configuration class registered in Bring Context")
+    @Test
+    void testConfigurationBeansRegistration() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TestConfiguration.class);
+
+        // when
+        RestClient restClient = bringApplicationContext.getBean(RestClient.class);
+        Map<String, BringService> bringServices = bringApplicationContext.getBeans(BringService.class);
+
+        // then
+        assertThat(restClient).isNotNull();
+        assertThat(bringServices).hasSize(2);
+
+        List<RestClient> restClients = bringServices.values().stream().map(BringService::getBringRestClient).toList();
+        assertThat(restClients.stream().allMatch(rc -> rc.equals(restClient))).isTrue();
+    }
+
+    @DisplayName("@Component and @Service beans registered in Bring Context")
+    @Test
+    void createComponentBeans() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(BringBeansService.class);
+        
+        // when
+        BringBeansService bringBeansService = bringApplicationContext.getBean(BringBeansService.class);
+
+        // then
+        assertThat(bringBeansService).isNotNull();
     }
 
 }
