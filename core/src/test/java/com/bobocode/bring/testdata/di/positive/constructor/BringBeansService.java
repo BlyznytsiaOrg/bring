@@ -1,8 +1,7 @@
-package data.beans;
+package com.bobocode.bring.testdata.di.positive.constructor;
 
 import com.bobocode.bring.core.anotation.Autowired;
 import com.bobocode.bring.core.anotation.Service;
-import data.service.BringService;
 
 @Service
 public class BringBeansService {

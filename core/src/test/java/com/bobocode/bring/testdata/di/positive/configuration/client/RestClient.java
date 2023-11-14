@@ -1,4 +1,4 @@
-package data.client;
+package com.bobocode.bring.testdata.di.positive.configuration.client;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
