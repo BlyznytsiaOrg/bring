@@ -21,4 +21,8 @@ public class BeanDefinition {
     
     private String factoryBeanName;
     
+    public boolean isConfiguration() {
+        return this.beanType == BeanTypeEnum.CONFIGURATION;
+    }
+    
 }

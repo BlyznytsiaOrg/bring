@@ -1,4 +1,4 @@
-package com.bobocode.bring.testdata.di.negative.contract;
+package com.bobocode.bring.testdata.di.positive.contract2;
 
 import com.bobocode.bring.core.anotation.Component;
 
