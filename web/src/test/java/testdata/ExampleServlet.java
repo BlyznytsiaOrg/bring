@@ -1,8 +1,8 @@
-package com.bobocode.bring.web.servlet;
+package testdata;
 
 import com.bobocode.bring.web.annotation.GetMapping;
 import com.bobocode.bring.web.annotation.RequestMapping;
-import java.util.concurrent.ThreadLocalRandom;
+import com.bobocode.bring.web.servlet.BaseServlet;
 
 @RequestMapping(path = "/example")
 public class ExampleServlet extends BaseServlet {
@@ -13,7 +13,8 @@ public class ExampleServlet extends BaseServlet {
     }
 
     @GetMapping(path = "/number")
-    public int getRandomNumber() {
-        return ThreadLocalRandom.current().nextInt(1000);
+    public int getNumber() {
+        return 200;
     }
+
 }

@@ -3,18 +3,17 @@ package com.bobocode.bring.web.embeddedTomcat;
 import com.bobocode.bring.web.server.ConnectorStartFailedException;
 import com.bobocode.bring.web.server.WebServer;
 import com.bobocode.bring.web.server.WebServerException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleState;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class TomcatWebServer implements WebServer {
-    private static final Log logger = LogFactory.getLog(TomcatWebServer.class);
     private final Tomcat tomcat;
     private final Object monitor = new Object();
     private volatile boolean started;
@@ -77,7 +76,7 @@ public class TomcatWebServer implements WebServer {
             }
             checkThatConnectorsHaveStarted();
             this.started = true;
-            logger.info("Tomcat started on port(s): " + getPortsDescription(true) + " with context path '"
+            log.info("Tomcat started on port(s): " + getPortsDescription(true) + " with context path '"
                     + getContextPath() + "'");
         }
     }

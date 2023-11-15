@@ -14,9 +14,17 @@ import java.util.List;
 @Slf4j
 public class DispatcherServlet extends FrameworkServlet {
     public static final String BRING_CONTEXT = "BRING_CONTEXT";
-    List<? extends BringServlet> bringServletList = new ArrayList<>(List.of(new ExampleServlet()));
+    List<? extends BringServlet> bringServletList;
 
-//    @Override
+    public DispatcherServlet() {
+        bringServletList = new ArrayList<>(List.of(new ExampleServlet()));
+    }
+
+    public DispatcherServlet(List<? extends BringServlet> bringServletList) {
+        this.bringServletList = bringServletList;
+    }
+
+    //    @Override
 //    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 //            throws ServletException, IOException {
 //        ThreadLocal<String> id = new ThreadLocal<>();
@@ -38,7 +46,6 @@ public class DispatcherServlet extends FrameworkServlet {
 
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) {
-        System.out.println("I am in process request");
         String requestPath = getRequestPath(req);
         bringServletList.stream()
                 .map(bringServlet -> processBringServlet(bringServlet, requestPath))
@@ -48,24 +55,25 @@ public class DispatcherServlet extends FrameworkServlet {
 
     @SneakyThrows
     public void performResponse(Object response, HttpServletResponse resp) {
-        System.out.println(response);
         PrintWriter writer = resp.getWriter();
-        writer.println(response);
+        writer.print(response);
         writer.flush();
     }
 
     @SneakyThrows
     public Object processBringServlet(BringServlet bringServlet, String requestPath) {
-        ServletParams servletParams = getServletParams(bringServlet.getClass());
-        System.out.println(servletParams.path());
-        if (requestPath.equals(servletParams.path())) {
-            Method method = servletParams.method();
-            return method.invoke(bringServlet);
+        List<ServletRequestParams> servletParamsList = getServletParams(bringServlet.getClass());
+        for (ServletRequestParams params : servletParamsList) {
+            if (requestPath.equals(params.path())) {
+                Method method = params.method();
+                return method.invoke(bringServlet);
+            }
         }
-        return new Object();
+        return String.format("This application has no explicit mapping for '%s'", requestPath);
     }
 
-    public ServletParams getServletParams(Class<?> clazz) {
+    public List<ServletRequestParams> getServletParams(Class<?> clazz) {
+        List<ServletRequestParams> servletRequestParamsList = new ArrayList<>();
         if (clazz.isAnnotationPresent(RequestMapping.class)) {
             RequestMapping annotation = clazz.getAnnotation(RequestMapping.class);
             String requestMappingPath = annotation.path();
@@ -73,11 +81,12 @@ public class DispatcherServlet extends FrameworkServlet {
             for (Method method : clazz.getMethods()) {
                 if (method.getAnnotation(GetMapping.class) != null) {
                     String getMappingPath = method.getAnnotation(GetMapping.class).path();
-                   return new ServletParams(method, requestMappingPath + getMappingPath);
+                    ServletRequestParams servletRequestParams = new ServletRequestParams(method, requestMappingPath + getMappingPath);
+                    servletRequestParamsList.add(servletRequestParams);
                 }
             }
         }
-        return new ServletParams(null, null);
+        return servletRequestParamsList;
     }
 
     public String getRequestPath(HttpServletRequest req) {
@@ -86,10 +95,9 @@ public class DispatcherServlet extends FrameworkServlet {
         if (requestURI.startsWith(contextPath)) {
             requestURI = requestURI.replace(contextPath, "");
         }
-        System.out.println(requestURI);
         return requestURI;
     }
 
-    public record ServletParams(Method method, String path) {
+    public record ServletRequestParams(Method method, String path) {
     }
 }

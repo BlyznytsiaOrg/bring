@@ -8,14 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class BaseServlet extends HttpServlet implements BringServlet {
-    private final HttpHeaders requestHeaders;
+    public final HttpHeaders requestHeaders;
 
     public BaseServlet() {
         this.requestHeaders = new HttpHeaders();
-    }
-
-    public HttpHeaders getRequestHeaders() {
-        return requestHeaders;
     }
 
 
