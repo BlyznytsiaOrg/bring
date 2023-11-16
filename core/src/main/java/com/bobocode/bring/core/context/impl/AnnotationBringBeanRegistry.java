@@ -1,9 +1,6 @@
 package com.bobocode.bring.core.context.impl;
 
-import com.bobocode.bring.core.anotation.Autowired;
-import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.core.anotation.Configuration;
-import com.bobocode.bring.core.anotation.Service;
+import com.bobocode.bring.core.anotation.*;
 import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
 import com.bobocode.bring.core.anotation.resolver.impl.ComponentBeanNameAnnotationResolver;
 import com.bobocode.bring.core.anotation.resolver.impl.ConfigurationBeanNameAnnotationResolver;
@@ -11,6 +8,7 @@ import com.bobocode.bring.core.anotation.resolver.impl.InterfaceBeanNameAnnotati
 import com.bobocode.bring.core.anotation.resolver.impl.ServiceBeanNameAnnotationResolver;
 import com.bobocode.bring.core.context.BeanDefinitionRegistry;
 import com.bobocode.bring.core.context.BeanRegistry;
+import com.bobocode.bring.core.context.type.ParameterValueTypeInjector;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.CyclicBeanException;
 import com.bobocode.bring.core.exception.NoConstructorWithAutowiredAnnotationBeanException;
@@ -21,10 +19,7 @@ import lombok.SneakyThrows;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.*;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.setField;
@@ -180,9 +175,19 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         List<String> names = ReflectionUtils.getParameterNames(constructor);
 
         for (int i = 0; i < parameters.length; i++) {
-            String dependencyBeanName = findBeanNameForParamInConstructor(parameters[i], names);
-            Object dependencyObject = getOrCreateBean(dependencyBeanName, parameters[i].getType());
-            dependencies[i] = dependencyObject;
+            Parameter parameter = parameters[i];
+            int index = i;
+            Optional<Object> injectViaProperties = getTypeResolverFactory().getParameterValueTypeInjectors().stream()
+                    .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
+                    .map(valueType -> valueType.setValueToSetter(parameter))
+                    .map(obj -> dependencies[index] = obj)
+                    .findFirst();
+
+            if (injectViaProperties.isEmpty()) {
+                String dependencyBeanName = findBeanNameForParamInConstructor(parameter, names);
+                Object dependencyObject = getOrCreateBean(dependencyBeanName, parameter.getType());
+                dependencies[i] = dependencyObject;
+            }
         }
 
         Object bean = constructor.newInstance(dependencies);
@@ -251,7 +256,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         Object bean = getSingletonObjects().get(beanName);
 
         Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Autowired.class))
+                .filter(field -> field.isAnnotationPresent(Autowired.class) || field.isAnnotationPresent(Value.class))
                 .forEach(field -> injectDependencyViaField(field, bean));
 
         Arrays.stream(clazz.getDeclaredMethods())
@@ -262,18 +267,41 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     @SneakyThrows
     private void injectDependencyViaMethod(Method method, Object bean) {
         if (isAutowiredSetterMethod(method)) {
-            Class<?> dependencyType = method.getParameterTypes()[0];
-            String dependencyBeanName = resolveBeanName(dependencyType);
-            Object dependencyObject = getOrCreateBean(dependencyBeanName, dependencyType);
-            method.invoke(bean, dependencyObject);
+            Parameter parameter = method.getParameters()[0];
+            Optional<Object> injectViaProperties = getTypeResolverFactory().getParameterValueTypeInjectors().stream()
+                    .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
+                    .map(valueType -> injectDependencyViaProperties(method, parameter, bean, valueType))
+                    .findFirst();
+
+            if (injectViaProperties.isEmpty()) {
+                Class<?> dependencyType = method.getParameterTypes()[0];
+                String dependencyBeanName = resolveBeanName(dependencyType);
+                Object dependencyObject = getOrCreateBean(dependencyBeanName, dependencyType);
+                method.invoke(bean, dependencyObject);
+            }
         }
     }
 
     @SneakyThrows
+    private static Object injectDependencyViaProperties(Method method, Parameter parameter, Object bean,
+                                                        ParameterValueTypeInjector valueType) {
+        Object dependencyObject = valueType.setValueToSetter(parameter);
+        method.invoke(bean, dependencyObject);
+        return dependencyObject;
+    }
+
+    @SneakyThrows
     private void injectDependencyViaField(Field field, Object bean) {
-        String dependencyBeanName = resolveBeanName(field.getType());
-        Object dependencyObject = getOrCreateBean(dependencyBeanName, field.getType());
-        setField(field, bean, dependencyObject);
+        Optional<Field> injectViaProperties = getTypeResolverFactory().getFieldValueTypeInjectors().stream()
+                .filter(valueType -> valueType.hasAnnotatedWithValue(field))
+                .map(valueType -> valueType.setValueToField(field, bean))
+                .findFirst();
+
+        if (injectViaProperties.isEmpty()) {
+            String dependencyBeanName = resolveBeanName(field.getType());
+            Object dependencyObject = getOrCreateBean(dependencyBeanName, field.getType());
+            setField(field, bean, dependencyObject);
+        }
     }
 
     private boolean isAutowiredSetterMethod(Method method) {

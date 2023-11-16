@@ -2,6 +2,7 @@ package com.bobocode.bring.core.context.scaner;
 
 import com.bobocode.bring.core.context.scaner.impl.ComponentClassPathScanner;
 import com.bobocode.bring.core.context.scaner.impl.ConfigurationClassPathScanner;
+import com.bobocode.bring.core.context.scaner.impl.ProfileClassPathScanner;
 import com.bobocode.bring.core.context.scaner.impl.ServiceClassPathScanner;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
@@ -61,7 +62,8 @@ public class ClassPathScannerFactory {
         this.classPathScanners = Arrays.asList(
                 new ComponentClassPathScanner(reflections),
                 new ServiceClassPathScanner(reflections),
-                new ConfigurationClassPathScanner(reflections)
+                new ConfigurationClassPathScanner(reflections),
+                new ProfileClassPathScanner(reflections)
         );
 
         log.info("Register ClassPathScannerFactory {}", Arrays.toString(classPathScanners.toArray()));
