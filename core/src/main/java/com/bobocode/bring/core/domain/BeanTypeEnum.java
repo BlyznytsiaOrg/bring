@@ -1,9 +1,6 @@
 package com.bobocode.bring.core.domain;
 
-import com.bobocode.bring.core.anotation.Bean;
-import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.core.anotation.Configuration;
-import com.bobocode.bring.core.anotation.Service;
+import com.bobocode.bring.core.anotation.*;
 import com.bobocode.bring.core.exception.BeanAnnotationMissingException;
 import com.bobocode.bring.core.utils.Pair;
 import lombok.Getter;
@@ -24,7 +21,9 @@ public enum BeanTypeEnum {
 
     SERVICE(3, Service.class),
 
-    COMPONENT(3, Component.class);
+    COMPONENT(3, Component.class),
+
+    PROFILE(3, Profile .class);
 
     private final int order;
     

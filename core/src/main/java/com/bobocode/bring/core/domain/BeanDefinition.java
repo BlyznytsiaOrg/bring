@@ -24,5 +24,9 @@ public class BeanDefinition {
     public boolean isConfiguration() {
         return this.beanType == BeanTypeEnum.CONFIGURATION;
     }
+
+    public boolean isProfile() {
+        return this.beanType == BeanTypeEnum.PROFILE;
+    }
     
 }
