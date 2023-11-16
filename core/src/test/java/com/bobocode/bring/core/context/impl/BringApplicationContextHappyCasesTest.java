@@ -5,9 +5,13 @@ import com.bobocode.bring.testdata.di.positive.configuration.client.RestClient;
 import com.bobocode.bring.testdata.di.positive.configuration.configuration.TestConfiguration;
 import com.bobocode.bring.testdata.di.positive.configuration.service.BringService;
 import com.bobocode.bring.testdata.di.positive.constructor.BringBeansService;
+import com.bobocode.bring.testdata.di.positive.constructorproperties.ProfileBeanConstructor;
 import com.bobocode.bring.testdata.di.positive.contract.Barista;
+import com.bobocode.bring.testdata.di.positive.fieldproperties.ProfileBean;
+import com.bobocode.bring.testdata.di.positive.fullinjection.GetInfoFromExternalServicesUseCase;
 import com.bobocode.bring.testdata.di.positive.setter.A;
 import com.bobocode.bring.testdata.di.positive.setter.B;
+import com.bobocode.bring.testdata.di.positive.setterproperties.ProfileBeanSetter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
