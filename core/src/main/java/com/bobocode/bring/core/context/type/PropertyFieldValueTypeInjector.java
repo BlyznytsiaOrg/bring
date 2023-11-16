@@ -1,7 +1,6 @@
 package com.bobocode.bring.core.context.type;
 
 import com.bobocode.bring.core.anotation.Value;
-import com.bobocode.bring.core.utils.ReflectionUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,11 +19,10 @@ public class PropertyFieldValueTypeInjector implements FieldValueTypeInjector {
     }
 
     @Override
-    public Field setValueToField(Field field, Object bean) {
+    public Object setValueToField(Field field, Object bean) {
         Value valueAnnotation = field.getAnnotation(Value.class);
         String key = valueAnnotation.value();
         String value = properties.get(key);
-        ReflectionUtils.setField(field, bean, field.getType().cast(value));
-        return field;
+        return field.getType().cast(value);
     }
 }
