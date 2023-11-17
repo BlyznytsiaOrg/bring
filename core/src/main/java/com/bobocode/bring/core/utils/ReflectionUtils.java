@@ -6,11 +6,11 @@ import com.thoughtworks.paranamer.CachingParanamer;
 import com.thoughtworks.paranamer.Paranamer;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import org.reflections.Reflections;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @UtilityClass
@@ -32,5 +32,19 @@ public final class ReflectionUtils {
         String name = parameter.getName();
         return Integer.parseInt(name.substring(name.indexOf("arg") + "arg".length()));
     }
+
+    @SneakyThrows
+    public static List<Class<?>> extractImplClasses(ParameterizedType genericType, Reflections reflections) {
+            Type actualTypeArgument = genericType.getActualTypeArguments()[0];
+            if (actualTypeArgument instanceof Class actualTypeArgumentClass) {
+                String name = actualTypeArgumentClass.getName();
+                Class<?> interfaceClass = Class.forName(name);
+
+                return (List<Class<?>>) reflections.getSubTypesOf(interfaceClass)
+                        .stream()
+                        .toList();
+            }
+            return Collections.emptyList();
+        }
     
 }

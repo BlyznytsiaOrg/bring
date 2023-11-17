@@ -2,6 +2,7 @@ package com.bobocode.bring.core.context.impl;
 
 import com.bobocode.bring.core.context.BringBeanFactory;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
+import com.bobocode.bring.core.context.type.TypeResolverFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessor;
@@ -107,6 +108,8 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
     private void invokeBeanFactoryPostProcessors() {
         beanPostProcessorDefinitionFactory.getBeanFactoryPostProcessors()
                 .forEach(processor -> processor.postProcessBeanFactory(this));
+
+        setTypeResolverFactory(new TypeResolverFactory(getProperties(), getReflections()));
     }
 
     private void invokeBeanPostProcessors() {
