@@ -19,7 +19,10 @@ import lombok.SneakyThrows;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.setField;
@@ -50,7 +53,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     @Override
     public void registerBean(String beanName, BeanDefinition beanDefinition) {
         Class<?> clazz = beanDefinition.getBeanClass();
-        
+
         if (currentlyCreatingBeans.contains(beanName)) {
             throw new CyclicBeanException(currentlyCreatingBeans);
         }
@@ -132,11 +135,11 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             if (hasRequiredAnnotation) {
                 List<String> beanNames = Optional.ofNullable(getTypeToBeanNames().get(implementation))
                         .orElseThrow(() -> new NoSuchBeanException(implementation));
-                
+
                 if (beanNames.size() != 1) {
                     throw new NoUniqueBeanException(implementation);
                 }
-                
+
                 String implementationBeanName = beanNames.get(0);
                 BeanDefinition beanDefinition = getBeanDefinitions().get(implementationBeanName);
                 registerBean(beanName, beanDefinition);
@@ -146,7 +149,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     }
 
     private <T> void registerListImplementations(Class<T> interfaceType) {
-            throw new UnsupportedOperationException("Not implemented yet");
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     private Optional<Constructor<?>> findAutowiredConstructor(Class<?> clazz) {
@@ -179,7 +182,13 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             int index = i;
             Optional<Object> injectViaProperties = getTypeResolverFactory().getParameterValueTypeInjectors().stream()
                     .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
-                    .map(valueType -> valueType.setValueToSetter(parameter))
+                    .map(valueType -> {
+                        Object dependencyValue = valueType.setValueToSetter(parameter);
+                        if (dependencyValue instanceof List) {
+                            return injectListDependency((List<Class<?>>) dependencyValue);
+                        }
+                        return dependencyValue;
+                    })
                     .map(obj -> dependencies[index] = obj)
                     .findFirst();
 
@@ -200,18 +209,18 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
         return bean;
     }
-    
+
     private String findBeanNameForParamInConstructor(Parameter parameter, List<String> constructorParamNames) {
         Class<?> clazz = parameter.getType();
         String paramName = constructorParamNames.get(ReflectionUtils.extractParameterPosition(parameter));
-        
-        List<String> beanNames = clazz.isInterface() 
+
+        List<String> beanNames = clazz.isInterface()
                 ? getTypeToBeanNames().entrySet()
-                    .stream()
-                    .filter(entry -> clazz.isAssignableFrom(entry.getKey()))
-                    .map(Map.Entry::getValue)
-                    .flatMap(Collection::stream)
-                    .toList() 
+                .stream()
+                .filter(entry -> clazz.isAssignableFrom(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .flatMap(Collection::stream)
+                .toList()
                 : Optional.ofNullable(getTypeToBeanNames().get(clazz)).orElse(Collections.emptyList());
 
         if (beanNames.isEmpty()) {
@@ -245,7 +254,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
 
         Object object = getSingletonObjects().get(beanName);
-        if (Objects.isNull(object)){
+        if (Objects.isNull(object)) {
             return getOrCreateBean(beanName, beanType);
         }
 
@@ -270,7 +279,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             Parameter parameter = method.getParameters()[0];
             Optional<Object> injectViaProperties = getTypeResolverFactory().getParameterValueTypeInjectors().stream()
                     .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
-                    .map(valueType -> injectDependencyViaProperties(method, parameter, bean, valueType))
+                    .map(valueType -> injectDependencyViaParameter(method, parameter, bean, valueType))
                     .findFirst();
 
             if (injectViaProperties.isEmpty()) {
@@ -283,18 +292,33 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     }
 
     @SneakyThrows
-    private static Object injectDependencyViaProperties(Method method, Parameter parameter, Object bean,
-                                                        ParameterValueTypeInjector valueType) {
-        Object dependencyObject = valueType.setValueToSetter(parameter);
-        method.invoke(bean, dependencyObject);
-        return dependencyObject;
+    private Object injectDependencyViaParameter(Method method, Parameter parameter, Object bean,
+                                                ParameterValueTypeInjector valueType) {
+        Object dependencyValue = valueType.setValueToSetter(parameter);
+        if (dependencyValue instanceof List) {
+            var dependencyObjects = injectListDependency((List<Class<?>>) dependencyValue);
+            method.invoke(bean, dependencyObjects);
+        } else {
+            method.invoke(bean, dependencyValue);
+        }
+        return dependencyValue;
     }
 
     @SneakyThrows
     private void injectDependencyViaField(Field field, Object bean) {
-        Optional<Field> injectViaProperties = getTypeResolverFactory().getFieldValueTypeInjectors().stream()
+        Optional<Object> injectViaProperties = getTypeResolverFactory().getFieldValueTypeInjectors().stream()
                 .filter(valueType -> valueType.hasAnnotatedWithValue(field))
-                .map(valueType -> valueType.setValueToField(field, bean))
+
+                .map(valueType -> {
+                    Object dependencyValue = valueType.setValueToField(field, bean);
+                    if (dependencyValue instanceof List) {
+                        var dependencyObjects = injectListDependency((List<Class<?>>) dependencyValue);
+                        setField(field, bean, dependencyObjects);
+                    } else {
+                        setField(field, bean, dependencyValue);
+                    }
+                    return dependencyValue;
+                })
                 .findFirst();
 
         if (injectViaProperties.isEmpty()) {
@@ -302,6 +326,17 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             Object dependencyObject = getOrCreateBean(dependencyBeanName, field.getType());
             setField(field, bean, dependencyObject);
         }
+    }
+
+    private List<Object> injectListDependency(List<Class<?>> value) {
+        List<Object> dependencyObjects = new ArrayList<>();
+        for (var impl : value) {
+            String implBeanName = resolveBeanName(impl);
+            Object dependecyObject = getOrCreateBean(implBeanName, impl);
+            dependencyObjects.add(dependecyObject);
+        }
+
+        return dependencyObjects;
     }
 
     private boolean isAutowiredSetterMethod(Method method) {
@@ -319,5 +354,5 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     protected Reflections getReflections() {
         return reflections;
     }
-    
+
 }

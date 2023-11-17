@@ -6,5 +6,5 @@ public interface FieldValueTypeInjector {
 
     boolean hasAnnotatedWithValue(Field field);
 
-    Field setValueToField(Field field, Object bean);
+    Object setValueToField(Field field, Object bean);
 }

@@ -214,7 +214,7 @@ class BringApplicationContextHappyCasesTest {
     @Test
     void shouldCreateAndInjectDifferentBeans() {
         // given
-        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".fullinjection");;
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".fullinjection");
 
         // when
         var useCase = bringApplicationContext.getBean(GetInfoFromExternalServicesUseCase.class);
@@ -234,4 +234,48 @@ class BringApplicationContextHappyCasesTest {
                 "restClient2=RestClient{url='https://exterl.service2', username='user200'}}}");
     }
 
+    @DisplayName("Should inject implementations of Interface to Field")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToField() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listfieldinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listfieldinjector.AField.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(2);
+    }
+
+    @DisplayName("Should inject implementations of Interface to Constructor")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToConstructor() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listconstructorinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listconstructorinjector.AConstructor.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(2);
+    }
+
+    @DisplayName("Should inject implementations of Interface to Setter")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToSetter() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listsetterinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listsetterinjector.ASetter.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(2);
+    }
 }
