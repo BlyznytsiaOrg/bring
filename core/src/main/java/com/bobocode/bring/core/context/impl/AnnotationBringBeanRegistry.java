@@ -328,9 +328,9 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         }
     }
 
-    private List<Object> injectListDependency(List<Class<?>> o) {
+    private List<Object> injectListDependency(List<Class<?>> value) {
         List<Object> dependencyObjects = new ArrayList<>();
-        for (var impl : o) {
+        for (var impl : value) {
             String implBeanName = resolveBeanName(impl);
             Object dependecyObject = getOrCreateBean(implBeanName, impl);
             dependencyObjects.add(dependecyObject);
