@@ -183,11 +183,11 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             Optional<Object> injectViaProperties = getTypeResolverFactory().getParameterValueTypeInjectors().stream()
                     .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
                     .map(valueType -> {
-                        Object o = valueType.setValueToSetter(parameter);
-                        if (o instanceof List) {
-                            return injectListDependency((List<Class<?>>) o);
+                        Object dependencyValue = valueType.setValueToSetter(parameter);
+                        if (dependencyValue instanceof List) {
+                            return injectListDependency((List<Class<?>>) dependencyValue);
                         }
-                        return o;
+                        return dependencyValue;
                     })
                     .map(obj -> dependencies[index] = obj)
                     .findFirst();
@@ -294,14 +294,14 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     @SneakyThrows
     private Object injectDependencyViaParameter(Method method, Parameter parameter, Object bean,
                                                 ParameterValueTypeInjector valueType) {
-        Object dependencyObject = valueType.setValueToSetter(parameter);
-        if (dependencyObject instanceof List) {
-            var dependencyObjects = injectListDependency((List<Class<?>>) dependencyObject);
+        Object dependencyValue = valueType.setValueToSetter(parameter);
+        if (dependencyValue instanceof List) {
+            var dependencyObjects = injectListDependency((List<Class<?>>) dependencyValue);
             method.invoke(bean, dependencyObjects);
         } else {
-            method.invoke(bean, dependencyObject);
+            method.invoke(bean, dependencyValue);
         }
-        return dependencyObject;
+        return dependencyValue;
     }
 
     @SneakyThrows
@@ -310,14 +310,14 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
                 .filter(valueType -> valueType.hasAnnotatedWithValue(field))
 
                 .map(valueType -> {
-                    Object o = valueType.setValueToField(field, bean);
-                    if (o instanceof List) {
-                        var dependencyObjects = injectListDependency((List<Class<?>>) o);
+                    Object dependencyValue = valueType.setValueToField(field, bean);
+                    if (dependencyValue instanceof List) {
+                        var dependencyObjects = injectListDependency((List<Class<?>>) dependencyValue);
                         setField(field, bean, dependencyObjects);
                     } else {
-                        setField(field, bean, o);
+                        setField(field, bean, dependencyValue);
                     }
-                    return o;
+                    return dependencyValue;
                 })
                 .findFirst();
 
