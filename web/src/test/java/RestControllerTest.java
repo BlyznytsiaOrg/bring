@@ -1,6 +1,12 @@
+import com.bobocode.bring.web.configuration.WebServerConfiguration;
+import com.bobocode.bring.web.dto.ErrorResponse;
 import com.bobocode.bring.web.embeddedTomcat.TomcatServletWebServerFactory;
 import com.bobocode.bring.web.embeddedTomcat.TomcatWebServer;
+import com.bobocode.bring.web.http.HttpStatus;
 import com.bobocode.bring.web.servlet.DispatcherServlet;
+import com.bobocode.bring.web.servlet.JsonExceptionHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 import org.junit.jupiter.api.AfterAll;
@@ -9,7 +15,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import testdata.ExampleServlet;
+import testdata.controller.ExampleServlet;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,20 +30,27 @@ public class RestControllerTest {
     public static final String HELLO_PATH = "/example/hello";
     public static final String NUMBER_PATH = "/example/number";
     public static final String NOT_EXIST_PATH = "/example/not-exist";
+    public static final String CUSTOM_EXCEPTION_PATH = "/example/custom-exception";
+    public static final String DEFAULT_EXCEPTION_PATH = "/example/default-exception";
     public static final int PORT = 9090;
     private static TomcatWebServer webServer;
+    private static ObjectMapper objectMapper;
     private HttpClient httpClient;
 
     @BeforeAll
     static void beforeAll() {
+        WebServerConfiguration webServerConfiguration = new WebServerConfiguration();
         TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory(PORT);
         DispatcherServlet dispatcherServlet = new DispatcherServlet(List.of(new ExampleServlet()));
         webServer = (TomcatWebServer)factory.getWebServer();
+        JsonExceptionHandler jsonExceptionHandler = webServerConfiguration.jsonExceptionHandler();
+        objectMapper = webServerConfiguration.objectMapper();
         Context context = factory.getContext();
         Tomcat tomcat = webServer.getTomcat();
 
         tomcat.addServlet(factory.getContextPath(), DISPATCHER_SERVLET_NAME, dispatcherServlet);
         context.addServletMappingDecoded(URL_PATTERN, DISPATCHER_SERVLET_NAME);
+        context.getPipeline().addValve(jsonExceptionHandler);
     }
 
     @BeforeEach
@@ -74,6 +87,36 @@ public class RestControllerTest {
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
         Assertions.assertEquals(String.format("This application has no explicit mapping for '%s'",
                 NOT_EXIST_PATH), actualResponse);
+    }
+
+    @Test
+    @DisplayName("should return custom message error")
+    @SneakyThrows
+    void shouldThrowCustomException() {
+        String url = getHost() + CUSTOM_EXCEPTION_PATH;
+        String defaultMessage = "Bad Request";
+        HttpRequest request = getHttpRequest(url);
+
+        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
+
+        Assertions.assertEquals(errorResponse.getMessage(), defaultMessage);
+        Assertions.assertEquals(errorResponse.getCode(), HttpStatus.BAD_REQUEST.getValue());
+    }
+
+    @Test
+    @DisplayName("should return default message error")
+    @SneakyThrows
+    void shouldThrowDefaultException() {
+        String url = getHost() + DEFAULT_EXCEPTION_PATH;
+        String defaultMessage = "TestDefaultException";
+        HttpRequest request = getHttpRequest(url);
+
+        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
+
+        Assertions.assertEquals(errorResponse.getMessage(), defaultMessage);
+        Assertions.assertEquals(errorResponse.getCode(), HttpStatus.INTERNAL_SERVER_ERROR.getValue());
     }
 
     @AfterAll
