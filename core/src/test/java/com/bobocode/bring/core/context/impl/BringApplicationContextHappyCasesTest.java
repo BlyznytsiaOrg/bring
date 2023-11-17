@@ -5,9 +5,13 @@ import com.bobocode.bring.testdata.di.positive.configuration.client.RestClient;
 import com.bobocode.bring.testdata.di.positive.configuration.configuration.TestConfiguration;
 import com.bobocode.bring.testdata.di.positive.configuration.service.BringService;
 import com.bobocode.bring.testdata.di.positive.constructor.BringBeansService;
+import com.bobocode.bring.testdata.di.positive.constructorproperties.ProfileBeanConstructor;
 import com.bobocode.bring.testdata.di.positive.contract.Barista;
+import com.bobocode.bring.testdata.di.positive.fieldproperties.ProfileBean;
+import com.bobocode.bring.testdata.di.positive.fullinjection.GetInfoFromExternalServicesUseCase;
 import com.bobocode.bring.testdata.di.positive.setter.A;
 import com.bobocode.bring.testdata.di.positive.setter.B;
+import com.bobocode.bring.testdata.di.positive.setterproperties.ProfileBeanSetter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -117,9 +121,9 @@ class BringApplicationContextHappyCasesTest {
         assertThat(bean.getDrink().make()).isEqualTo("Making a delicious latte!");
     }
 
-    @DisplayName("All beans from configuration class registered in Bring Context")
+    @DisplayName("Should register all beans from configuration class in Bring Context")
     @Test
-    void testConfigurationBeansRegistration() {
+    void shouldRegisterConfigurationBeans() {
         // given
         BringApplicationContext bringApplicationContext = BringApplication.run(TestConfiguration.class);
 
@@ -135,9 +139,9 @@ class BringApplicationContextHappyCasesTest {
         assertThat(restClients.stream().allMatch(rc -> rc.equals(restClient))).isTrue();
     }
 
-    @DisplayName("@Component and @Service beans registered in Bring Context")
+    @DisplayName("Should register @Component and @Service beans in Bring Context")
     @Test
-    void createComponentBeans() {
+    void shouldCreateComponentBeans() {
         // given
         BringApplicationContext bringApplicationContext = BringApplication.run(BringBeansService.class);
         
@@ -148,4 +152,130 @@ class BringApplicationContextHappyCasesTest {
         assertThat(bringBeansService).isNotNull();
     }
 
+
+    @DisplayName("Should found profile bean and read application properties and do field injection")
+    @Test
+    void shouldFoundProfileBeanAndReadApplicationPropertiesAndSetValueToFieldInjection() {
+        //when
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".fieldproperties");
+        ProfileBean profileBean = bringApplicationContext.getBean(ProfileBean.class);
+
+        //then
+        assertThat(bringApplicationContext.getProfileName()).isEqualTo("dev");
+        assertThat(bringApplicationContext.getProperties()).isNotNull()
+                        .hasSize(1)
+                        .containsEntry("bring.main.banner-mode", "on");
+
+        assertThat(profileBean).isNotNull();
+        assertThat(profileBean.getBannerMode())
+                .isNotNull()
+                .isEqualTo("on");
+    }
+
+    @DisplayName("Should found profile bean and read application properties and do setter injection")
+    @Test
+    void shouldFoundProfileBeanAndReadApplicationPropertiesAndSetValueToSetterInjection() {
+        //when
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".setterproperties");
+        ProfileBeanSetter profileBeanSetter = bringApplicationContext.getBean(ProfileBeanSetter.class);
+
+        //then
+        assertThat(bringApplicationContext.getProfileName()).isEqualTo("dev");
+        assertThat(bringApplicationContext.getProperties()).isNotNull()
+                .hasSize(1)
+                .containsEntry("bring.main.banner-mode", "on");
+
+        assertThat(profileBeanSetter).isNotNull();
+        assertThat(profileBeanSetter.getBannerMode())
+                .isNotNull()
+                .isEqualTo("on");
+    }
+
+    @DisplayName("Should found profile bean and read application properties and do constructor injection")
+    @Test
+    void shouldFoundProfileBeanAndReadApplicationPropertiesAndSetValueToConstructorInjection() {
+        //when
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".constructorproperties");
+        ProfileBeanConstructor profileBeanConstructor = bringApplicationContext.getBean(ProfileBeanConstructor.class);
+
+        //then
+        assertThat(bringApplicationContext.getProfileName()).isEqualTo("dev");
+        assertThat(bringApplicationContext.getProperties()).isNotNull()
+                .hasSize(1)
+                .containsEntry("bring.main.banner-mode", "on");
+
+        assertThat(profileBeanConstructor).isNotNull();
+        assertThat(profileBeanConstructor.getBannerMode())
+                .isNotNull()
+                .isEqualTo("on");
+    }
+
+    @DisplayName("Should inject beans annotated with different annotations")
+    @Test
+    void shouldCreateAndInjectDifferentBeans() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".fullinjection");
+
+        // when
+        var useCase = bringApplicationContext.getBean(GetInfoFromExternalServicesUseCase.class);
+
+        // then
+        assertThat(useCase).isNotNull();
+        assertThat(useCase.getInfoFromService())
+                .hasSize(4)
+                .contains("Some info")
+                .contains("Other info")
+                .contains("Some info2")
+                .contains("Other info2");
+        assertThat(useCase).hasToString("GetInfoFromExternalService2UseCase{" +
+                "externalService=ExternalService1{" +
+                "restClient=RestClient{url='https://exterl.service', username='user100'}}, " +
+                "externalService2=ExternalService2{" +
+                "restClient2=RestClient{url='https://exterl.service2', username='user200'}}}");
+    }
+
+    @DisplayName("Should inject implementations of Interface to Field")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToField() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listfieldinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listfieldinjector.AField.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(2);
+    }
+
+    @DisplayName("Should inject implementations of Interface to Constructor")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToConstructor() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listconstructorinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listconstructorinjector.AConstructor.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(2);
+    }
+
+    @DisplayName("Should inject implementations of Interface to Setter")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToSetter() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listsetterinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listsetterinjector.ASetter.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(2);
+    }
 }

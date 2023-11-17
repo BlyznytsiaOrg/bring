@@ -1,6 +1,7 @@
 package com.bobocode.bring.core.postprocessor;
 
 import com.bobocode.bring.core.postprocessor.impl.ConfigurationClassPostProcessor;
+import com.bobocode.bring.core.postprocessor.impl.ValuePropertiesPostProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,6 +50,7 @@ public class BeanPostProcessorDefinitionFactory {
      */
     public BeanPostProcessorDefinitionFactory() {
         beanFactoryPostProcessors = List.of(
+                new ValuePropertiesPostProcessor(),
                 new ConfigurationClassPostProcessor()
         );
 

@@ -1,10 +1,13 @@
 package com.bobocode.bring.core.context.impl;
 
 import com.bobocode.bring.core.context.BringBeanFactory;
+import com.bobocode.bring.core.context.type.TypeResolverFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.BeansException;
 import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,18 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
     private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>();
     
     private final Map<String, List<Object>> interfaceNameToImplementations = new ConcurrentHashMap<>();
+
+    @Setter
+    @Getter
+    private Map<String, String> properties = new ConcurrentHashMap<>();
+
+    @Setter
+    @Getter
+    private String profileName;
+
+    @Setter
+    @Getter
+    private TypeResolverFactory typeResolverFactory;
 
     @Override
     public <T> T getBean(Class<T> type) throws BeansException {

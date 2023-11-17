@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "bring.banner.location",
+      "type": "java.lang.String",
+      "description": "The file path or URL for the main banner location in the application."
+    },
+    {
+      "name": "bring.main.banner-mode",
+      "type": "java.lang.String",
+      "description": "Specifies whether the main banner is turned ON or OFF in the application. Use 'ON' to display the banner and 'OFF' to hide it."
+    }
+  ]
+}
