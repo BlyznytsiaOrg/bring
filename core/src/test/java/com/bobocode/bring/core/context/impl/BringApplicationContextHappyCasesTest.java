@@ -295,5 +295,22 @@ class BringApplicationContextHappyCasesTest {
         assertThat(barista).isNotEqualTo(barista2);
         assertThat(barista.getUuid()).isNotEqualTo(barista2.getUuid());
     }
+
+    @DisplayName("Should return new object when getting prototype configuration bean")
+    @Test
+    void shouldCreatePrototypeConfigurationBean() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype");
+
+        // when
+        var bean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.SimpleClass.class);
+        var bean2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.SimpleClass.class);
+
+        // then
+        assertThat(bean).isNotNull();
+        assertThat(bean2).isNotNull();
+        assertThat(bean).isNotEqualTo(bean2);
+        assertThat(bean.getUuid()).isNotEqualTo(bean2.getUuid());
+    }
     
 }
