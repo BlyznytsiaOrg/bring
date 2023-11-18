@@ -9,10 +9,11 @@ import com.bobocode.bring.core.exception.NoUniqueBeanException;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -23,7 +24,9 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
     private final Map<Class<?>, List<String>> typeToBeanNames = new ConcurrentHashMap<>();
     
     private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>();
-    
+
+    private final Map<String, Supplier<Object>> prototypeSuppliers = new ConcurrentHashMap<>();
+
     private final Map<String, List<Object>> interfaceNameToImplementations = new ConcurrentHashMap<>();
 
     @Setter
@@ -46,21 +49,37 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
             throw new NoUniqueBeanException(type);
         }
 
-        return beans.values().stream().findFirst().orElseThrow(() -> new NoSuchBeanException(type));
+        return beans.values()
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new NoSuchBeanException(type));
     }
 
     @Override
     public <T> T getBean(Class<T> type, String name) throws BeansException {
-        Object obj = singletonObjects.get(name);
+        Object obj = Optional.ofNullable(singletonObjects.get(name))
+                .orElse(Optional.ofNullable(prototypeSuppliers.get(name))
+                  .map(Supplier::get)
+                  .orElse(null));
+        
+        if (Objects.isNull(obj)) {
+            throw new NoSuchBeanException(type);
+        }
+        
         return type.cast(obj);
     }
 
     @Override
     public <T> Map<String, T> getBeans(Class<T> type) throws BeansException {
-        return getAllBeans().entrySet()
+        List<String> beanNames = typeToBeanNames.entrySet()
                 .stream()
-                .filter(entry -> type.isAssignableFrom(entry.getValue().getClass()))
-                .collect(toMap(Map.Entry::getKey, t -> type.cast(t.getValue())));
+                .filter(entry -> type.isAssignableFrom(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .flatMap(Collection::stream)
+                .toList();
+        
+        return beanNames.stream()
+                .collect(Collectors.toMap(Function.identity(), name -> getBean(type, name)));
     }
 
     @Override
@@ -76,6 +95,10 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
         return singletonObjects;
     }
 
+    protected Map<String, Supplier<Object>> getPrototypeSuppliers() {
+        return prototypeSuppliers;
+    }
+
     protected Map<String, List<Object>> getInterfaceNameToImplementations() {
         return interfaceNameToImplementations;
     }
@@ -88,8 +111,12 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
         return interfaceNameToImplementations.getOrDefault(beanName, new ArrayList<>());
     }
 
-    void addBean(String beanName, Object bean) {
+    void addSingletonBean(String beanName, Object bean) {
         singletonObjects.put(beanName, bean);
+    }
+
+    void addPrototypeBean(String beanName, Supplier<Object> supplier) {
+        prototypeSuppliers.put(beanName, supplier);
     }
 
     void addInterfaceNameToImplementations(String interfaceName, Object implementation) {

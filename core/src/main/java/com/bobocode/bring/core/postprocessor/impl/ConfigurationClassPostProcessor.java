@@ -3,6 +3,7 @@ package com.bobocode.bring.core.postprocessor.impl;
 import com.bobocode.bring.core.anotation.Bean;
 import com.bobocode.bring.core.context.impl.DefaultBringBeanFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
+import com.bobocode.bring.core.utils.BeanScopeUtils;
 import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.postprocessor.BeanFactoryPostProcessor;
 
@@ -37,7 +38,7 @@ public class ConfigurationClassPostProcessor implements BeanFactoryPostProcessor
         BeanDefinition beanDefinition = BeanDefinition.builder()
             .beanClass(method.getReturnType())
             .beanType(BeanTypeEnum.findBeanType(method))
-            .isSingleton(true)
+            .scope(BeanScopeUtils.findBeanScope(method))
             .method(method)
             .factoryMethodName(method.getName())
             .factoryBeanName(beanName)

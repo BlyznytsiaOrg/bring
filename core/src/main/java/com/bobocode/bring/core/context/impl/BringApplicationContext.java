@@ -4,15 +4,14 @@ import com.bobocode.bring.core.context.BringBeanFactory;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.context.type.TypeResolverFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
+import com.bobocode.bring.core.utils.BeanScopeUtils;
 import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessor;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessorDefinitionFactory;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessorFactory;
 import org.reflections.Reflections;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The {@code BringApplicationContext} class represents the core context for managing and initializing
@@ -87,7 +86,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
             BeanDefinition beanDefinition = BeanDefinition.builder()
                     .beanClass(clazz)
                     .beanType(BeanTypeEnum.findBeanType(clazz))
-                    .isSingleton(true)
+                    .scope(BeanScopeUtils.findBeanScope(clazz))
                     .factoryBeanName(clazz.getSimpleName())
                     .build();
 

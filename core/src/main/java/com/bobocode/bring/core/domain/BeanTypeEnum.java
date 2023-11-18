@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
@@ -39,6 +40,7 @@ public enum BeanTypeEnum {
         
         return Arrays.stream(clazz.getAnnotations())
                 .map(annotation -> annotationToBeanType.get(annotation.annotationType()))
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElseThrow(() -> new BeanAnnotationMissingException(
                     "Unable to create Bean of type=[%s]. Class is not annotated with %s", 
@@ -51,6 +53,7 @@ public enum BeanTypeEnum {
 
         return Arrays.stream(method.getAnnotations())
             .map(annotation -> annotationToBeanType.get(annotation.annotationType()))
+            .filter(Objects::nonNull)
             .findFirst()
             .orElseThrow(() -> new BeanAnnotationMissingException(
                 "Unable to create Bean of type=[%s], methodName=[%s]. Method is not annotated with %s",
