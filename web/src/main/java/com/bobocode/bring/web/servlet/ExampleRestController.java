@@ -5,8 +5,9 @@ import com.bobocode.bring.web.annotation.GetMapping;
 import com.bobocode.bring.web.annotation.PathVariable;
 import com.bobocode.bring.web.annotation.RequestMapping;
 
-@RestController
-@RequestMapping(path = "/example")
+//TODO need to delete them later
+//@RestController
+//@RequestMapping(path = "/example")
 public class ExampleRestController extends BaseServlet {
 
     @GetMapping(path = "/hello")
@@ -19,8 +20,8 @@ public class ExampleRestController extends BaseServlet {
         return 200;
     }
 
-    @GetMapping(path = "/{id}")
+    /*@GetMapping(path = "/{id}")
     public StringBuilder variable(@PathVariable StringBuilder id) {
         return id;
-    }
+    }*/
 }

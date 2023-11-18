@@ -21,6 +21,7 @@ public class RestControllerTest {
     public static final String NOT_EXIST_PATH = "/not-exist";
     public static final String CUSTOM_EXCEPTION_PATH = "/example/custom-exception";
     public static final String DEFAULT_EXCEPTION_PATH = "/example/default-exception";
+    public static final String URL = "http://localhost:%s%s";
     private static ObjectMapper objectMapper;
     private static ServerProperties serverProperties;
     private HttpClient httpClient;
@@ -142,6 +143,6 @@ public class RestControllerTest {
     }
 
     private String getHost() {
-        return String.format("http://localhost:%s", serverProperties.getPort());
+        return String.format(URL, serverProperties.getPort(), serverProperties.getContextPath());
     }
 }
