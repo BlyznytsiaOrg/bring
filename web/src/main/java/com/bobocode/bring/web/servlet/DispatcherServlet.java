@@ -4,6 +4,7 @@ import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.web.annotation.*;
 import com.bobocode.bring.web.exception.MethodArgumentTypeMismatchException;
 import com.bobocode.bring.web.exception.TypeArgumentUnsupportedException;
+import com.bobocode.bring.web.utils.ReflectionUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -49,10 +50,8 @@ public class DispatcherServlet extends FrameworkServlet {
 
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) {
-        String requestPath = getRequestPath(req);
-        String methodName = req.getMethod();
         bringServlets.stream()
-                .map(bringServlet -> processRestController(bringServlet, requestPath, methodName))
+                .map(bringServlet -> processRestController(bringServlet, req))
                 .findFirst()
                 .ifPresent(response -> performResponse(response, resp));
     }
@@ -65,8 +64,9 @@ public class DispatcherServlet extends FrameworkServlet {
     }
 
     @SneakyThrows
-    public Object processRestController(BringServlet bringServlet, String requestPath,
-                                        String methodName) {
+    public Object processRestController(BringServlet bringServlet, HttpServletRequest req) {
+        String requestPath = getRequestPath(req);
+        String methodName = req.getMethod();
         Map<String, List<RestControllerParams>> restControllerParamsMap = getRestControllerParams(bringServlet.getClass());
         List<RestControllerParams> methodParamsList = restControllerParamsMap.get(methodName);
         if (methodParamsList != null) {
@@ -82,14 +82,12 @@ public class DispatcherServlet extends FrameworkServlet {
                         int index = requestPath.lastIndexOf("/");
                         String requestPathShortened = requestPath.substring(0, index + 1);
                         if (requestPathShortened.equals(params.path())){
-                            Object[] args = prepareArgs(requestPath, params, parameters);
+                            Object[] args = prepareArgs(req, requestPath, method);
                             return method.invoke(bringServlet, args);
                         }
                     } else if (checkIfRequestParamAnnotationIsPresent(parameters)) {
-                        int index = requestPath.lastIndexOf("?");
-                        String requestPathShortened = requestPath.substring(0, index);
-                        if (requestPathShortened.equals(params.path())) {
-                            Object[] args = prepareArgs(requestPath, params, parameters);
+                        if (requestPath.equals(params.path())) {
+                            Object[] args = prepareArgs(req, requestPath, method);
                             return method.invoke(bringServlet, args);
                         }
                     }
@@ -117,8 +115,9 @@ public class DispatcherServlet extends FrameworkServlet {
         return false;
     }
 
-    private Object[] prepareArgs(String requestPath, RestControllerParams params,
-                                 Parameter[] parameters) {
+    private Object[] prepareArgs(HttpServletRequest req, String requestPath,
+                                 Method method) {
+        Parameter[] parameters = method.getParameters();
         Object[] args = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             if (parameters[i].isAnnotationPresent(PathVariable.class)) {
@@ -127,8 +126,13 @@ public class DispatcherServlet extends FrameworkServlet {
                 Class<?> type = parameters[i].getType();
                 args[i] = parseToParameterType(pathVariable, type);
             } else if (parameters[i].isAnnotationPresent(RequestParam.class)) {
-                String requestParamPath = requestPath.split("\\?")[1];
-                String[] requestParamArray = requestParamPath.split("&");
+                List<String> parameterNames = ReflectionUtils.getParameterNames(method);
+                String parameterName = parameterNames.get(i);
+                Class<?> type = parameters[i].getType();
+                String parameterValue = req.getParameter(parameterName);
+                if (parameterValue != null) {
+                    args[i] = parseToParameterType(parameterValue, type);
+                }
             }
         }
         return args;

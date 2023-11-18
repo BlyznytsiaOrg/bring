@@ -125,7 +125,7 @@ public class RestControllerTest {
     void shouldThrowException() throws URISyntaxException, IOException, InterruptedException {
         String pathVariable = "non_boolean";
         String expectedMessage = String.format("Failed to convert value of type 'java.lang.String' "
-                + "to required type 'boolean'; Invalid boolean value [%s]", pathVariable);
+                + "to required type 'boolean'; Invalid value [%s]", pathVariable);
         String url = getHost() + "/example/variable1/" + pathVariable;
         HttpRequest request = getHttpGetRequest(url);
 
