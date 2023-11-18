@@ -1,7 +1,8 @@
 package com.bobocode.bring.web;
 
+import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
-import com.bobocode.bring.web.configuration.WebServerConfiguration;
+import com.bobocode.bring.web.embeddedTomcat.TomcatServletWebServerFactory;
 import com.bobocode.bring.web.embeddedTomcat.TomcatWebServer;
 import com.bobocode.bring.web.servlet.DispatcherServlet;
 import com.bobocode.bring.web.servlet.JsonExceptionHandler;
@@ -10,6 +11,7 @@ import jakarta.servlet.ServletContext;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 
+@Component
 public class WebStarter {
     public static final String BRING_CONTEXT = "BRING_CONTEXT";
     public static final String DISPATCHER_SERVLET_NAME = "dispatcher";
@@ -18,11 +20,12 @@ public class WebStarter {
     private final DispatcherServlet dispatcherServlet;
     private final JsonExceptionHandler jsonExceptionHandler;
 
-    public WebStarter() {
-        //TODO should be created via Bring
-        this.servletWebServerFactory = new WebServerConfiguration().tomcatServletWebServerFactory();
-        this.dispatcherServlet = new WebServerConfiguration().dispatcherServlet();
-        this.jsonExceptionHandler = new WebServerConfiguration().jsonExceptionHandler();
+    public WebStarter(TomcatServletWebServerFactory tomcatServletWebServerFactory,
+                      DispatcherServlet dispatcherServlet,
+                      JsonExceptionHandler jsonExceptionHandler) {
+        this.servletWebServerFactory = tomcatServletWebServerFactory;
+        this.dispatcherServlet = dispatcherServlet;
+        this.jsonExceptionHandler = jsonExceptionHandler;
     }
 
     public void run(BringApplicationContext bringApplicationContext) {

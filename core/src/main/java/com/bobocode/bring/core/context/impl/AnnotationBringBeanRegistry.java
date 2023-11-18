@@ -2,10 +2,7 @@ package com.bobocode.bring.core.context.impl;
 
 import com.bobocode.bring.core.anotation.*;
 import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
-import com.bobocode.bring.core.anotation.resolver.impl.ComponentBeanNameAnnotationResolver;
-import com.bobocode.bring.core.anotation.resolver.impl.ConfigurationBeanNameAnnotationResolver;
-import com.bobocode.bring.core.anotation.resolver.impl.InterfaceBeanNameAnnotationResolver;
-import com.bobocode.bring.core.anotation.resolver.impl.ServiceBeanNameAnnotationResolver;
+import com.bobocode.bring.core.anotation.resolver.impl.*;
 import com.bobocode.bring.core.context.BeanDefinitionRegistry;
 import com.bobocode.bring.core.context.BeanRegistry;
 import com.bobocode.bring.core.context.type.ParameterValueTypeInjector;
@@ -33,15 +30,18 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
     private final Reflections reflections;
 
+    private final Reflections internalBringReflection= new Reflections("com.bobocode.bring");
+
     private final List<AnnotationResolver> annotationResolvers = List.of(
             new ComponentBeanNameAnnotationResolver(),
             new ServiceBeanNameAnnotationResolver(),
             new InterfaceBeanNameAnnotationResolver(),
-            new ConfigurationBeanNameAnnotationResolver()
+            new ConfigurationBeanNameAnnotationResolver(),
+            new ReqestMappingBeanNameAnnotationResolver()
     );
 
     private final List<Class<? extends Annotation>> createdBeanAnnotations = List.of(
-            Component.class, Service.class, Configuration.class
+            Component.class, Service.class, Configuration.class, RequestMapping.class, Bean.class
     );
 
     private final Set<String> currentlyCreatingBeans = new HashSet<>();
@@ -183,7 +183,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             Optional<Object> injectViaProperties = getTypeResolverFactory().getParameterValueTypeInjectors().stream()
                     .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
                     .map(valueType -> {
-                        Object dependencyValue = valueType.setValueToSetter(parameter);
+                        Object dependencyValue = valueType.setValueToSetter(parameter, createdBeanAnnotations);
                         if (dependencyValue instanceof List) {
                             return injectListDependency((List<Class<?>>) dependencyValue);
                         }
@@ -294,7 +294,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     @SneakyThrows
     private Object injectDependencyViaParameter(Method method, Parameter parameter, Object bean,
                                                 ParameterValueTypeInjector valueType) {
-        Object dependencyValue = valueType.setValueToSetter(parameter);
+        Object dependencyValue = valueType.setValueToSetter(parameter, createdBeanAnnotations);
         if (dependencyValue instanceof List) {
             var dependencyObjects = injectListDependency((List<Class<?>>) dependencyValue);
             method.invoke(bean, dependencyObjects);
@@ -310,10 +310,9 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
                 .filter(valueType -> valueType.hasAnnotatedWithValue(field))
 
                 .map(valueType -> {
-                    Object dependencyValue = valueType.setValueToField(field, bean);
-                    if (dependencyValue instanceof List) {
-                        var dependencyObjects = injectListDependency((List<Class<?>>) dependencyValue);
-                        setField(field, bean, dependencyObjects);
+                    Object dependencyValue = valueType.setValueToField(field, bean, createdBeanAnnotations);
+                    if (dependencyValue instanceof List listDependencyValue) {
+                        setField(field, bean, injectListDependency(listDependencyValue));
                     } else {
                         setField(field, bean, dependencyValue);
                     }

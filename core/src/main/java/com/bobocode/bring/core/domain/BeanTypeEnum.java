@@ -23,7 +23,9 @@ public enum BeanTypeEnum {
 
     COMPONENT(3, Component.class),
 
-    PROFILE(3, Profile .class);
+    PROFILE(3, Profile .class),
+
+    REQUEST_MAPPING(4, RequestMapping .class);
 
     private final int order;
     

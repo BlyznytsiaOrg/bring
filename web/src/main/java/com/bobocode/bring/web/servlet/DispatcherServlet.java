@@ -1,7 +1,8 @@
 package com.bobocode.bring.web.servlet;
 
+import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.anotation.RequestMapping;
 import com.bobocode.bring.web.annotation.GetMapping;
-import com.bobocode.bring.web.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -11,17 +12,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 @Slf4j
 public class DispatcherServlet extends FrameworkServlet {
     public static final String BRING_CONTEXT = "BRING_CONTEXT";
-    List<? extends BringServlet> bringServletList;
+    private final List<BringServlet> bringServlets;
 
-    public DispatcherServlet() {
-        bringServletList = new ArrayList<>(List.of(new ExampleServlet()));
-    }
-
-    public DispatcherServlet(List<? extends BringServlet> bringServletList) {
-        this.bringServletList = bringServletList;
+    public DispatcherServlet(List<BringServlet> bringServlets) {
+        this.bringServlets = bringServlets;
     }
 
     //    @Override
@@ -47,7 +45,7 @@ public class DispatcherServlet extends FrameworkServlet {
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) {
         String requestPath = getRequestPath(req);
-        bringServletList.stream()
+        bringServlets.stream()
                 .map(bringServlet -> processBringServlet(bringServlet, requestPath))
                 .findFirst()
                 .ifPresent(response -> performResponse(response, resp));

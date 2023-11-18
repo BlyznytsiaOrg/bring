@@ -1,5 +1,6 @@
 package com.bobocode.bring.web.service;
 
+import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.web.annotation.ResponseStatus;
 import com.bobocode.bring.web.dto.ErrorResponse;
 import com.bobocode.bring.web.http.HttpStatus;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+@Component
 public class ErrorResponseCreator {
 
     public ErrorResponse prepareErrorResponse(ResponseStatus responseStatus,

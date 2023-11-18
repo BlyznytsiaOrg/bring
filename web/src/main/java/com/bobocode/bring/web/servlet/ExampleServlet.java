@@ -1,10 +1,10 @@
 package com.bobocode.bring.web.servlet;
 
+import com.bobocode.bring.core.anotation.RequestMapping;
 import com.bobocode.bring.web.annotation.GetMapping;
-import com.bobocode.bring.web.annotation.RequestMapping;
 import java.util.concurrent.ThreadLocalRandom;
 
-@RequestMapping(path = "/example")
+//@RequestMapping(path = "/example")
 public class ExampleServlet extends BaseServlet {
 
     @GetMapping(path = "/hello")
