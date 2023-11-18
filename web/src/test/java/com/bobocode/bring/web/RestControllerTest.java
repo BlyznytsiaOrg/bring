@@ -1,24 +1,19 @@
+package com.bobocode.bring.web;
+
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
-import com.bobocode.bring.web.BringWebApplication;
 import com.bobocode.bring.web.configuration.ServerProperties;
 import com.bobocode.bring.web.dto.ErrorResponse;
 import com.bobocode.bring.web.http.HttpStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import testdata.controller.ExampleRestController;
+import org.junit.jupiter.api.*;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class RestControllerTest {
     public static final String HELLO_PATH = "/example/hello";
@@ -113,8 +108,6 @@ public class RestControllerTest {
         Assertions.assertEquals(errorResponse.getMessage(), defaultMessage);
         Assertions.assertEquals(errorResponse.getCode(), HttpStatus.INTERNAL_SERVER_ERROR.getValue());
     }
-
-    private HttpRequest getHttpRequest(String url) throws URISyntaxException {
     @Test
     @DisplayName("should return boolean 'true'")
     void shouldReturnBooleanTrue() throws URISyntaxException, IOException, InterruptedException {

@@ -30,18 +30,17 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
     private final Reflections reflections;
 
-    private final Reflections internalBringReflection= new Reflections("com.bobocode.bring");
-
     private final List<AnnotationResolver> annotationResolvers = List.of(
             new ComponentBeanNameAnnotationResolver(),
             new ServiceBeanNameAnnotationResolver(),
             new InterfaceBeanNameAnnotationResolver(),
             new ConfigurationBeanNameAnnotationResolver(),
-            new ReqestMappingBeanNameAnnotationResolver()
+            new ControllerBeanNameAnnotationResolver(),
+            new RestControllerBeanNameAnnotationResolver()
     );
 
     private final List<Class<? extends Annotation>> createdBeanAnnotations = List.of(
-            Component.class, Service.class, Configuration.class, RequestMapping.class, Bean.class
+            Component.class, Service.class, Configuration.class, RestController.class, Controller.class, Bean.class
     );
 
     private final Set<String> currentlyCreatingBeans = new HashSet<>();

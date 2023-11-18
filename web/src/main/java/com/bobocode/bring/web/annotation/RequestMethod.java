@@ -1,4 +1,4 @@
-package com.bobocode.bring.core.anotation;
+package com.bobocode.bring.web.annotation;
 
 public enum RequestMethod {
 

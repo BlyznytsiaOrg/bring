@@ -61,7 +61,8 @@ public class ClassPathScannerFactory {
                 new ServiceClassPathScanner(reflections),
                 new ConfigurationClassPathScanner(reflections),
                 new ProfileClassPathScanner(reflections),
-                new RequestMappingClassPathScanner(reflections)
+                new ControllerClassPathScanner(reflections),
+                new RestControllerClassPathScanner(reflections)
         );
 
         log.info("Register ClassPathScannerFactory {}", Arrays.toString(classPathScanners.toArray()));

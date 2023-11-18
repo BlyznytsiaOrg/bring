@@ -7,7 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-@RequestMapping(method = RequestMethod.DELETE)
 public @interface DeleteMapping {
     String path() default "";
 }

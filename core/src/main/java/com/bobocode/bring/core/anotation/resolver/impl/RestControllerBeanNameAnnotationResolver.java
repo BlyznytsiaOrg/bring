@@ -1,13 +1,12 @@
 package com.bobocode.bring.core.anotation.resolver.impl;
 
-import com.bobocode.bring.core.anotation.Configuration;
+import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
 
-public class ConfigurationBeanNameAnnotationResolver implements AnnotationResolver {
-    
+public class RestControllerBeanNameAnnotationResolver implements AnnotationResolver {
     @Override
     public boolean isSupported(Class<?> clazz) {
-        return clazz.getAnnotation(Configuration.class) != null;
+        return  clazz.getAnnotation(RestController.class) != null;
     }
 
     @Override

@@ -1,10 +1,9 @@
 package com.bobocode.bring.web.servlet;
 
-import com.bobocode.bring.core.anotation.RequestMapping;
+import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.annotation.GetMapping;
 import com.bobocode.bring.web.annotation.PathVariable;
 import com.bobocode.bring.web.annotation.RequestMapping;
-import com.bobocode.bring.web.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/example")
