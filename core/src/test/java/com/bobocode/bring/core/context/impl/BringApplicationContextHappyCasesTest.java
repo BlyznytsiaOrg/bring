@@ -278,4 +278,22 @@ class BringApplicationContextHappyCasesTest {
         assertThat(aBean.getList()).isNotNull();
         assertThat(aBean.getList()).hasSize(2);
     }
+
+    @DisplayName("Should return new object when getting prototype bean")
+    @Test
+    void shouldCreatePrototypeBean() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype");
+
+        // when
+        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.Barista.class);
+        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.Barista.class);
+
+        // then
+        assertThat(barista).isNotNull();
+        assertThat(barista2).isNotNull();
+        assertThat(barista).isNotEqualTo(barista2);
+        assertThat(barista.getUuid()).isNotEqualTo(barista2.getUuid());
+    }
+    
 }

@@ -16,6 +16,7 @@ import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
 import com.bobocode.bring.core.utils.ReflectionUtils;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
@@ -24,9 +25,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.setField;
 
+@Slf4j
 public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory implements BeanRegistry, BeanDefinitionRegistry {
 
     private static final String SET_METHOD_START_PREFIX = "set";
@@ -65,11 +68,11 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
         currentlyCreatingBeans.add(beanName);
 
-        if (Objects.nonNull(beanDefinition.getMethod())) {
+        if (beanDefinition.isConfigurationBean()) {
             registerConfigurationBean(beanName, beanDefinition);
         } else {
             findAutowiredConstructor(clazz)
-                    .map(constructorToUse -> createBeanUsingConstructor(constructorToUse, beanName))
+                    .map(constructorToUse -> createBeanUsingConstructor(constructorToUse, beanName, beanDefinition))
                     .orElseThrow(() -> new NoConstructorWithAutowiredAnnotationBeanException(clazz));
 
             injectDependencies(clazz, beanName);
@@ -80,14 +83,23 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
     @SneakyThrows
     private Object registerConfigurationBean(String beanName, BeanDefinition beanDefinition) {
-        Object configObj = getSingletonObjects().get(beanDefinition.getFactoryBeanName());
+        Object configObj = Optional.ofNullable(getSingletonObjects().get(beanDefinition.getFactoryBeanName()))
+                .orElseThrow(() -> {
+                    log.info("Unable to register Bean from Configuration class [{}]: " +
+                            "Configuration class not annotated or is not of Singleton scope.", beanName);
+                    return new NoSuchBeanException(beanDefinition.getBeanClass());
+                });
+        
         List<String> methodParamNames = ReflectionUtils.getParameterNames(beanDefinition.getMethod());
 
         List<Object> methodObjs = new ArrayList<>();
         methodParamNames.forEach(paramName -> {
-            Object o = getSingletonObjects().get(paramName);
-            if (Objects.nonNull(o)) {
-                methodObjs.add(o);
+            Object object = beanDefinition.isPrototype() 
+              ? Optional.ofNullable(getPrototypeSuppliers().get(paramName)).map(Supplier::get).orElse(null) 
+              : getSingletonObjects().get(paramName);
+            
+            if (Objects.nonNull(object)) {
+                methodObjs.add(object);
             } else {
                 BeanDefinition bd = Optional.ofNullable(getBeanDefinitions().get(paramName))
                         .orElseThrow(() -> new NoSuchBeanException(beanDefinition.getBeanClass()));
@@ -96,11 +108,17 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             }
         });
 
-        Object obj = beanDefinition.getMethod().invoke(configObj, methodObjs.toArray());
+        Supplier<Object> supplier = ReflectionUtils.invokeBeanMethod(beanDefinition.getMethod(), 
+                configObj, methodObjs.toArray());
+        Object bean = supplier.get();
+        
+        if (beanDefinition.isPrototype()) {
+            addPrototypeBean(beanName, supplier);
+        } else {
+            addSingletonBean(beanName, bean);
+        }
 
-        getSingletonObjects().put(beanName, obj);
-
-        return obj;
+        return bean;
     }
 
     @Override
@@ -123,7 +141,6 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             registerListImplementations(interfaceType);
             return;
         }
-
 
         Set<Class<? extends T>> implementations = reflections.getSubTypesOf(interfaceType);
 
@@ -171,7 +188,8 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     }
 
     @SneakyThrows
-    private Object createBeanUsingConstructor(Constructor<?> constructor, String beanName) {
+    private Object createBeanUsingConstructor(Constructor<?> constructor, String beanName, 
+                                              BeanDefinition beanDefinition) {
         Parameter[] parameters = constructor.getParameters();
         Object[] dependencies = new Object[parameters.length];
 
@@ -199,14 +217,19 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             }
         }
 
-        Object bean = constructor.newInstance(dependencies);
+        Supplier<Object> supplier = ReflectionUtils.createNewInstance(constructor, dependencies);
+        Object bean = supplier.get();
 
         for (var interfaceClass : bean.getClass().getInterfaces()) {
             addInterfaceNameToImplementations(interfaceClass.getSimpleName(), bean);
         }
 
-        addBean(beanName, bean);
-
+        if (beanDefinition.isPrototype()) {
+            addPrototypeBean(beanName, supplier);
+        } else {
+            addSingletonBean(beanName, bean);
+        }
+        
         return bean;
     }
 
@@ -216,11 +239,11 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
         List<String> beanNames = clazz.isInterface()
                 ? getTypeToBeanNames().entrySet()
-                .stream()
-                .filter(entry -> clazz.isAssignableFrom(entry.getKey()))
-                .map(Map.Entry::getValue)
-                .flatMap(Collection::stream)
-                .toList()
+                    .stream()
+                    .filter(entry -> clazz.isAssignableFrom(entry.getKey()))
+                    .map(Map.Entry::getValue)
+                    .flatMap(Collection::stream)
+                    .toList()
                 : Optional.ofNullable(getTypeToBeanNames().get(clazz)).orElse(Collections.emptyList());
 
         if (beanNames.isEmpty()) {
@@ -253,12 +276,15 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         }
 
 
-        Object object = getSingletonObjects().get(beanName);
-        if (Objects.isNull(object)) {
+        Object bean = Optional.ofNullable(getSingletonObjects().get(beanName))
+          .orElse(Optional.ofNullable(getPrototypeSuppliers().get(beanName))
+            .map(Supplier::get)
+            .orElse(null));
+        if (Objects.isNull(bean)) {
             return getOrCreateBean(beanName, beanType);
         }
 
-        return object;
+        return bean;
     }
 
     private void injectDependencies(Class<?> clazz, String beanName) {
