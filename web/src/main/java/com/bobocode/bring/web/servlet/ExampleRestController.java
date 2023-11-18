@@ -1,11 +1,13 @@
 package com.bobocode.bring.web.servlet;
 
 import com.bobocode.bring.web.annotation.GetMapping;
+import com.bobocode.bring.web.annotation.PathVariable;
 import com.bobocode.bring.web.annotation.RequestMapping;
-import java.util.concurrent.ThreadLocalRandom;
+import com.bobocode.bring.web.annotation.RestController;
 
+@RestController
 @RequestMapping(path = "/example")
-public class ExampleServlet extends BaseServlet {
+public class ExampleRestController extends BaseServlet {
 
     @GetMapping(path = "/hello")
     public String sayHello() {
@@ -14,6 +16,11 @@ public class ExampleServlet extends BaseServlet {
 
     @GetMapping(path = "/number")
     public int getRandomNumber() {
-        return ThreadLocalRandom.current().nextInt(1000);
+        return 200;
+    }
+
+    @GetMapping(path = "/{id}")
+    public StringBuilder variable(@PathVariable StringBuilder id) {
+        return id;
     }
 }
