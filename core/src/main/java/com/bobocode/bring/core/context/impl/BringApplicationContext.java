@@ -68,12 +68,10 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
      * @see BeanPostProcessorDefinitionFactory
      * @see BeanPostProcessorFactory
      */
-    public BringApplicationContext(String basePackage) {
+    public BringApplicationContext(String... basePackage) {
         super(new Reflections(basePackage));
         this.classPathScannerFactory = new ClassPathScannerFactory(getReflections());
-        var bringClassPathScannerFactory = new ClassPathScannerFactory(getReflections());
         this.beansToCreate = classPathScannerFactory.getBeansToCreate();
-        this.beansToCreate.addAll(bringClassPathScannerFactory.getBeansToCreate());
         this.beanPostProcessorDefinitionFactory =  new BeanPostProcessorDefinitionFactory();
         // Create Bean definitions for classes annotated with annotations from ClassPathScanner
         register(beansToCreate);
