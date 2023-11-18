@@ -121,7 +121,7 @@ public class RestControllerTest {
     }
 
     @Test
-    @DisplayName("should throw exception with message")
+    @DisplayName("should throw exception with message for invalid boolean value")
     void shouldThrowException() throws URISyntaxException, IOException, InterruptedException {
         String pathVariable = "non_boolean";
         String expectedMessage = String.format("Failed to convert value of type 'java.lang.String' "
@@ -132,6 +132,40 @@ public class RestControllerTest {
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
         ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
 
+        Assertions.assertEquals(expectedMessage, errorResponse.getMessage());
+    }
+
+    @Test
+    @DisplayName("should return request parameters")
+    void shouldReturnRequestParams() throws URISyntaxException, IOException, InterruptedException {
+        String nameParam = "name";
+        String nameValue = "Bob";
+        String idParam = "id";
+        String idValue = "15";
+        String url = getHost() + "/example/reqParam?" + nameParam + "=" + nameValue
+              + "&" + idParam + "=" + idValue;
+        HttpRequest request = getHttpGetRequest(url);
+
+        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        Assertions.assertEquals(nameValue + " - " + idValue, actualResponse);
+    }
+
+    @Test
+    @DisplayName("should return exception for absense of required request parameter")
+    void shouldReturnExceptionForParameterAbsense()
+            throws URISyntaxException, IOException, InterruptedException {
+        String nameParam = "name1";
+        String nameValue = "Bob";
+        String idParam = "id";
+        String idValue = "15";
+        String expectedMessage = "Required request parameter 'name' "
+                + "for method parameter type 'String' is not present";
+        String url = getHost() + "/example/reqParam?" + nameParam + "=" + nameValue
+                + "&" + idParam + "=" + idValue;
+        HttpRequest request = getHttpGetRequest(url);
+
+        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
         Assertions.assertEquals(expectedMessage, errorResponse.getMessage());
     }
 

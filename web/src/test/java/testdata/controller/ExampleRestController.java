@@ -46,5 +46,4 @@ public class ExampleRestController extends BaseServlet {
     public String reqParam(@RequestParam String name, @RequestParam Long id) {
         return name + " - " + id;
     }
-
 }

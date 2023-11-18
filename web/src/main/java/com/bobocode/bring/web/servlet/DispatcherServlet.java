@@ -1,9 +1,14 @@
 package com.bobocode.bring.web.servlet;
 
 import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.web.annotation.*;
+import com.bobocode.bring.web.annotation.PathVariable;
+import com.bobocode.bring.web.annotation.RequestMapping;
+import com.bobocode.bring.web.annotation.RequestParam;
 import com.bobocode.bring.web.exception.MethodArgumentTypeMismatchException;
+import com.bobocode.bring.web.exception.MissingServletRequestParameterException;
 import com.bobocode.bring.web.exception.TypeArgumentUnsupportedException;
+import com.bobocode.bring.web.servlet.mapping.ParamsResolver;
+import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
 import com.bobocode.bring.web.utils.ReflectionUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,41 +17,21 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Component
 @Slf4j
 public class DispatcherServlet extends FrameworkServlet {
-    public static final String BRING_CONTEXT = "BRING_CONTEXT";
     private final List<BringServlet> bringServlets;
+    private final List<ParamsResolver> paramsResolvers;
 
-    public DispatcherServlet(List<BringServlet> bringServlets) {
+    public DispatcherServlet(List<BringServlet> bringServlets,
+                             List<ParamsResolver> paramsResolvers) {
         this.bringServlets = bringServlets;
+        this.paramsResolvers = paramsResolvers;
     }
-
-    //    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-//            throws ServletException, IOException {
-//        ThreadLocal<String> id = new ThreadLocal<>();
-//        id.set(UUID.randomUUID().toString());
-//        req.setAttribute("id", id);
-//        System.out.println("I am in doGet of DispatcherServlet");
-//        var bringContext = (BringApplicationContext) req.getServletContext().getAttribute(BRING_CONTEXT);
-
-//        Map<String, Object> allBeans = bringContext.getAllBeans();
-//        StringBuilder mapAsString = new StringBuilder();
-//        allBeans.keySet().stream().map(key -> key + "=" + allBeans.get(key) + ", ").forEach(mapAsString::append);
-//
-//        resp.addHeader("Trace-Id", id.get());
-//
-//        var writer = resp.getWriter();
-//        writer.println(mapAsString);
-//        writer.flush();
-//    }
 
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) {
@@ -81,15 +66,14 @@ public class DispatcherServlet extends FrameworkServlet {
                     if (checkIfPathVariableAnnotationIsPresent(parameters)) {
                         int index = requestPath.lastIndexOf("/");
                         String requestPathShortened = requestPath.substring(0, index + 1);
-                        if (requestPathShortened.equals(params.path())){
+                        if (requestPathShortened.equals(params.path())) {
                             Object[] args = prepareArgs(req, requestPath, method);
                             return method.invoke(bringServlet, args);
                         }
-                    } else if (checkIfRequestParamAnnotationIsPresent(parameters)) {
-                        if (requestPath.equals(params.path())) {
+                    } else if (checkIfRequestParamAnnotationIsPresent(parameters)
+                            && (requestPath.equals(params.path()))) {
                             Object[] args = prepareArgs(req, requestPath, method);
                             return method.invoke(bringServlet, args);
-                        }
                     }
                 }
             }
@@ -132,6 +116,11 @@ public class DispatcherServlet extends FrameworkServlet {
                 String parameterValue = req.getParameter(parameterName);
                 if (parameterValue != null) {
                     args[i] = parseToParameterType(parameterValue, type);
+                } else {
+                    throw new MissingServletRequestParameterException(
+                            String.format("Required request parameter '%s' "
+                                    + "for method parameter type '%s' is not present",
+                                    parameterName, type.getSimpleName()));
                 }
             }
         }
@@ -182,73 +171,14 @@ public class DispatcherServlet extends FrameworkServlet {
             String requestMappingPath = requestMappingAnnotation.path();
 
             for (Method method : clazz.getMethods()) {
-                if (method.isAnnotationPresent(GetMapping.class)) {
-                    GetMapping annotation = method.getAnnotation(GetMapping.class);
-                    String methodPath = getMethodPath(annotation.path());
-                    String path = requestMappingPath + methodPath;
-                    RestControllerParams restControllerParams = getRestControllerParams(method, path, RequestMethod.GET);
-                    List<RestControllerParams> getMethodParamsList = Optional.ofNullable(restConrollerParamsMap.get(RequestMethod.GET.name()))
-                            .orElse(new ArrayList<>());
-                    addSorted(restControllerParams, getMethodParamsList);
-                    restConrollerParamsMap.put(RequestMethod.GET.name(), getMethodParamsList);
-                } else if (method.isAnnotationPresent(PostMapping.class)) {
-                    PostMapping annotation = method.getAnnotation(PostMapping.class);
-                    String methodPath = annotation.path();
-                    String path = requestMappingPath + methodPath;
-                    RestControllerParams restControllerParams = getRestControllerParams(method, path, RequestMethod.POST);
-                    List<RestControllerParams> getMethodParamsList = Optional.ofNullable(restConrollerParamsMap.get(RequestMethod.POST.name()))
-                            .orElse(new ArrayList<>());
-                    addSorted(restControllerParams, getMethodParamsList);
-                    restConrollerParamsMap.put(RequestMethod.POST.name(), getMethodParamsList);
-                } else if (method.isAnnotationPresent(PutMapping.class)) {
-                    PutMapping annotation = method.getAnnotation(PutMapping.class);
-                    String methodPath = annotation.path();
-                    String path = requestMappingPath + methodPath;
-                    RestControllerParams restControllerParams = getRestControllerParams(method, path, RequestMethod.PUT);
-                    List<RestControllerParams> getMethodParamsList = Optional.ofNullable(restConrollerParamsMap.get(RequestMethod.PUT.name()))
-                            .orElse(new ArrayList<>());
-                    addSorted(restControllerParams, getMethodParamsList);
-                    restConrollerParamsMap.put(RequestMethod.PUT.name(), getMethodParamsList);
-                } else if (method.isAnnotationPresent(PatchMapping.class)) {
-                    PatchMapping annotation = method.getAnnotation(PatchMapping.class);
-                    String methodPath = annotation.path();
-                    String path = requestMappingPath + methodPath;
-                    RestControllerParams restControllerParams = getRestControllerParams(method, path, RequestMethod.PATCH);
-                    List<RestControllerParams> getMethodParamsList = Optional.ofNullable(restConrollerParamsMap.get(RequestMethod.PATCH.name()))
-                            .orElse(new ArrayList<>());
-                    addSorted(restControllerParams, getMethodParamsList);
-                    restConrollerParamsMap.put(RequestMethod.PATCH.name(), getMethodParamsList);
-                }
+                paramsResolvers.stream()
+                        .filter(resolver -> method.isAnnotationPresent(resolver.getAnnotation()))
+                        .findFirst()
+                        .ifPresent(resolver -> resolver.handleAnnotation(requestMappingPath,
+                                method, restConrollerParamsMap));
             }
         }
         return restConrollerParamsMap;
-    }
-
-    private void addSorted(RestControllerParams restControllerParams,
-                           List<RestControllerParams> methodParamsList) {
-        Parameter[] parameters = restControllerParams.method.getParameters();
-        for (Parameter parameter : parameters) {
-            if (parameter.isAnnotationPresent(PathVariable.class)) {
-                methodParamsList.add(restControllerParams);
-                return;
-            }
-        }
-        methodParamsList.add(0, restControllerParams);
-    }
-
-    private String getMethodPath(String path) {
-        if (path.contains("{") && path.contains("}")) {
-            int index = path.lastIndexOf("{");
-            path = path.substring(0, index);
-        }
-        return path;
-    }
-
-    private RestControllerParams getRestControllerParams(Method method,
-                                                         String path,
-                                                         RequestMethod requestMethod) {
-        return new RestControllerParams(method, requestMethod, path);
-
     }
 
     public String getRequestPath(HttpServletRequest req) {
@@ -258,8 +188,5 @@ public class DispatcherServlet extends FrameworkServlet {
             requestURI = requestURI.replace(contextPath, "");
         }
         return requestURI;
-    }
-
-    public record RestControllerParams(Method method, RequestMethod requestMethod, String path) {
     }
 }

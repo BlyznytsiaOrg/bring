@@ -38,8 +38,5 @@ public class WebStarter {
 
         tomcat.addServlet(servletWebServerFactory.getContextPath(), DISPATCHER_SERVLET_NAME, dispatcherServlet);
         context.addServletMappingDecoded(URL_PATTERN, DISPATCHER_SERVLET_NAME);
-
-        context.getServletContext().getServletRegistrations().entrySet()
-                .forEach(entry -> System.out.println(entry.getKey() + " - " + entry.getValue()));
     }
 }
