@@ -2,11 +2,15 @@ package testdata.controller;
 
 import com.bobocode.bring.core.anotation.RequestMapping;
 import com.bobocode.bring.web.annotation.GetMapping;
+import com.bobocode.bring.web.annotation.PathVariable;
+import com.bobocode.bring.web.annotation.RequestMapping;
+import com.bobocode.bring.web.annotation.RestController;
 import com.bobocode.bring.web.servlet.BaseServlet;
 import testdata.exception.TestCustomException;
 
+@RestController
 @RequestMapping(path = "/example")
-public class ExampleServlet extends BaseServlet {
+public class ExampleRestController extends BaseServlet {
 
     @GetMapping(path = "/hello")
     public String sayHello() {
@@ -16,6 +20,16 @@ public class ExampleServlet extends BaseServlet {
     @GetMapping(path = "/number")
     public int getNumber() {
         return 200;
+    }
+
+    @GetMapping(path = "/{id}")
+    public Long getPathVariableLong(@PathVariable Long id) {
+        return id;
+    }
+
+    @GetMapping(path = "/variable1/{value}")
+    public boolean getPathVariableBoolean(@PathVariable boolean value) {
+        return value;
     }
 
     @GetMapping(path = "/custom-exception")

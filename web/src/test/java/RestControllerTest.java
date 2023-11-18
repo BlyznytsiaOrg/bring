@@ -10,18 +10,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import testdata.controller.ExampleRestController;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class RestControllerTest {
     public static final String HELLO_PATH = "/example/hello";
     public static final String NUMBER_PATH = "/example/number";
-    public static final String NOT_EXIST_PATH = "/example/not-exist";
+    public static final String NOT_EXIST_PATH = "/not-exist";
     public static final String CUSTOM_EXCEPTION_PATH = "/example/custom-exception";
     public static final String DEFAULT_EXCEPTION_PATH = "/example/default-exception";
     private static ObjectMapper objectMapper;
@@ -44,7 +46,7 @@ public class RestControllerTest {
     @DisplayName("should return 'Hello'")
     void hello_ok() throws URISyntaxException, IOException, InterruptedException {
         String url = getHost() + HELLO_PATH;
-        HttpRequest request = getHttpRequest(url);
+        HttpRequest request = getHttpGetRequest(url);
 
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
         Assertions.assertEquals("Hello", actualResponse);
@@ -54,7 +56,7 @@ public class RestControllerTest {
     @DisplayName("should return '200'")
     void number_ok() throws IOException, InterruptedException, URISyntaxException {
         String url = getHost() + NUMBER_PATH;
-        HttpRequest request = getHttpRequest(url);
+        HttpRequest request = getHttpGetRequest(url);
 
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
         Assertions.assertEquals("200", actualResponse);
@@ -64,11 +66,22 @@ public class RestControllerTest {
     @DisplayName("should return 'This application has no explicit mapping for 'path'")
     void notExistingPath_notOk() throws URISyntaxException, IOException, InterruptedException {
         String url = getHost() + NOT_EXIST_PATH;
-        HttpRequest request = getHttpRequest(url);
+        HttpRequest request = getHttpGetRequest(url);
 
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
         Assertions.assertEquals(String.format("This application has no explicit mapping for '%s'",
                 NOT_EXIST_PATH), actualResponse);
+    }
+
+    @Test
+    @DisplayName("should return the value of path variable")
+    void pathVariable_ok() throws URISyntaxException, IOException, InterruptedException {
+        String pathVariable = "20";
+        String url = getHost() + "/example/" + pathVariable;
+        HttpRequest request = getHttpGetRequest(url);
+
+        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        Assertions.assertEquals(pathVariable, actualResponse);
     }
 
     @Test
@@ -77,7 +90,7 @@ public class RestControllerTest {
     void shouldThrowCustomException() {
         String url = getHost() + CUSTOM_EXCEPTION_PATH;
         String defaultMessage = "Bad Request";
-        HttpRequest request = getHttpRequest(url);
+        HttpRequest request = getHttpGetRequest(url);
 
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
         ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
@@ -92,7 +105,7 @@ public class RestControllerTest {
     void shouldThrowDefaultException() {
         String url = getHost() + DEFAULT_EXCEPTION_PATH;
         String defaultMessage = "TestDefaultException";
-        HttpRequest request = getHttpRequest(url);
+        HttpRequest request = getHttpGetRequest(url);
 
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
         ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
@@ -102,6 +115,33 @@ public class RestControllerTest {
     }
 
     private HttpRequest getHttpRequest(String url) throws URISyntaxException {
+    @Test
+    @DisplayName("should return boolean 'true'")
+    void shouldReturnBooleanTrue() throws URISyntaxException, IOException, InterruptedException {
+        String pathVariable = "true";
+        String url = getHost() + "/example/variable1/" + pathVariable;
+        HttpRequest request = getHttpGetRequest(url);
+
+        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        Assertions.assertEquals(pathVariable, actualResponse);
+    }
+
+    @Test
+    @DisplayName("should throw exception with message")
+    void shouldThrowException() throws URISyntaxException, IOException, InterruptedException {
+        String pathVariable = "non_boolean";
+        String expectedMessage = String.format("Failed to convert value of type 'java.lang.String' "
+                + "to required type 'boolean'; Invalid boolean value [%s]", pathVariable);
+        String url = getHost() + "/example/variable1/" + pathVariable;
+        HttpRequest request = getHttpGetRequest(url);
+
+        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
+
+        Assertions.assertEquals(expectedMessage, errorResponse.getMessage());
+    }
+
+    private HttpRequest getHttpGetRequest(String url) throws URISyntaxException {
         return HttpRequest.newBuilder()
                 .GET()
                 .uri(new URI(url))
