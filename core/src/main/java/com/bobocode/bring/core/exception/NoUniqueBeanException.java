@@ -10,8 +10,8 @@ public class NoUniqueBeanException extends RuntimeException {
     }
 
 
-    public NoUniqueBeanException(String beanName, List<Object> implementations) {
+    public <T> NoUniqueBeanException(Class<T> clazz, List<String> implementations) {
         super(String.format("No qualifying bean of type '%s' available: expected single matching bean but found %s: %s",
-                beanName, implementations.size(), Arrays.toString(implementations.toArray())));
+                clazz, implementations.size(), Arrays.toString(implementations.toArray())));
     }
 }
