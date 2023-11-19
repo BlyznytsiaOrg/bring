@@ -1,4 +1,4 @@
-package com.bobocode.bring.web;
+package com.bobocode.bring.web.servlet;
 
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
