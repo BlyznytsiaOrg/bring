@@ -1,6 +1,6 @@
 package com.bobocode.bring.web.servlet.mapping;
 
-import com.bobocode.bring.web.annotation.PathVariable;
+import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;

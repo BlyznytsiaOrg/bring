@@ -1,6 +1,6 @@
 package com.bobocode.bring.web.servlet;
 
-import com.bobocode.bring.web.http.HttpHeaders;
+import com.bobocode.bring.web.servlet.http.HttpHeaders;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

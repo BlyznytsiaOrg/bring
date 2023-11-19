@@ -1,9 +1,9 @@
 package com.bobocode.bring.web;
 
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
-import com.bobocode.bring.web.configuration.ServerProperties;
-import com.bobocode.bring.web.dto.ErrorResponse;
-import com.bobocode.bring.web.http.HttpStatus;
+import com.bobocode.bring.web.server.properties.ServerProperties;
+import com.bobocode.bring.web.servlet.error.ErrorResponse;
+import com.bobocode.bring.web.servlet.http.HttpStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;

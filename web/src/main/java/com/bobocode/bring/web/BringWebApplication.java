@@ -1,6 +1,7 @@
 package com.bobocode.bring.web;
 
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
+import com.bobocode.bring.web.servlet.WebStarter;
 
 
 public class BringWebApplication {
@@ -18,6 +19,7 @@ public class BringWebApplication {
         // Invoke Bean Post Processors, create Bean objects
         context.refresh();
 
+        // Start Web Server and add bringContext to it.
         var webStarter = context.getBean(WebStarter.class);
         webStarter.run(context);
 
@@ -32,6 +34,7 @@ public class BringWebApplication {
         // Invoke Bean Post Processors, create Bean objects
         context.refresh();
 
+        // Start Web Server and add bringContext to it.
         var webStarter = context.getBean(WebStarter.class);
         webStarter.run(context);
 
