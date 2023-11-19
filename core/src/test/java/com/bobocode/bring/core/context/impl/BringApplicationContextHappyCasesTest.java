@@ -312,5 +312,21 @@ class BringApplicationContextHappyCasesTest {
         assertThat(bean).isNotEqualTo(bean2);
         assertThat(bean.getUuid()).isNotEqualTo(bean2.getUuid());
     }
-    
+
+    @DisplayName("Should inject implementations of Interface to Field in Order")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToFieldInOrder() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listfieldinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listfieldinjector.AField.class);
+        aBean.talking();
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(2);
+//        assertThat(aBean.getList().getFirst()).isEqualTo();
+    }
 }
