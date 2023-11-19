@@ -1,4 +1,4 @@
-package com.bobocode.bring.core.schedule;
+package com.bobocode.bring.core.bpp.impl.schedule;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;

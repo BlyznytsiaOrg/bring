@@ -1,10 +1,10 @@
-package com.bobocode.bring.core.postprocessor.impl;
+package com.bobocode.bring.core.bpp.impl;
 
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.anotation.ScheduledTask;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessor;
-import com.bobocode.bring.core.schedule.CustomScheduleConfiguration;
-import com.bobocode.bring.core.schedule.CustomScheduler;
+import com.bobocode.bring.core.bpp.impl.schedule.CustomScheduleConfiguration;
+import com.bobocode.bring.core.bpp.impl.schedule.CustomScheduler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;

@@ -1,6 +1,7 @@
-package com.bobocode.bring.core.postprocessor;
+package com.bobocode.bring.core.bpp;
 
-import com.bobocode.bring.core.postprocessor.impl.ScheduleBeanPostProcessor;
+import com.bobocode.bring.core.bpp.impl.ScheduleBeanPostProcessor;
+import com.bobocode.bring.core.postprocessor.BeanPostProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
