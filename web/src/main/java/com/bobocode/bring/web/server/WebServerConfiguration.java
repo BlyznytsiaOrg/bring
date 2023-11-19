@@ -1,10 +1,10 @@
-package com.bobocode.bring.web.configuration;
+package com.bobocode.bring.web.server;
 
 import com.bobocode.bring.core.anotation.Autowired;
 import com.bobocode.bring.core.anotation.Bean;
 import com.bobocode.bring.core.anotation.Configuration;
-import com.bobocode.bring.web.embeddedTomcat.TomcatServletWebServerFactory;
-import com.bobocode.bring.web.service.ErrorResponseCreator;
+import com.bobocode.bring.web.server.properties.ServerProperties;
+import com.bobocode.bring.web.servlet.error.ErrorResponseCreator;
 import com.bobocode.bring.web.servlet.JsonExceptionHandler;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,4 +1,4 @@
-package com.bobocode.bring.web.server;
+package com.bobocode.bring.web.server.exception;
 
 public class WebServerException extends RuntimeException {
 

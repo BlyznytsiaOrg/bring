@@ -1,12 +1,12 @@
 package com.bobocode.bring.web.servlet;
 
 import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.web.annotation.PathVariable;
-import com.bobocode.bring.web.annotation.RequestMapping;
-import com.bobocode.bring.web.annotation.RequestParam;
-import com.bobocode.bring.web.exception.MethodArgumentTypeMismatchException;
-import com.bobocode.bring.web.exception.MissingServletRequestParameterException;
-import com.bobocode.bring.web.exception.TypeArgumentUnsupportedException;
+import com.bobocode.bring.web.servlet.annotation.PathVariable;
+import com.bobocode.bring.web.servlet.annotation.RequestMapping;
+import com.bobocode.bring.web.servlet.annotation.RequestParam;
+import com.bobocode.bring.web.servlet.exception.MethodArgumentTypeMismatchException;
+import com.bobocode.bring.web.servlet.exception.MissingServletRequestParameterException;
+import com.bobocode.bring.web.servlet.exception.TypeArgumentUnsupportedException;
 import com.bobocode.bring.web.servlet.mapping.ParamsResolver;
 import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
 import com.bobocode.bring.web.utils.ReflectionUtils;

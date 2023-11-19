@@ -1,8 +1,8 @@
 package com.bobocode.bring.web.servlet.mapping;
 
 import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.web.annotation.DeleteMapping;
-import com.bobocode.bring.web.annotation.RequestMethod;
+import com.bobocode.bring.web.servlet.annotation.DeleteMapping;
+import com.bobocode.bring.web.servlet.annotation.RequestMethod;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;

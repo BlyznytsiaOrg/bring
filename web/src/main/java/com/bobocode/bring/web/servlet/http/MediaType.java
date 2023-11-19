@@ -1,4 +1,4 @@
-package com.bobocode.bring.web.http;
+package com.bobocode.bring.web.servlet.http;
 
 import lombok.experimental.UtilityClass;
 

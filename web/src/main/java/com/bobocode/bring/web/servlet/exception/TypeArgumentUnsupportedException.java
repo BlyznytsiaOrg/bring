@@ -1,4 +1,4 @@
-package com.bobocode.bring.web.exception;
+package com.bobocode.bring.web.servlet.exception;
 
 public class TypeArgumentUnsupportedException extends RuntimeException {
 

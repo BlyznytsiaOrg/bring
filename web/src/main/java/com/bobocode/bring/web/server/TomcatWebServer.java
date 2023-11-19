@@ -1,8 +1,8 @@
-package com.bobocode.bring.web.embeddedTomcat;
+package com.bobocode.bring.web.server;
 
-import com.bobocode.bring.web.server.ConnectorStartFailedException;
-import com.bobocode.bring.web.server.WebServer;
-import com.bobocode.bring.web.server.WebServerException;
+import com.bobocode.bring.web.server.exception.ConnectorStartFailedException;
+import com.bobocode.bring.web.server.exception.WebServerException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class TomcatWebServer implements WebServer {
+    @Getter
     private final Tomcat tomcat;
     private final Object monitor = new Object();
     private volatile boolean started;
@@ -21,10 +22,6 @@ public class TomcatWebServer implements WebServer {
     public TomcatWebServer(Tomcat tomcat) {
         this.tomcat = tomcat;
         initialize();
-    }
-
-    public Tomcat getTomcat() {
-        return tomcat;
     }
 
     private void initialize() {

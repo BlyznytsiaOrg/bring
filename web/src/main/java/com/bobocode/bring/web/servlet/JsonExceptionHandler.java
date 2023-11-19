@@ -1,10 +1,10 @@
 package com.bobocode.bring.web.servlet;
 
 import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.web.annotation.ResponseStatus;
-import com.bobocode.bring.web.configuration.ServerProperties;
-import com.bobocode.bring.web.http.MediaType;
-import com.bobocode.bring.web.service.ErrorResponseCreator;
+import com.bobocode.bring.web.servlet.annotation.ResponseStatus;
+import com.bobocode.bring.web.server.properties.ServerProperties;
+import com.bobocode.bring.web.servlet.http.MediaType;
+import com.bobocode.bring.web.servlet.error.ErrorResponseCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

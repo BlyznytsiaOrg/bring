@@ -2,11 +2,11 @@ package com.bobocode.bring.web;
 
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
-import com.bobocode.bring.web.embeddedTomcat.TomcatServletWebServerFactory;
-import com.bobocode.bring.web.embeddedTomcat.TomcatWebServer;
+import com.bobocode.bring.web.server.TomcatServletWebServerFactory;
+import com.bobocode.bring.web.server.TomcatWebServer;
 import com.bobocode.bring.web.servlet.DispatcherServlet;
 import com.bobocode.bring.web.servlet.JsonExceptionHandler;
-import com.bobocode.bring.web.servlet.ServletWebServerFactory;
+import com.bobocode.bring.web.server.ServletWebServerFactory;
 import jakarta.servlet.ServletContext;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;

@@ -1,9 +1,8 @@
-package com.bobocode.bring.web.service;
+package com.bobocode.bring.web.servlet.error;
 
 import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.web.annotation.ResponseStatus;
-import com.bobocode.bring.web.dto.ErrorResponse;
-import com.bobocode.bring.web.http.HttpStatus;
+import com.bobocode.bring.web.servlet.annotation.ResponseStatus;
+import com.bobocode.bring.web.servlet.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

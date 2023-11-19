@@ -1,8 +1,7 @@
-package com.bobocode.bring.web.embeddedTomcat;
+package com.bobocode.bring.web.server;
 
-import com.bobocode.bring.web.server.WebServer;
-import com.bobocode.bring.web.server.WebServerException;
-import com.bobocode.bring.web.servlet.ServletWebServerFactory;
+import com.bobocode.bring.web.server.exception.WebServerException;
+import lombok.Getter;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 
@@ -11,8 +10,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class TomcatServletWebServerFactory implements ServletWebServerFactory {
+    @Getter
     private int port = 8080;
     private String contextPath = "";
+    @Getter
     private File baseDirectory;
     private Context context;
 
@@ -46,14 +47,6 @@ public class TomcatServletWebServerFactory implements ServletWebServerFactory {
 
     public void setPort(int port) {
         this.port = port;
-    }
-
-    public File getBaseDirectory() {
-        return baseDirectory;
-    }
-
-    public int getPort() {
-        return this.port;
     }
 
     @Override

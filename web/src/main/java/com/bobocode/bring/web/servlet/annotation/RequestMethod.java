@@ -1,4 +1,4 @@
-package com.bobocode.bring.web.annotation;
+package com.bobocode.bring.web.servlet.annotation;
 
 public enum RequestMethod {
 

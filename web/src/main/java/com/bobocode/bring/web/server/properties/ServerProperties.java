@@ -1,4 +1,4 @@
-package com.bobocode.bring.web.configuration;
+package com.bobocode.bring.web.server.properties;
 
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.anotation.Value;

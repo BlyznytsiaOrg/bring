@@ -1,10 +1,8 @@
 package com.bobocode.bring.web.servlet;
 
-import com.bobocode.bring.core.anotation.RestController;
-import com.bobocode.bring.web.annotation.GetMapping;
-import com.bobocode.bring.web.annotation.PathVariable;
-import com.bobocode.bring.web.annotation.RequestMapping;
-import com.bobocode.bring.web.annotation.RequestParam;
+import com.bobocode.bring.web.servlet.annotation.GetMapping;
+import com.bobocode.bring.web.servlet.annotation.PathVariable;
+import com.bobocode.bring.web.servlet.annotation.RequestParam;
 
 //TODO need to delete them later
 //@RestController

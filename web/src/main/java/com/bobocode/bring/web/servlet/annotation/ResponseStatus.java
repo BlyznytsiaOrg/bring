@@ -1,6 +1,6 @@
-package com.bobocode.bring.web.annotation;
+package com.bobocode.bring.web.servlet.annotation;
 
-import com.bobocode.bring.web.http.HttpStatus;
+import com.bobocode.bring.web.servlet.http.HttpStatus;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

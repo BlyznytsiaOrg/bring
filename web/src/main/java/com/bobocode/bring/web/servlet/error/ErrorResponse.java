@@ -1,6 +1,5 @@
-package com.bobocode.bring.web.dto;
+package com.bobocode.bring.web.servlet.error;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.time.LocalDateTime;
