@@ -52,7 +52,7 @@ class BringApplicationContextNegativeCasesTest {
     void shouldThrowExceptionWhenWeHaveTwoDependenciesForOneInterface() {
         //given
         var expectedMessage = "No qualifying bean of type 'interface com.bobocode.bring.testdata.di.negative.oneinterfacetwodependency.Drink'" +
-                " available: expected single matching bean but found 2: [Latte, Espresso]";
+                " available: expected single matching bean but found 2: [Espresso,Latte]";
         //when
         Executable executable = () -> {
             var bringApplicationContext = BringApplication.run(DEMO_PACKAGE + ".oneinterfacetwodependency");
