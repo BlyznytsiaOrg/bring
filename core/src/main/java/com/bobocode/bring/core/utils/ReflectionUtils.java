@@ -1,5 +1,6 @@
 package com.bobocode.bring.core.utils;
 
+import com.bobocode.bring.core.exception.BringGeneralException;
 import com.thoughtworks.paranamer.AnnotationParanamer;
 import com.thoughtworks.paranamer.BytecodeReadingParanamer;
 import com.thoughtworks.paranamer.CachingParanamer;
@@ -13,6 +14,7 @@ import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 @UtilityClass
 public final class ReflectionUtils {
@@ -55,5 +57,25 @@ public final class ReflectionUtils {
         return Arrays.stream(implementation.getAnnotations())
                 .map(Annotation::annotationType)
                 .anyMatch(createdBeanAnnotations::contains);
+    }
+
+    public static Supplier<Object> invokeBeanMethod(Method method, Object obj, Object[] params) {
+        return () -> {
+            try {
+                return method.invoke(obj, params);
+            } catch (Exception e) {
+                throw new BringGeneralException(e);
+            }
+        };
+    }
+
+    public static Supplier<Object> createNewInstance(Constructor<?> constructor, Object[] args) {
+        return () -> {
+            try {
+                return constructor.newInstance(args);
+            } catch (Exception e) {
+                throw new BringGeneralException(e);
+            }
+        };
     }
 }
