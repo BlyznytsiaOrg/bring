@@ -5,9 +5,7 @@ import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.RequestBody;
 import com.bobocode.bring.web.servlet.annotation.RequestMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestParam;
-import com.bobocode.bring.web.servlet.exception.MethodArgumentTypeMismatchException;
 import com.bobocode.bring.web.servlet.exception.MissingServletRequestParameterException;
-import com.bobocode.bring.web.servlet.exception.TypeArgumentUnsupportedException;
 import com.bobocode.bring.web.servlet.mapping.ParamsResolver;
 import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
 import com.bobocode.bring.web.utils.ReflectionUtils;
@@ -16,7 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
@@ -24,6 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getRequestPath;
+import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterType;
 
 @Component
 @Slf4j
@@ -51,9 +55,10 @@ public class DispatcherServlet extends FrameworkServlet {
 
     @SneakyThrows
     public void performResponse(Object response, HttpServletResponse resp) {
-        PrintWriter writer = resp.getWriter();
-        writer.print(response);
-        writer.flush();
+        try (PrintWriter writer = resp.getWriter()){
+            writer.print(response);
+            writer.flush();
+        }
     }
 
     @SneakyThrows
@@ -61,28 +66,23 @@ public class DispatcherServlet extends FrameworkServlet {
                                         HttpServletResponse resp) {
         String requestPath = getRequestPath(req);
         String methodName = req.getMethod();
-        Map<String, List<RestControllerParams>> restControllerParamsMap = getRestControllerParams(bringServlet.getClass());
-        List<RestControllerParams> methodParamsList = restControllerParamsMap.get(methodName);
+        var restControllerParamsMap = getRestControllerParams(bringServlet.getClass());
+        var methodParamsList = restControllerParamsMap.get(methodName);
         if (methodParamsList != null) {
             for (RestControllerParams params : methodParamsList) {
                 Method method = params.method();
                 Parameter[] parameters = method.getParameters();
-                if (parameters.length == 0) {
-                    if (requestPath.equals(params.path())) {
-                        return method.invoke(bringServlet);
-                    }
+                if (parameters.length == 0 && requestPath.equals(params.path())) {
+                    return method.invoke(bringServlet);
                 } else {
-                    Object[] args = new Object[parameters.length];
                     if (checkIfPathVariableAnnotationIsPresent(parameters)) {
                         int index = requestPath.lastIndexOf("/");
                         String requestPathShortened = requestPath.substring(0, index + 1);
                         if (requestPathShortened.equals(params.path())) {
-                            prepareArgs(req, resp, requestPath, method, args);
-                            return method.invoke(bringServlet, args);
+                            return invokeMethodWithArgs(bringServlet, req, resp, requestPath, method);
                         }
                     } else if (requestPath.equals(params.path())) {
-                        prepareArgs(req, resp, requestPath, method, args);
-                        return method.invoke(bringServlet, args);
+                        return invokeMethodWithArgs(bringServlet, req, resp, requestPath, method);
                     }
                 }
             }
@@ -94,88 +94,72 @@ public class DispatcherServlet extends FrameworkServlet {
         return Arrays.stream(parameters).anyMatch(parameter -> parameter.isAnnotationPresent(PathVariable.class));
     }
 
+    private Object invokeMethodWithArgs(BringServlet bringServlet, HttpServletRequest req, HttpServletResponse resp,
+                                        String requestPath, Method method)
+            throws InvocationTargetException, IllegalAccessException {
+        Object[] args = prepareArgs(req, resp, requestPath, method);
+        return method.invoke(bringServlet, args);
+    }
+
     @SneakyThrows
-    private void prepareArgs(HttpServletRequest req, HttpServletResponse resp,
-                             String requestPath, Method method, Object[] args) {
+    private Object[] prepareArgs(HttpServletRequest req, HttpServletResponse resp,
+                             String requestPath, Method method) {
         Parameter[] parameters = method.getParameters();
+        Object[] args = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             if (parameters[i].isAnnotationPresent(PathVariable.class)) {
-                int index = requestPath.lastIndexOf("/");
-                String pathVariable = requestPath.substring(index + 1);
-                Class<?> type = parameters[i].getType();
-                args[i] = parseToParameterType(pathVariable, type);
+                extractPathVariable(requestPath, args, parameters, i);
             } else if (parameters[i].isAnnotationPresent(RequestParam.class)) {
-                List<String> parameterNames = ReflectionUtils.getParameterNames(method);
-                String parameterName = parameterNames.get(i);
-                Class<?> type = parameters[i].getType();
-                String parameterValue = req.getParameter(parameterName);
-                if (parameterValue != null) {
-                    args[i] = parseToParameterType(parameterValue, type);
-                } else {
-                    throw new MissingServletRequestParameterException(
-                            String.format("Required request parameter '%s' "
-                                            + "for method parameter type '%s' is not present",
-                                    parameterName, type.getSimpleName()));
-                }
+                extractRequestParam(req, method, args, i, parameters);
             } else if (parameters[i].isAnnotationPresent(RequestBody.class)) {
-                Class<?> type = parameters[i].getType();
-                if (type.equals(String.class)) {
-                    args[i] = req.getReader().lines().collect(Collectors.joining());
-                } else {
-                    args[i] = objectMapper.readValue(req.getReader(), type);
-                }
+                extractRequestBody(req, args, parameters, i);
             } else if (parameters[i].getType().equals(HttpServletRequest.class)) {
                 args[i] = req;
             } else if (parameters[i].getType().equals(HttpServletResponse.class)) {
                 args[i] = resp;
             }
         }
+
+        return args;
     }
 
-    private Object parseToParameterType(String pathVariable, Class<?> type) {
-        Object obj;
-        try {
-            if (type.equals(String.class)) {
-                obj = pathVariable;
-            } else if (type.equals(Long.class) || type.equals(long.class)) {
-                obj = Long.parseLong(pathVariable);
-            } else if (type.equals(Double.class) || type.equals(double.class)) {
-                obj = Double.parseDouble(pathVariable);
-            } else if (type.equals(Float.class) || type.equals(float.class)) {
-                obj = Float.parseFloat(pathVariable);
-            } else if (type.equals(Integer.class) || type.equals(int.class)) {
-                obj = Integer.parseInt(pathVariable);
-            } else if (type.equals(Byte.class) || type.equals(byte.class)) {
-                obj = Byte.parseByte(pathVariable);
-            } else if (type.equals(Short.class) || type.equals(short.class)) {
-                obj = Short.parseShort(pathVariable);
-            } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
-                if (pathVariable.equals("true")) {
-                    obj = Boolean.TRUE;
-                } else if (pathVariable.equals("false")) {
-                    obj = Boolean.FALSE;
-                } else {
-                    throw new MethodArgumentTypeMismatchException(
-                            String.format("Failed to convert value of type 'java.lang.String' "
-                                    + "to required type '%s'; Invalid value [%s]", type.getName(), pathVariable));
-                }
-            } else {
-                throw new TypeArgumentUnsupportedException(
-                        String.format("The type parameter: '%s' is not supported", type.getName()));
-            }
-            return obj;
-        } catch (NumberFormatException exception) {
-            throw new MethodArgumentTypeMismatchException(
-                    String.format("Failed to convert value of type 'java.lang.String' "
-                            + "to required type '%s'; Invalid value [%s]", type.getName(), pathVariable));
+    private void extractRequestBody(HttpServletRequest req, Object[] args, Parameter[] parameters, int i)
+            throws IOException {
+        Class<?> type = parameters[i].getType();
+        if (type.equals(String.class)) {
+            args[i] = req.getReader().lines().collect(Collectors.joining());
+        } else {
+            args[i] = objectMapper.readValue(req.getReader(), type);
         }
+    }
+
+    private static void extractRequestParam(HttpServletRequest req, Method method, Object[] args, int i,
+                                            Parameter[] parameters) {
+        List<String> parameterNames = ReflectionUtils.getParameterNames(method);
+        String parameterName = parameterNames.get(i);
+        Class<?> type = parameters[i].getType();
+        String parameterValue = req.getParameter(parameterName);
+        if (parameterValue != null) {
+            args[i] = parseToParameterType(parameterValue, type);
+        } else {
+            throw new MissingServletRequestParameterException(
+                    String.format("Required request parameter '%s' "
+                                    + "for method parameter type '%s' is not present",
+                            parameterName, type.getSimpleName()));
+        }
+    }
+
+    private static void extractPathVariable(String requestPath, Object[] args, Parameter[] parameters, int i) {
+        int index = requestPath.lastIndexOf("/");
+        String pathVariable = requestPath.substring(index + 1);
+        Class<?> type = parameters[i].getType();
+        args[i] = parseToParameterType(pathVariable, type);
     }
 
     public Map<String, List<RestControllerParams>> getRestControllerParams(Class<?> clazz) {
         Map<String, List<RestControllerParams>> restConrollerParamsMap = new HashMap<>();
         if (clazz.isAnnotationPresent(RequestMapping.class)) {
-            RequestMapping requestMappingAnnotation = clazz.getAnnotation(RequestMapping.class);
-            String requestMappingPath = requestMappingAnnotation.path();
+            String requestMappingPath = clazz.getAnnotation(RequestMapping.class).path();
 
             for (Method method : clazz.getMethods()) {
                 paramsResolvers.stream()
@@ -186,14 +170,5 @@ public class DispatcherServlet extends FrameworkServlet {
             }
         }
         return restConrollerParamsMap;
-    }
-
-    public String getRequestPath(HttpServletRequest req) {
-        String contextPath = req.getContextPath();
-        String requestURI = req.getRequestURI();
-        if (requestURI.startsWith(contextPath)) {
-            requestURI = requestURI.replace(contextPath, "");
-        }
-        return requestURI;
     }
 }
