@@ -2,6 +2,7 @@ package com.bobocode.bring.web.servlet;
 
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
+import com.bobocode.bring.web.servlet.annotation.RequestBody;
 import com.bobocode.bring.web.servlet.annotation.RequestMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestParam;
 import com.bobocode.bring.web.servlet.exception.MethodArgumentTypeMismatchException;
@@ -10,6 +11,7 @@ import com.bobocode.bring.web.servlet.exception.TypeArgumentUnsupportedException
 import com.bobocode.bring.web.servlet.mapping.ParamsResolver;
 import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
 import com.bobocode.bring.web.utils.ReflectionUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -20,23 +22,28 @@ import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class DispatcherServlet extends FrameworkServlet {
     private final List<BringServlet> bringServlets;
     private final List<ParamsResolver> paramsResolvers;
+    private final ObjectMapper objectMapper;
 
     public DispatcherServlet(List<BringServlet> bringServlets,
-                             List<ParamsResolver> paramsResolvers) {
+                             List<ParamsResolver> paramsResolvers,
+                             ObjectMapper objectMapper) {
         this.bringServlets = bringServlets;
         this.paramsResolvers = paramsResolvers;
+        this.objectMapper = objectMapper;
     }
 
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) {
+
         bringServlets.stream()
-                .map(bringServlet -> processRestController(bringServlet, req))
+                .map(bringServlet -> processRestController(bringServlet, req, resp))
                 .findFirst()
                 .ifPresent(response -> performResponse(response, resp));
     }
@@ -49,7 +56,8 @@ public class DispatcherServlet extends FrameworkServlet {
     }
 
     @SneakyThrows
-    public Object processRestController(BringServlet bringServlet, HttpServletRequest req) {
+    public Object processRestController(BringServlet bringServlet, HttpServletRequest req,
+                                        HttpServletResponse resp) {
         String requestPath = getRequestPath(req);
         String methodName = req.getMethod();
         Map<String, List<RestControllerParams>> restControllerParamsMap = getRestControllerParams(bringServlet.getClass());
@@ -63,31 +71,22 @@ public class DispatcherServlet extends FrameworkServlet {
                         return method.invoke(bringServlet);
                     }
                 } else {
+                    Object[] args = new Object[parameters.length];
                     if (checkIfPathVariableAnnotationIsPresent(parameters)) {
                         int index = requestPath.lastIndexOf("/");
                         String requestPathShortened = requestPath.substring(0, index + 1);
                         if (requestPathShortened.equals(params.path())) {
-                            Object[] args = prepareArgs(req, requestPath, method);
+                            prepareArgs(req, resp, requestPath, method, args);
                             return method.invoke(bringServlet, args);
                         }
-                    } else if (checkIfRequestParamAnnotationIsPresent(parameters)
-                            && (requestPath.equals(params.path()))) {
-                            Object[] args = prepareArgs(req, requestPath, method);
-                            return method.invoke(bringServlet, args);
+                    } else if (requestPath.equals(params.path())) {
+                        prepareArgs(req, resp, requestPath, method, args);
+                        return method.invoke(bringServlet, args);
                     }
                 }
             }
         }
         return String.format("This application has no explicit mapping for '%s'", requestPath);
-    }
-
-    private boolean checkIfRequestParamAnnotationIsPresent(Parameter[] parameters) {
-        for (Parameter parameter : parameters) {
-            if (parameter.isAnnotationPresent(RequestParam.class)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private boolean checkIfPathVariableAnnotationIsPresent(Parameter[] parameters) {
@@ -99,10 +98,10 @@ public class DispatcherServlet extends FrameworkServlet {
         return false;
     }
 
-    private Object[] prepareArgs(HttpServletRequest req, String requestPath,
-                                 Method method) {
+    @SneakyThrows
+    private void prepareArgs(HttpServletRequest req, HttpServletResponse resp,
+                             String requestPath, Method method, Object[] args) {
         Parameter[] parameters = method.getParameters();
-        Object[] args = new Object[parameters.length];
         for (int i = 0; i < parameters.length; i++) {
             if (parameters[i].isAnnotationPresent(PathVariable.class)) {
                 int index = requestPath.lastIndexOf("/");
@@ -119,12 +118,22 @@ public class DispatcherServlet extends FrameworkServlet {
                 } else {
                     throw new MissingServletRequestParameterException(
                             String.format("Required request parameter '%s' "
-                                    + "for method parameter type '%s' is not present",
+                                            + "for method parameter type '%s' is not present",
                                     parameterName, type.getSimpleName()));
                 }
+            } else if (parameters[i].isAnnotationPresent(RequestBody.class)) {
+                Class<?> type = parameters[i].getType();
+                if (type.equals(String.class)) {
+                    args[i] = req.getReader().lines().collect(Collectors.joining());
+                } else {
+                    args[i] = objectMapper.readValue(req.getReader(), type);
+                }
+            } else if (parameters[i].getType().equals(HttpServletRequest.class)) {
+                args[i] = req;
+            } else if (parameters[i].getType().equals(HttpServletResponse.class)) {
+                args[i] = resp;
             }
         }
-        return args;
     }
 
     private Object parseToParameterType(String pathVariable, Class<?> type) {
@@ -142,6 +151,8 @@ public class DispatcherServlet extends FrameworkServlet {
                 obj = Integer.parseInt(pathVariable);
             } else if (type.equals(Byte.class) || type.equals(byte.class)) {
                 obj = Byte.parseByte(pathVariable);
+            } else if (type.equals(Short.class) || type.equals(short.class)) {
+                obj = Short.parseShort(pathVariable);
             } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
                 if (pathVariable.equals("true")) {
                     obj = Boolean.TRUE;

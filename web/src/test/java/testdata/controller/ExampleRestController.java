@@ -3,9 +3,14 @@ package testdata.controller;
 import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
+import com.bobocode.bring.web.servlet.annotation.PostMapping;
+import com.bobocode.bring.web.servlet.annotation.PutMapping;
+import com.bobocode.bring.web.servlet.annotation.RequestBody;
 import com.bobocode.bring.web.servlet.annotation.RequestMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestParam;
 import com.bobocode.bring.web.servlet.BaseServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import testdata.exception.TestCustomException;
 
 @RestController
@@ -46,4 +51,30 @@ public class ExampleRestController extends BaseServlet {
     public String reqParam(@RequestParam String name, @RequestParam Long id) {
         return name + " - " + id;
     }
+
+    @PutMapping(path = "/request")
+    public int request(HttpServletRequest request) {
+        return request.getContentLength();
+    }
+
+    @GetMapping(path = "/response")
+    public String response(HttpServletResponse response) {
+        response.setContentType("application/json");
+        return response.getContentType();
+    }
+
+    @PostMapping(path = "/bodyAsString")
+    public String bodyString(@RequestBody String body) {
+        return body;
+    }
+
+    @PostMapping(path = "/bodyAsEntity")
+    public User bodyEntity(@RequestBody User user) {
+        return user;
+    }
+
+
+    public record User(String name, int age) {
+    }
 }
+
