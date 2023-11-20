@@ -15,7 +15,9 @@ public class BeanDefinition {
     
     private BeanTypeEnum beanType;
     
-    private String scope;
+    private BeanScope scope;
+    
+    private ProxyMode proxyMode;
     
     private Method method;
     
@@ -36,7 +38,11 @@ public class BeanDefinition {
     }
     
     public boolean isPrototype() {
-        return Objects.equals(scope, BeanScopeUtils.PROTOTYPE);
+        return scope == BeanScope.PROTOTYPE;
+    }
+    
+    public boolean isProxy() {
+        return proxyMode == ProxyMode.ON;
     }
     
 }

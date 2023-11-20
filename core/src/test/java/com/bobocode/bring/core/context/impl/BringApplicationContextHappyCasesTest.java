@@ -9,6 +9,8 @@ import com.bobocode.bring.testdata.di.positive.constructorproperties.ProfileBean
 import com.bobocode.bring.testdata.di.positive.contract.Barista;
 import com.bobocode.bring.testdata.di.positive.fieldproperties.ProfileBean;
 import com.bobocode.bring.testdata.di.positive.fullinjection.GetInfoFromExternalServicesUseCase;
+import com.bobocode.bring.testdata.di.positive.prototype.off.CoffeeShop;
+import com.bobocode.bring.testdata.di.positive.prototype.off.SimpleClass;
 import com.bobocode.bring.testdata.di.positive.setter.A;
 import com.bobocode.bring.testdata.di.positive.setter.B;
 import com.bobocode.bring.testdata.di.positive.setterproperties.ProfileBeanSetter;
@@ -283,11 +285,11 @@ class BringApplicationContextHappyCasesTest {
     @Test
     void shouldCreatePrototypeBean() {
         // given
-        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype");
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.off");
 
         // when
-        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.Barista.class);
-        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.Barista.class);
+        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.off.Barista.class);
+        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.off.Barista.class);
 
         // then
         assertThat(barista).isNotNull();
@@ -300,17 +302,105 @@ class BringApplicationContextHappyCasesTest {
     @Test
     void shouldCreatePrototypeConfigurationBean() {
         // given
-        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype");
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.off");
 
         // when
-        var bean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.SimpleClass.class);
-        var bean2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.SimpleClass.class);
+        var bean = bringApplicationContext.getBean(SimpleClass.class);
+        var bean2 = bringApplicationContext.getBean(SimpleClass.class);
 
         // then
         assertThat(bean).isNotNull();
         assertThat(bean2).isNotNull();
         assertThat(bean).isNotEqualTo(bean2);
         assertThat(bean.getUuid()).isNotEqualTo(bean2.getUuid());
+    }
+
+    @DisplayName("Should return same prototype object when proxy mode OFF")
+    @Test
+    void shouldCreateSingletonWithPrototypeBean() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.off");
+
+        // when
+        var coffeeShop = bringApplicationContext.getBean(CoffeeShop.class);
+        var coffeeShop2 = bringApplicationContext.getBean(CoffeeShop.class);
+
+        // then
+        assertThat(coffeeShop).isNotNull();
+        assertThat(coffeeShop2).isNotNull();
+        assertThat(coffeeShop).isEqualTo(coffeeShop2);
+        assertThat(coffeeShop.getBarista().getUuid()).isEqualTo(coffeeShop2.getBarista().getUuid());
+    }
+
+    @DisplayName("Should return new object when getting prototype ProxyMode ON bean")
+    @Test
+    void shouldCreatePrototypeBean_withProxy() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.on");
+
+        // when
+        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.Barista.class);
+        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.Barista.class);
+
+        // then
+        assertThat(barista).isNotNull();
+        assertThat(barista2).isNotNull();
+        assertThat(barista).isNotEqualTo(barista2);
+        assertThat(barista.getUuid()).isNotEqualTo(barista2.getUuid());
+    }
+
+    @DisplayName("Should return new object when getting prototype ProxyMode ON bean injection via interface")
+    @Test
+    void shouldCreatePrototypeBeanInterfaceInjection_withProxy() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.onwithinterface");
+
+        // when
+        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.onwithinterface.Barista.class);
+        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.onwithinterface.Barista.class);
+
+        // then
+        assertThat(barista).isNotNull();
+        assertThat(barista2).isNotNull();
+        assertThat(barista).isNotEqualTo(barista2);
+        assertThat(barista.getUuid()).isNotEqualTo(barista2.getUuid());
+    }
+
+    @DisplayName("Should return new object when getting prototype ProxyMode ON configuration bean")
+    @Test
+    void shouldCreatePrototypeConfigurationBean_withProxy() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.on");
+
+        // when
+        var bean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.SimpleClass.class);
+        var bean2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.SimpleClass.class);
+
+        // then vi
+        assertThat(bean).isNotNull();
+        assertThat(bean2).isNotNull();
+        assertThat(bean).isNotEqualTo(bean2);
+        assertThat(bean.getUuid()).isNotEqualTo(bean2.getUuid());
+    }
+
+    @DisplayName("Should return different prototype object when proxy mode ON")
+    @Test
+    void shouldCreateSingletonWithPrototypeBean_withProxy() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.on");
+
+        // when
+        var coffeeShop = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.CoffeeShop.class);
+        var coffeeShop2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.CoffeeShop.class);
+
+        // then
+        assertThat(coffeeShop).isNotNull();
+        assertThat(coffeeShop2).isNotNull();
+        assertThat(coffeeShop).isEqualTo(coffeeShop2);
+        assertThat(coffeeShop.getBarista()).isNotEqualTo(coffeeShop2.getBarista());
+        assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop2.getBarista().getUuid());
+        assertThat(coffeeShop.getBarista()).isNotEqualTo(coffeeShop.getBarista());
+        assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop.getBarista().getUuid());
     }
     
 }

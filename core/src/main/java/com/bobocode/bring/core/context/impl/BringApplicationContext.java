@@ -87,6 +87,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
                     .beanClass(clazz)
                     .beanType(BeanTypeEnum.findBeanType(clazz))
                     .scope(BeanScopeUtils.findBeanScope(clazz))
+                    .proxyMode(BeanScopeUtils.findProxyMode(clazz))
                     .factoryBeanName(clazz.getSimpleName())
                     .build();
 

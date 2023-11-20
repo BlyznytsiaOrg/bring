@@ -217,7 +217,8 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             }
         }
 
-        Supplier<Object> supplier = ReflectionUtils.createNewInstance(constructor, dependencies);
+        Supplier<Object> supplier = ReflectionUtils.createNewInstance(constructor, dependencies, 
+                beanDefinition.getBeanClass(), beanDefinition.isProxy());
         Object bean = supplier.get();
 
         for (var interfaceClass : bean.getClass().getInterfaces()) {
