@@ -1,5 +1,6 @@
 package com.bobocode.bring.web;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static testdata.controller.ExampleRestController.User;
 
@@ -220,16 +221,17 @@ public class RestControllerTest {
     @Test
     @Order(13)
     @DisplayName("should return body as String")
-    void bodyAsString() throws URISyntaxException, IOException, InterruptedException {
-        String body = "{\n"
-                + "  \"name\": \"Bob\",\n"
-                + "  \"age\": 22\n"
-                + "}";
-
+    void shouldReturnBodyAsStringAndCheckIt() throws URISyntaxException, IOException, InterruptedException {
+        //given
+        String body = "{  \"name\": \"Bob\",  \"age\": 22}";
         String url = getHost() + BODY_AS_STRING;
         HttpRequest request = getHttpPostRequest(url, body);
+
+        //when
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-        assertEquals(body, actualResponse);
+
+        //then
+        assertThat(actualResponse).isEqualTo(body);
     }
 
     @Test

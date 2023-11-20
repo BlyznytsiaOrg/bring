@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,12 +91,7 @@ public class DispatcherServlet extends FrameworkServlet {
     }
 
     private boolean checkIfPathVariableAnnotationIsPresent(Parameter[] parameters) {
-        for (Parameter parameter : parameters) {
-            if (parameter.isAnnotationPresent(PathVariable.class)) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.stream(parameters).anyMatch(parameter -> parameter.isAnnotationPresent(PathVariable.class));
     }
 
     @SneakyThrows
