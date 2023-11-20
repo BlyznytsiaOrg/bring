@@ -399,8 +399,8 @@ class BringApplicationContextHappyCasesTest {
         assertThat(coffeeShop).isEqualTo(coffeeShop2);
         assertThat(coffeeShop.getBarista()).isNotEqualTo(coffeeShop2.getBarista());
         assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop2.getBarista().getUuid());
-        assertThat(coffeeShop.getBarista()).isNotEqualTo(coffeeShop.getBarista());
-        assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop.getBarista().getUuid());
+        assertThat(coffeeShop.getBarista()).isNotEqualTo(coffeeShop2.getBarista());
+        assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop2.getBarista().getUuid());
     }
     
 }
