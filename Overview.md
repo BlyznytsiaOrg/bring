@@ -10,6 +10,37 @@ Others operate as self-contained entities within a single jar, utilizing embedde
 Bring's adaptability addresses these distinct deployment needs, ensuring seamless integration regardless of the deployment environment's complexities.
 
 
+# Bring build using modules
+
+The Bring Framework consists of features organized into two modules. 
+These modules are grouped into Core Container, Web as shown in the following diagram.
+
+<img width="922" alt="image" src="https://github.com/YevgenDemoTestOrganization/bring/assets/73576438/f659a4e7-5b66-44f9-b832-645d67a3d3f8">
+
+
+The **Core Container** is the backbone of the Bring framework, offering essential functionalities like the Inversion of Control (IoC) container and the ApplicationContext. 
+It encompasses the following module:
+
+- **Bring Core** module is at the core of the Bring framework, delivering essential functionalities like IoC (Inversion of Control) and DI (Dependency Injection). 
+At its center lies the IoC container, which serves as the framework's nucleus, responsible for the creation and administration of beans instances. 
+This container utilizes dependency injection to effectively interconnect these beans. BeanFactory, foundational to the IoC container, tasked with overseeing a bean's lifecycle. 
+Serving as the fundamental interface to access the IoC container, the Bean Factory provides essential methods for obtaining beans.
+- **Bring Context**: provides the ApplicationContext, which is an advanced version of the BeanFactory and provides additional features, such as resource loading.
+
+The **Web** segment encompasses module designed to assist in constructing web applications, featuring:
+
+- **Bring Web** module presents a comprehensive Model-View-Controller (MVC) framework tailored for web application development. 
+It offers an array of functionalities, spanning from managing HTTP requests and responses to handling static content. 
+
+This enabling developers to combine view technology and api in one place.
+
+**Miscellaneous:**
+
+The Miscellaneous section comprises additional features offering diverse functionalities, such as:
+
+- **Scheduling** refers to the automated execution of tasks at predefined intervals, allowing them to run in a loop based on specific times or intervals without requiring manual intervention.
+
+
 # Design Philosophy
 
 This framework is crafted with educational principles at its core, aiming to empower individuals in mastering reflection, architectural design, and comprehending Dependency Inversion. 
