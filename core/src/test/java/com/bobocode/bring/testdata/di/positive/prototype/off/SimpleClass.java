@@ -1,4 +1,4 @@
-package com.bobocode.bring.testdata.di.positive.prototype;
+package com.bobocode.bring.testdata.di.positive.prototype.off;
 
 import java.util.UUID;
 

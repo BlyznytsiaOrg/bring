@@ -39,6 +39,7 @@ public class ConfigurationClassPostProcessor implements BeanFactoryPostProcessor
             .beanClass(method.getReturnType())
             .beanType(BeanTypeEnum.findBeanType(method))
             .scope(BeanScopeUtils.findBeanScope(method))
+            .proxyMode(BeanScopeUtils.findProxyMode(method))
             .method(method)
             .factoryMethodName(method.getName())
             .factoryBeanName(beanName)

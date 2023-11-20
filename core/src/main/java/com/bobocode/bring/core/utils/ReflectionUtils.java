@@ -59,10 +59,15 @@ public final class ReflectionUtils {
         };
     }
 
-    public static Supplier<Object> createNewInstance(Constructor<?> constructor, Object[] args) {
+    public static Supplier<Object> createNewInstance(Constructor<?> constructor, Object[] args, Class<?> clazz,
+                                                     boolean proxy) {
         return () -> {
             try {
-                return constructor.newInstance(args);
+                if (proxy) {
+                    return ProxyUtils.createProxy(clazz, constructor, args);
+                } else {
+                    return constructor.newInstance(args);
+                }
             } catch (Exception e) {
                 throw new BringGeneralException(e);
             }
