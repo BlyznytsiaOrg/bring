@@ -349,6 +349,23 @@ class BringApplicationContextHappyCasesTest {
         assertThat(barista.getUuid()).isNotEqualTo(barista2.getUuid());
     }
 
+    @DisplayName("Should return new object when getting prototype ProxyMode ON bean injection via interface")
+    @Test
+    void shouldCreatePrototypeBeanInterfaceInjection_withProxy() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.onwithinterface");
+
+        // when
+        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.onwithinterface.Barista.class);
+        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.onwithinterface.Barista.class);
+
+        // then
+        assertThat(barista).isNotNull();
+        assertThat(barista2).isNotNull();
+        assertThat(barista).isNotEqualTo(barista2);
+        assertThat(barista.getUuid()).isNotEqualTo(barista2.getUuid());
+    }
+
     @DisplayName("Should return new object when getting prototype ProxyMode ON configuration bean")
     @Test
     void shouldCreatePrototypeConfigurationBean_withProxy() {
@@ -359,7 +376,7 @@ class BringApplicationContextHappyCasesTest {
         var bean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.SimpleClass.class);
         var bean2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.SimpleClass.class);
 
-        // then
+        // then vi
         assertThat(bean).isNotNull();
         assertThat(bean2).isNotNull();
         assertThat(bean).isNotEqualTo(bean2);
