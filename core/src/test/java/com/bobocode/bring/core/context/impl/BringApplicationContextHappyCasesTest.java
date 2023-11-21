@@ -1,6 +1,7 @@
 package com.bobocode.bring.core.context.impl;
 
 import com.bobocode.bring.core.BringApplication;
+import com.bobocode.bring.testdata.di.positive.mixconfigurationandcomponent.Employee;
 import com.bobocode.bring.testdata.di.positive.configuration.client.RestClient;
 import com.bobocode.bring.testdata.di.positive.configuration.configuration.TestConfiguration;
 import com.bobocode.bring.testdata.di.positive.configuration.service.BringService;
@@ -401,6 +402,23 @@ class BringApplicationContextHappyCasesTest {
         assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop2.getBarista().getUuid());
         assertThat(coffeeShop.getBarista()).isNotEqualTo(coffeeShop2.getBarista());
         assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop2.getBarista().getUuid());
+    }
+
+
+    @DisplayName("Should inject String that was setup via Configuration and inject into Employee via Component")
+    @Test
+    void shouldFoundEmployeeWithConstructorAndStringName() {
+        //given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".mixconfigurationandcomponent");
+
+        //when
+        var employee = bringApplicationContext.getBean(Employee.class);
+        String name = bringApplicationContext.getBean(String.class);
+
+        //then
+        assertThat(employee).isNotNull();
+        assertThat(employee.getName()).isNotNull();
+        assertThat(employee.getName()).isEqualTo(name);
     }
     
 }
