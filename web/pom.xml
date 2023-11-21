@@ -15,12 +15,20 @@
   <url>https://maven.apache.org</url>
 
   <properties>
+    <junit.version>5.9.2</junit.version>
+    <asserj.version>3.24.2</asserj.version>
     <jakarta.servlet.jsp.api.version>3.1.1</jakarta.servlet.jsp.api.version>
     <tomcat.embed.version>10.1.13</tomcat.embed.version>
     <jakarta.annotation.api.version>2.1.1</jakarta.annotation.api.version>
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.15.3</version>
+    </dependency>
 
     <dependency>
       <groupId>com.bobocode.bring.core</groupId>
@@ -80,6 +88,20 @@
           <groupId>org.apache.tomcat</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${asserj.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

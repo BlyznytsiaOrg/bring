@@ -8,7 +8,7 @@ import com.bobocode.bring.core.utils.BeanScopeUtils;
 import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessor;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessorDefinitionFactory;
-import com.bobocode.bring.core.postprocessor.BeanPostProcessorFactory;
+import com.bobocode.bring.core.bpp.BeanPostProcessorFactory;
 import org.reflections.Reflections;
 
 import java.util.*;
@@ -67,7 +67,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
      * @see BeanPostProcessorDefinitionFactory
      * @see BeanPostProcessorFactory
      */
-    public BringApplicationContext(String basePackage) {
+    public BringApplicationContext(String... basePackage) {
         super(new Reflections(basePackage));
         this.classPathScannerFactory = new ClassPathScannerFactory(getReflections());
         this.beansToCreate = classPathScannerFactory.getBeansToCreate();
