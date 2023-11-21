@@ -1,11 +1,10 @@
 package com.bobocode.bring.web.servlet;
 
-import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.PostMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestBody;
-import com.bobocode.bring.web.servlet.annotation.RequestMapping;
+import com.bobocode.bring.web.servlet.annotation.RequestHeader;
 import com.bobocode.bring.web.servlet.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -42,6 +41,11 @@ public class ExampleRestController extends BaseServlet {
     @GetMapping(path = "/request")
     public String response(HttpServletRequest request) {
         return request.getClass().getSimpleName();
+    }
+
+    @GetMapping(path = "/header")
+    public String header(@RequestHeader(value = "Content-Type") String header) {
+        return header;
     }
 
     public record UserDto(String name, int age) {

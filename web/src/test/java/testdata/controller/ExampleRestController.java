@@ -6,16 +6,29 @@ import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.PostMapping;
 import com.bobocode.bring.web.servlet.annotation.PutMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestBody;
+import com.bobocode.bring.web.servlet.annotation.RequestHeader;
 import com.bobocode.bring.web.servlet.annotation.RequestMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestParam;
 import com.bobocode.bring.web.servlet.BaseServlet;
+import com.bobocode.bring.web.servlet.annotation.ResponseStatus;
+import com.bobocode.bring.web.servlet.http.HttpStatus;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import testdata.exception.TestCustomException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/example")
 public class ExampleRestController extends BaseServlet {
+
+    private final ObjectMapper objectMapper;
+
+    public ExampleRestController(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @GetMapping(path = "/hello")
     public String sayHello() {
@@ -71,6 +84,35 @@ public class ExampleRestController extends BaseServlet {
     @PostMapping(path = "/bodyAsEntity")
     public User bodyEntity(@RequestBody User user) {
         return user;
+    }
+
+    @GetMapping(path = "/header")
+    public String header(@RequestHeader(value = "Content-Type") String header) {
+        return header;
+    }
+
+    @GetMapping(path = "/status")
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
+    public String status() {
+       return "";
+    }
+
+    @PostMapping(path = "/severalArg/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public String several(@PathVariable Long id,
+                          @RequestHeader(value = "Accept") String header,
+                          @RequestBody User user,
+                          HttpServletRequest request,
+                          HttpServletResponse response) throws JsonProcessingException {
+        String contentType = request.getContentType();
+        int status = response.getStatus();
+        Map<String, Object> objectMap = new HashMap<>();
+        objectMap.put("id", id);
+        objectMap.put("Accept", header);
+        objectMap.put("user", user);
+        objectMap.put("Content-Type", contentType);
+        objectMap.put("status", status);
+        return objectMapper.writeValueAsString(objectMap);
     }
 
 
