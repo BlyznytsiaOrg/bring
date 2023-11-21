@@ -246,7 +246,7 @@ class BringApplicationContextHappyCasesTest {
         // then
         assertThat(aBean).isNotNull();
         assertThat(aBean.getList()).isNotNull();
-        assertThat(aBean.getList()).hasSize(2);
+        assertThat(aBean.getList()).hasSize(3);
     }
 
     @DisplayName("Should inject implementations of Interface to Constructor")
@@ -313,7 +313,7 @@ class BringApplicationContextHappyCasesTest {
         assertThat(bean.getUuid()).isNotEqualTo(bean2.getUuid());
     }
 
-    @DisplayName("Should inject implementations of Interface to Field in Order")
+    @DisplayName("Should inject implementations of Interface to Field in appropriate Order")
     @Test
     void shouldInjectListOfInterfaceImplementationToFieldInOrder() {
         // given
@@ -321,12 +321,12 @@ class BringApplicationContextHappyCasesTest {
 
         // when
         var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listfieldinjector.AField.class);
-        aBean.talking();
 
         // then
         assertThat(aBean).isNotNull();
         assertThat(aBean.getList()).isNotNull();
-        assertThat(aBean.getList()).hasSize(2);
-//        assertThat(aBean.getList().getFirst()).isEqualTo();
+        assertThat(aBean.getList().get(0)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.B.class);
+        assertThat(aBean.getList().get(1)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.D.class);
+        assertThat(aBean.getList().get(2)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.C.class);
     }
 }
