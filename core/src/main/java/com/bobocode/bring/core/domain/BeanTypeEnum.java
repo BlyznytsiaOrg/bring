@@ -24,7 +24,11 @@ public enum BeanTypeEnum {
 
     COMPONENT(3, Component.class),
 
-    PROFILE(3, Profile .class);
+    PROFILE(3, Profile.class),
+
+    REST_CONTROLLER(4, RestController.class),
+
+    CONTROLLER(4, Controller.class);
 
     private final int order;
     

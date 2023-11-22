@@ -26,7 +26,7 @@ public class TypeResolverFactory {
         );
         this.parameterValueTypeInjectors = List.of(
                 new PropertyParameterValueTypeInjector(properties),
-                new ParameterListValueTypeInjectorImpl(reflections)
+                new ParameterListValueTypeInjector(reflections)
         );
     }
 }

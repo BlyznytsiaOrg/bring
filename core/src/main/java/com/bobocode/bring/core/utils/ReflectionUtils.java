@@ -10,6 +10,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.reflections.Reflections;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,35 +22,44 @@ public final class ReflectionUtils {
 
     private final OrderComparator ORDER_COMPARATOR = new OrderComparator();
     private final Paranamer info = new CachingParanamer(new AnnotationParanamer(new BytecodeReadingParanamer()));
+    private static final String ARG = "arg";
 
     @SneakyThrows
     public static void setField(Field field, Object obj, Object value) {
         field.setAccessible(true);
         field.set(obj, value);
     }
-
+    
     public List<String> getParameterNames(AccessibleObject methodOrConstructor) {
         return Arrays.stream(info.lookupParameterNames(methodOrConstructor)).toList();
     }
-
+    
     public int extractParameterPosition(Parameter parameter) {
         String name = parameter.getName();
-        return Integer.parseInt(name.substring(name.indexOf("arg") + "arg".length()));
+        return Integer.parseInt(name.substring(name.indexOf(ARG) + ARG.length()));
     }
 
     @SneakyThrows
-    public static List<Class<?>> extractImplClasses(ParameterizedType genericType, Reflections reflections) {
-        Type actualTypeArgument = genericType.getActualTypeArguments()[0];
-        if (actualTypeArgument instanceof Class actualTypeArgumentClass) {
-            String name = actualTypeArgumentClass.getName();
-            Class<?> interfaceClass = Class.forName(name);
+    public static List<Class<?>> extractImplClasses(ParameterizedType genericType, Reflections reflections,
+                                                    List<Class<? extends Annotation>> createdBeanAnnotations) {
+            Type actualTypeArgument = genericType.getActualTypeArguments()[0];
+            if (actualTypeArgument instanceof Class actualTypeArgumentClass) {
+                String name = actualTypeArgumentClass.getName();
+                Class<?> interfaceClass = Class.forName(name);
 
-            return (List<Class<?>>) reflections.getSubTypesOf(interfaceClass)
-                    .stream()
-                    .sorted(ORDER_COMPARATOR)
-                    .toList();
+                return (List<Class<?>>) reflections.getSubTypesOf(interfaceClass)
+                        .stream()
+                        .filter(implementation -> isImplementationAnnotated(implementation, createdBeanAnnotations))
+                        .sorted(ORDER_COMPARATOR)
+                        .toList();
+            }
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
+
+    private static boolean isImplementationAnnotated(Class<?> implementation, List<Class<? extends Annotation>> createdBeanAnnotations) {
+        return Arrays.stream(implementation.getAnnotations())
+                .map(Annotation::annotationType)
+                .anyMatch(createdBeanAnnotations::contains);
     }
 
     public static Supplier<Object> invokeBeanMethod(Method method, Object obj, Object[] params) {
@@ -62,10 +72,15 @@ public final class ReflectionUtils {
         };
     }
 
-    public static Supplier<Object> createNewInstance(Constructor<?> constructor, Object[] args) {
+    public static Supplier<Object> createNewInstance(Constructor<?> constructor, Object[] args, Class<?> clazz,
+                                                     boolean proxy) {
         return () -> {
             try {
-                return constructor.newInstance(args);
+                if (proxy) {
+                    return ProxyUtils.createProxy(clazz, constructor, args);
+                } else {
+                    return constructor.newInstance(args);
+                }
             } catch (Exception e) {
                 throw new BringGeneralException(e);
             }

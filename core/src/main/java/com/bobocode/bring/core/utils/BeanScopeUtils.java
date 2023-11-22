@@ -1,6 +1,8 @@
 package com.bobocode.bring.core.utils;
 
 import com.bobocode.bring.core.anotation.Scope;
+import com.bobocode.bring.core.domain.BeanScope;
+import com.bobocode.bring.core.domain.ProxyMode;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Method;
@@ -10,26 +12,40 @@ import java.util.Optional;
 @UtilityClass
 public class BeanScopeUtils {
     
-    public final String SINGLETON = "singleton";
-    
-    public final String PROTOTYPE = "prototype";
-    
-    public String findBeanScope(Class<?> clazz) {
+    public BeanScope findBeanScope(Class<?> clazz) {
         return Optional.ofNullable(clazz.getAnnotation(Scope.class))
-                .map(Scope::value)
+                .map(Scope::name)
                 .filter(value -> getAllScopes().contains(value))
-                .orElse(BeanScopeUtils.SINGLETON);
+                .orElse(BeanScope.SINGLETON);
     }
 
-    public String findBeanScope(Method method) {
+    public BeanScope findBeanScope(Method method) {
         return Optional.ofNullable(method.getAnnotation(Scope.class))
-                .map(Scope::value)
+                .map(Scope::name)
                 .filter(value -> getAllScopes().contains(value))
-                .orElse(BeanScopeUtils.SINGLETON);
+                .orElse(BeanScope.SINGLETON);
+    }
+
+    public ProxyMode findProxyMode(Class<?> clazz) {
+        return Optional.ofNullable(clazz.getAnnotation(Scope.class))
+          .map(Scope::proxyMode)
+          .filter(value -> getAllProxyModes().contains(value))
+          .orElse(null);
+    }
+
+    public ProxyMode findProxyMode(Method method) {
+        return Optional.ofNullable(method.getAnnotation(Scope.class))
+          .map(Scope::proxyMode)
+          .filter(value -> getAllProxyModes().contains(value))
+          .orElse(null);
     }
     
-    private List<String> getAllScopes() {
-        return List.of(SINGLETON, PROTOTYPE);
+    private List<BeanScope> getAllScopes() {
+        return List.of(BeanScope.values());
+    }
+
+    private List<ProxyMode> getAllProxyModes() {
+        return List.of(ProxyMode.values());
     }
     
 }

@@ -1,5 +1,7 @@
 package com.bobocode.bring.web.server;
 
+import com.bobocode.bring.web.server.exception.WebServerException;
+
 public interface WebServer {
 
     /**

@@ -1,24 +1,19 @@
 package com.bobocode.bring.web.servlet;
 
-import com.bobocode.bring.web.http.HttpHeaders;
+import com.bobocode.bring.web.servlet.http.HttpHeaders;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class BaseServlet extends HttpServlet {
-    private final HttpHeaders headers;
+public class BaseServlet extends HttpServlet implements BringServlet {
+    public final HttpHeaders requestHeaders;
 
     public BaseServlet() {
-        this.headers = new HttpHeaders();
+        this.requestHeaders = new HttpHeaders();
     }
 
-    public HttpHeaders getHeaders() {
-        return headers;
-    }
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp)
@@ -32,8 +27,10 @@ public class BaseServlet extends HttpServlet {
     }
 
     private void processHeader(HttpServletRequest req, String headerName) {
-        List<String> valuesList = new ArrayList<>();
-        req.getHeaders(headerName).asIterator().forEachRemaining(valuesList::add);
-        headers.set(headerName, valuesList);
+            requestHeaders.getHeadersNameList()
+                    .stream()
+                    .filter(name -> name.equalsIgnoreCase(headerName))
+                    .findFirst()
+                    .ifPresent(name -> requestHeaders.set(name, req.getHeader(name)));
     }
 }
