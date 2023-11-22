@@ -22,6 +22,7 @@ public class BringPropertiesSourceScanner implements BringSourceScanner {
 
     @SneakyThrows
     private List<File> loadAllProperties(String type) {
+        log.info("Scanning for {} files", type);
         List<File> refFiles = new ArrayList<>();
         String applicationProperties = APPLICATION + type;
 
@@ -33,6 +34,7 @@ public class BringPropertiesSourceScanner implements BringSourceScanner {
 
         Path folderPath = Paths.get(resource.toURI()).resolve("..").normalize();
 
+        log.debug("Folder path {}" , folderPath);
         File[] files = folderPath.toFile().listFiles();
 
         if (Objects.nonNull(files)) {

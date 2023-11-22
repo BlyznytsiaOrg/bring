@@ -20,6 +20,7 @@ public class ProfileSourceResolve {
     }
 
     public Map<String, String> resolve(String profileName, String type) {
+        log.trace("Resolve profileName {} type {}", profileName, type);
         Map<String, String> properties = new HashMap<>();
         bringSourceScanner.scan(type).forEach(file -> {
             String name = file.getName();

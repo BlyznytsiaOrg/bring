@@ -23,6 +23,46 @@
         </encoder>
     </appender>
 
+    <logger name="com.bobocode.bring.web" level="${com.bobocode.bring.web.log.level:-INFO}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="com.bobocode.bring.web.server" level="${com.bobocode.bring.web.server.log.level:-INFO}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="com.bobocode.bring.web.servlet" level="${com.bobocode.bring.web.servlet.log.level:-INFO}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="com.bobocode.bring" level="${com.bobocode.bring.log.level:-INFO}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="com.bobocode.bring.core.postprocessor" level="${com.bobocode.bring.core.postprocessor.log.level:-INFO}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="com.bobocode.bring.core.bpp" level="${com.bobocode.bring.core.bpp.log.level:-INFO}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="com.bobocode.bring.core.context" level="${com.bobocode.bring.core.context.log.level:-INFO}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <logger name="com.bobocode.bring.core.env" level="${com.bobocode.bring.core.env.log.level:-INFO}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </logger>
+
     <!-- Async Appender -->
     <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="STDOUT" />
@@ -30,7 +70,7 @@
     </appender>
 
     <!-- Root Logger Configuration -->
-    <root level="debug">
+    <root level="${root.log.level:-INFO}">
         <appender-ref ref="ASYNC" />
     </root>
 
