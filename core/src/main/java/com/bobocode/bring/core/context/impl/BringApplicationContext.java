@@ -1,5 +1,6 @@
 package com.bobocode.bring.core.context.impl;
 
+import com.bobocode.bring.core.anotation.Primary;
 import com.bobocode.bring.core.context.BringBeanFactory;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
@@ -7,6 +8,8 @@ import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessor;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessorDefinitionFactory;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessorFactory;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.reflections.Reflections;
 
 import java.util.Comparator;
@@ -82,12 +85,15 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
     }
 
     private void register(Set<Class<?>> classes) {
+       // classes.stream().filter(c -> Arrays.asList(c.getAnnotations()).contains(Primary.class)).collect(
+       //     Collectors.toList());
         classes.forEach(clazz -> {
             BeanDefinition beanDefinition = BeanDefinition.builder()
                     .beanClass(clazz)
                     .beanType(BeanTypeEnum.findBeanType(clazz))
                     .isSingleton(true)
                     .factoryBeanName(clazz.getSimpleName())
+                    .isPrimary(clazz.isAnnotationPresent(Primary.class))
                     .build();
 
             registerBeanDefinition(beanDefinition);
@@ -98,7 +104,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
         // Create additional Bean definitions i.e. for Beans in Configuration classes
         invokeBeanFactoryPostProcessors();
         
-        invokeBeanPostProcessors();
+        invokeBeanPostProcessors();//Here we have all bean definitions
         
         // Create Singleton Bean objects from Bean definitions
         instantiateBeans();

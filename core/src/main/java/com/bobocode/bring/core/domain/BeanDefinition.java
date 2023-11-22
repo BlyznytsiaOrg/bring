@@ -20,6 +20,8 @@ public class BeanDefinition {
     private String factoryMethodName;
     
     private String factoryBeanName;
+
+    private boolean isPrimary;
     
     public boolean isConfiguration() {
         return this.beanType == BeanTypeEnum.CONFIGURATION;

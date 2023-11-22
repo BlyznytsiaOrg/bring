@@ -1,6 +1,7 @@
 package com.bobocode.bring.core.postprocessor.impl;
 
 import com.bobocode.bring.core.anotation.Bean;
+import com.bobocode.bring.core.anotation.Primary;
 import com.bobocode.bring.core.context.impl.DefaultBringBeanFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.domain.BeanTypeEnum;
@@ -41,6 +42,7 @@ public class ConfigurationClassPostProcessor implements BeanFactoryPostProcessor
             .method(method)
             .factoryMethodName(method.getName())
             .factoryBeanName(beanName)
+            .isPrimary(method.isAnnotationPresent(Primary.class))
             .build();
         
           defaultBeanFactory.addBeanDefinition(beanDefinition.getFactoryMethodName(), beanDefinition);
