@@ -1,7 +1,6 @@
 package com.bobocode.bring.core.bpp;
 
 import com.bobocode.bring.core.bpp.impl.ScheduleBeanPostProcessor;
-import com.bobocode.bring.core.postprocessor.BeanPostProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,10 +27,11 @@ import java.util.List;
  * List<BeanPostProcessor> processors = processorFactory.getBeanPostProcessors();
  * }</pre>
  *
- * @author Blyzhnytsia Team
- * @since 1.0
  * @see BeanPostProcessor
  * @see ScheduleBeanPostProcessor
+ *
+ *  @author Blyzhnytsia Team
+ *  @since 1.0
  */
 @Getter
 @Slf4j
