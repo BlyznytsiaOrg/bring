@@ -2,6 +2,17 @@ package com.bobocode.bring.web.servlet.http;
 
 import lombok.Getter;
 
+/**
+ * Enumeration representing HTTP status codes as defined in the HTTP/1.1 specification.
+ * Each constant in this enum represents a specific HTTP status code, along with its series and reason phrase.
+ *
+ * <p>For more information about HTTP status codes, refer to the HTTP/1.1 specification:
+ * <a href="https://tools.ietf.org/html/rfc7231">RFC 7231 - Hypertext Transfer Protocol (HTTP/1.1)</a>
+ *
+ * @author Blyzhnytsia Team
+ * @version 1.0
+ * @since 2023-11-17
+ */
 @Getter
 public enum HttpStatus {
 

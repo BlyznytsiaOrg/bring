@@ -16,4 +16,13 @@ public class ServerProperties {
 
     @Value("server.withStackTrace")
     private boolean withStackTrace;
+
+    @Value("server.staticFolder")
+    private String staticFolder;
+
+    @Value("server.regexStaticUrl")
+    private String regexStaticUrl;
+
+    @Value("server.urlDelimiter")
+    private String urlDelimiter;
 }

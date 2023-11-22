@@ -5,10 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -16,6 +15,9 @@ import static java.util.stream.Collectors.toMap;
 public class BringPropertySourceLoader implements BringSourceLoader {
 
     public static final String APPLICATION_PROPERTIES = "application.properties";
+    public static final String RANDOM_PORT_KEY = "${random.port}";
+    public static final int START_PORT_RANGE = 8000;
+    public static final int END_PORT_RANGE = 9000;
 
     @Override
     public String getFileExtensions() {
@@ -31,7 +33,7 @@ public class BringPropertySourceLoader implements BringSourceLoader {
     }
 
 
-    private static Map<String, String> loadProperties(String fileName) {
+    private Map<String, String> loadProperties(String fileName) {
         String defaultFileName  = (fileName == null) ? APPLICATION_PROPERTIES : fileName;
         log.debug("Load Property file {}", defaultFileName);
         Map<String, String> propertiesMap = new HashMap<>();
@@ -47,7 +49,7 @@ public class BringPropertySourceLoader implements BringSourceLoader {
 
             propertiesMap = properties.stringPropertyNames()
                     .stream()
-                    .collect(toMap(key -> key, properties::getProperty, (a, b) -> b));
+                    .collect(toMap(key -> key, getValue(properties), (a, b) -> b));
 
         } catch (IOException exe) {
             log.error("Error loading properties from file {}: {}. Will use default one {}", defaultFileName,
@@ -55,5 +57,12 @@ public class BringPropertySourceLoader implements BringSourceLoader {
         }
 
         return propertiesMap;
+    }
+
+    private Function<String, String> getValue(Properties properties) {
+        return key -> Optional.ofNullable(properties.getProperty(key))
+                .filter(RANDOM_PORT_KEY::equals)
+                .map(value -> String.valueOf(ThreadLocalRandom.current().nextInt(START_PORT_RANGE, END_PORT_RANGE)))
+                .orElse(properties.getProperty(key));
     }
 }
