@@ -1,5 +1,6 @@
 package com.bobocode.bring.core.utils;
 
+import com.bobocode.bring.core.context.type.OrderComparator;
 import com.bobocode.bring.core.exception.BringGeneralException;
 import com.thoughtworks.paranamer.AnnotationParanamer;
 import com.thoughtworks.paranamer.BytecodeReadingParanamer;
@@ -19,6 +20,7 @@ import java.util.function.Supplier;
 @UtilityClass
 public final class ReflectionUtils {
 
+    private final OrderComparator ORDER_COMPARATOR = new OrderComparator();
     private final Paranamer info = new CachingParanamer(new AnnotationParanamer(new BytecodeReadingParanamer()));
     private static final String ARG = "arg";
 
@@ -48,6 +50,7 @@ public final class ReflectionUtils {
                 return (List<Class<?>>) reflections.getSubTypesOf(interfaceClass)
                         .stream()
                         .filter(implementation -> isImplementationAnnotated(implementation, createdBeanAnnotations))
+                        .sorted(ORDER_COMPARATOR)
                         .toList();
             }
             return Collections.emptyList();
