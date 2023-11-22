@@ -1,5 +1,6 @@
 package com.bobocode.bring.core.context.impl;
 
+import com.bobocode.bring.core.anotation.Primary;
 import com.bobocode.bring.core.context.BringBeanFactory;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.context.type.TypeResolverFactory;
@@ -8,6 +9,9 @@ import com.bobocode.bring.core.utils.BeanScopeUtils;
 import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.bpp.BeanPostProcessor;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessorDefinitionFactory;
+import com.bobocode.bring.core.postprocessor.BeanPostProcessorFactory;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import com.bobocode.bring.core.bpp.BeanPostProcessorFactory;
 import org.reflections.Reflections;
 
@@ -89,6 +93,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
                     .scope(BeanScopeUtils.findBeanScope(clazz))
                     .proxyMode(BeanScopeUtils.findProxyMode(clazz))
                     .factoryBeanName(clazz.getSimpleName())
+                    .isPrimary(clazz.isAnnotationPresent(Primary.class))
                     .build();
 
             registerBeanDefinition(beanDefinition);

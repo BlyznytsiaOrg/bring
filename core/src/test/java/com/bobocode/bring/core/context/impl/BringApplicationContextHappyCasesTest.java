@@ -11,6 +11,10 @@ import com.bobocode.bring.testdata.di.positive.fieldproperties.ProfileBean;
 import com.bobocode.bring.testdata.di.positive.fullinjection.GetInfoFromExternalServicesUseCase;
 import com.bobocode.bring.testdata.di.positive.prototype.off.CoffeeShop;
 import com.bobocode.bring.testdata.di.positive.prototype.off.SimpleClass;
+import com.bobocode.bring.testdata.di.positive.primary.bean.Employee;
+import com.bobocode.bring.testdata.di.positive.primary.component.C;
+import com.bobocode.bring.testdata.di.positive.qualifier.PrintService;
+import com.bobocode.bring.testdata.di.positive.qualifier.Printer;
 import com.bobocode.bring.testdata.di.positive.setter.A;
 import com.bobocode.bring.testdata.di.positive.setter.B;
 import com.bobocode.bring.testdata.di.positive.setterproperties.ProfileBeanSetter;
@@ -179,6 +183,51 @@ class BringApplicationContextHappyCasesTest {
                 "restClient=RestClient{url='https://exterl.service', username='user100'}}, " +
                 "externalService2=ExternalService2{" +
                 "restClient2=RestClient{url='https://exterl.service2', username='user200'}}}");
+    }
+
+    @DisplayName("Should autowire appropriate bean when we have 2 implementations and one of them is marked by @Primary annotation")
+    @Test
+    void injectPrimaryComponent() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".primary.component");
+
+        // when
+        C c = bringApplicationContext.getBean(C.class);
+
+        // then
+        assertThat(c).isNotNull();
+        assertThat(c.getField()).isNotNull();
+        assertThat(c.getField()).isInstanceOf(com.bobocode.bring.testdata.di.positive.primary.component.A.class);
+    }
+
+    @DisplayName("Should register appropriate bean when we have 2 methods with the same bean type to return and one of them is marked by @Primary annotation")
+    @Test
+    void registerPrimaryBean() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".primary.bean");
+
+        // when
+        Employee employee = bringApplicationContext.getBean(Employee.class);
+
+        // then
+        assertThat(employee).isNotNull();
+        assertThat(employee.getName()).isEqualTo("Jerry");
+
+    }
+
+    @DisplayName("Should autowire appropriate bean when we have 2 implementations and @Qualifier annotation")
+    @Test
+    void registerQualifierComponent() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".qualifier");
+
+        // when
+        PrintService printer = bringApplicationContext.getBean(PrintService.class);
+
+        // then
+        assertThat(printer).isNotNull();
+        assertThat(printer.getPrinter().print()).isEqualTo("Canon");
+
     }
 
     @DisplayName("Should inject implementations of Interface to Field")
