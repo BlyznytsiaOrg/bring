@@ -1,6 +1,5 @@
 package com.bobocode.bring.core.anotation.resolver.impl;
 
-import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.anotation.Configuration;
 import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
 

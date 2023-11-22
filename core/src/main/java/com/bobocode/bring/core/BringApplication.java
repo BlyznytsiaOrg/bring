@@ -33,6 +33,9 @@ import com.bobocode.bring.core.context.impl.BringApplicationContext;
  */
 public class BringApplication {
 
+    //TODO uncomment later when all code will be merged need to change all test data packages
+    //private static final String BRING_PACKAGE = "com.bobocode.bring";
+
     /**
      * Private constructor to prevent instantiation of the class.
      * Instances of this class should be created using the static methods {@link #run(Class)} or {@link #run(String)}.
@@ -49,7 +52,8 @@ public class BringApplication {
      */
     public static BringApplicationContext run(Class<?> clazz) {
         // Create context: register Bean definitions
-        BringApplicationContext context = new BringApplicationContext(clazz);
+        String[] bringPackages = new String[]{/*BRING_PACKAGE,*/ clazz.getPackageName()};
+        BringApplicationContext context = new BringApplicationContext(bringPackages);
         
         // Invoke Bean Post Processors, create Bean objects
         context.refresh();
@@ -66,7 +70,8 @@ public class BringApplication {
      */
     public static BringApplicationContext run(String basePackage) {
         // Create context: register Bean definitions
-        BringApplicationContext context = new BringApplicationContext(basePackage);
+        String[] bringPackages = new String[]{/*BRING_PACKAGE,*/ basePackage};
+        BringApplicationContext context = new BringApplicationContext(bringPackages);
 
         // Invoke Bean Post Processors, create Bean objects
         context.refresh();

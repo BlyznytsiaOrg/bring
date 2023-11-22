@@ -3,18 +3,19 @@ package com.bobocode.bring.core.context.impl;
 import com.bobocode.bring.core.anotation.Primary;
 import com.bobocode.bring.core.context.BringBeanFactory;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
+import com.bobocode.bring.core.context.type.TypeResolverFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
+import com.bobocode.bring.core.utils.BeanScopeUtils;
 import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessor;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessorDefinitionFactory;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessorFactory;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import com.bobocode.bring.core.bpp.BeanPostProcessorFactory;
 import org.reflections.Reflections;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The {@code BringApplicationContext} class represents the core context for managing and initializing
@@ -70,7 +71,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
      * @see BeanPostProcessorDefinitionFactory
      * @see BeanPostProcessorFactory
      */
-    public BringApplicationContext(String basePackage) {
+    public BringApplicationContext(String... basePackage) {
         super(new Reflections(basePackage));
         this.classPathScannerFactory = new ClassPathScannerFactory(getReflections());
         this.beansToCreate = classPathScannerFactory.getBeansToCreate();
@@ -91,7 +92,8 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
             BeanDefinition beanDefinition = BeanDefinition.builder()
                     .beanClass(clazz)
                     .beanType(BeanTypeEnum.findBeanType(clazz))
-                    .isSingleton(true)
+                    .scope(BeanScopeUtils.findBeanScope(clazz))
+                    .proxyMode(BeanScopeUtils.findProxyMode(clazz))
                     .factoryBeanName(clazz.getSimpleName())
                     .isPrimary(clazz.isAnnotationPresent(Primary.class))
                     .build();
@@ -113,6 +115,8 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
     private void invokeBeanFactoryPostProcessors() {
         beanPostProcessorDefinitionFactory.getBeanFactoryPostProcessors()
                 .forEach(processor -> processor.postProcessBeanFactory(this));
+
+        setTypeResolverFactory(new TypeResolverFactory(getProperties(), getReflections()));
     }
 
     private void invokeBeanPostProcessors() {

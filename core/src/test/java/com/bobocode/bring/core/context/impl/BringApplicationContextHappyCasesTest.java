@@ -5,14 +5,19 @@ import com.bobocode.bring.testdata.di.positive.configuration.client.RestClient;
 import com.bobocode.bring.testdata.di.positive.configuration.configuration.TestConfiguration;
 import com.bobocode.bring.testdata.di.positive.configuration.service.BringService;
 import com.bobocode.bring.testdata.di.positive.constructor.BringBeansService;
+import com.bobocode.bring.testdata.di.positive.constructorproperties.ProfileBeanConstructor;
 import com.bobocode.bring.testdata.di.positive.contract.Barista;
+import com.bobocode.bring.testdata.di.positive.fieldproperties.ProfileBean;
 import com.bobocode.bring.testdata.di.positive.fullinjection.GetInfoFromExternalServicesUseCase;
+import com.bobocode.bring.testdata.di.positive.prototype.off.CoffeeShop;
+import com.bobocode.bring.testdata.di.positive.prototype.off.SimpleClass;
 import com.bobocode.bring.testdata.di.positive.primary.bean.Employee;
 import com.bobocode.bring.testdata.di.positive.primary.component.C;
 import com.bobocode.bring.testdata.di.positive.qualifier.PrintService;
 import com.bobocode.bring.testdata.di.positive.qualifier.Printer;
 import com.bobocode.bring.testdata.di.positive.setter.A;
 import com.bobocode.bring.testdata.di.positive.setter.B;
+import com.bobocode.bring.testdata.di.positive.setterproperties.ProfileBeanSetter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -153,11 +158,69 @@ class BringApplicationContextHappyCasesTest {
         assertThat(bringBeansService).isNotNull();
     }
 
+
+    @DisplayName("Should found profile bean and read application properties and do field injection")
+    @Test
+    void shouldFoundProfileBeanAndReadApplicationPropertiesAndSetValueToFieldInjection() {
+        //when
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".fieldproperties");
+        ProfileBean profileBean = bringApplicationContext.getBean(ProfileBean.class);
+
+        //then
+        assertThat(bringApplicationContext.getProfileName()).isEqualTo("dev");
+        assertThat(bringApplicationContext.getProperties()).isNotNull()
+                        .hasSize(1)
+                        .containsEntry("bring.main.banner-mode", "on");
+
+        assertThat(profileBean).isNotNull();
+        assertThat(profileBean.getBannerMode())
+                .isNotNull()
+                .isEqualTo("on");
+    }
+
+    @DisplayName("Should found profile bean and read application properties and do setter injection")
+    @Test
+    void shouldFoundProfileBeanAndReadApplicationPropertiesAndSetValueToSetterInjection() {
+        //when
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".setterproperties");
+        ProfileBeanSetter profileBeanSetter = bringApplicationContext.getBean(ProfileBeanSetter.class);
+
+        //then
+        assertThat(bringApplicationContext.getProfileName()).isEqualTo("dev");
+        assertThat(bringApplicationContext.getProperties()).isNotNull()
+                .hasSize(1)
+                .containsEntry("bring.main.banner-mode", "on");
+
+        assertThat(profileBeanSetter).isNotNull();
+        assertThat(profileBeanSetter.getBannerMode())
+                .isNotNull()
+                .isEqualTo("on");
+    }
+
+    @DisplayName("Should found profile bean and read application properties and do constructor injection")
+    @Test
+    void shouldFoundProfileBeanAndReadApplicationPropertiesAndSetValueToConstructorInjection() {
+        //when
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".constructorproperties");
+        ProfileBeanConstructor profileBeanConstructor = bringApplicationContext.getBean(ProfileBeanConstructor.class);
+
+        //then
+        assertThat(bringApplicationContext.getProfileName()).isEqualTo("dev");
+        assertThat(bringApplicationContext.getProperties()).isNotNull()
+                .hasSize(1)
+                .containsEntry("bring.main.banner-mode", "on");
+
+        assertThat(profileBeanConstructor).isNotNull();
+        assertThat(profileBeanConstructor.getBannerMode())
+                .isNotNull()
+                .isEqualTo("on");
+    }
+
     @DisplayName("Should inject beans annotated with different annotations")
     @Test
     void shouldCreateAndInjectDifferentBeans() {
         // given
-        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".fullinjection");;
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".fullinjection");
 
         // when
         var useCase = bringApplicationContext.getBean(GetInfoFromExternalServicesUseCase.class);
@@ -222,4 +285,187 @@ class BringApplicationContextHappyCasesTest {
 
     }
 
+    @DisplayName("Should inject implementations of Interface to Field")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToField() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listfieldinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listfieldinjector.AField.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(3);
+    }
+
+    @DisplayName("Should inject implementations of Interface to Constructor")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToConstructor() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listconstructorinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listconstructorinjector.AConstructor.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(2);
+    }
+
+    @DisplayName("Should inject implementations of Interface to Setter")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToSetter() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listsetterinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listsetterinjector.ASetter.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(2);
+    }
+
+    @DisplayName("Should return new object when getting prototype bean")
+    @Test
+    void shouldCreatePrototypeBean() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.off");
+
+        // when
+        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.off.Barista.class);
+        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.off.Barista.class);
+
+        // then
+        assertThat(barista).isNotNull();
+        assertThat(barista2).isNotNull();
+        assertThat(barista).isNotEqualTo(barista2);
+        assertThat(barista.getUuid()).isNotEqualTo(barista2.getUuid());
+    }
+
+    @DisplayName("Should return new object when getting prototype configuration bean")
+    @Test
+    void shouldCreatePrototypeConfigurationBean() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.off");
+
+        // when
+        var bean = bringApplicationContext.getBean(SimpleClass.class);
+        var bean2 = bringApplicationContext.getBean(SimpleClass.class);
+
+        // then
+        assertThat(bean).isNotNull();
+        assertThat(bean2).isNotNull();
+        assertThat(bean).isNotEqualTo(bean2);
+        assertThat(bean.getUuid()).isNotEqualTo(bean2.getUuid());
+    }
+
+    @DisplayName("Should return same prototype object when proxy mode OFF")
+    @Test
+    void shouldCreateSingletonWithPrototypeBean() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.off");
+
+        // when
+        var coffeeShop = bringApplicationContext.getBean(CoffeeShop.class);
+        var coffeeShop2 = bringApplicationContext.getBean(CoffeeShop.class);
+
+        // then
+        assertThat(coffeeShop).isNotNull();
+        assertThat(coffeeShop2).isNotNull();
+        assertThat(coffeeShop).isEqualTo(coffeeShop2);
+        assertThat(coffeeShop.getBarista().getUuid()).isEqualTo(coffeeShop2.getBarista().getUuid());
+    }
+
+    @DisplayName("Should return new object when getting prototype ProxyMode ON bean")
+    @Test
+    void shouldCreatePrototypeBean_withProxy() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.on");
+
+        // when
+        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.Barista.class);
+        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.Barista.class);
+
+        // then
+        assertThat(barista).isNotNull();
+        assertThat(barista2).isNotNull();
+        assertThat(barista).isNotEqualTo(barista2);
+        assertThat(barista.getUuid()).isNotEqualTo(barista2.getUuid());
+    }
+
+    @DisplayName("Should return new object when getting prototype ProxyMode ON bean injection via interface")
+    @Test
+    void shouldCreatePrototypeBeanInterfaceInjection_withProxy() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.onwithinterface");
+
+        // when
+        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.onwithinterface.Barista.class);
+        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.onwithinterface.Barista.class);
+
+        // then
+        assertThat(barista).isNotNull();
+        assertThat(barista2).isNotNull();
+        assertThat(barista).isNotEqualTo(barista2);
+        assertThat(barista.getUuid()).isNotEqualTo(barista2.getUuid());
+    }
+
+    @DisplayName("Should return new object when getting prototype ProxyMode ON configuration bean")
+    @Test
+    void shouldCreatePrototypeConfigurationBean_withProxy() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.on");
+
+        // when
+        var bean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.SimpleClass.class);
+        var bean2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.SimpleClass.class);
+
+        // then vi
+        assertThat(bean).isNotNull();
+        assertThat(bean2).isNotNull();
+        assertThat(bean).isNotEqualTo(bean2);
+        assertThat(bean.getUuid()).isNotEqualTo(bean2.getUuid());
+    }
+
+    @DisplayName("Should return different prototype object when proxy mode ON")
+    @Test
+    void shouldCreateSingletonWithPrototypeBean_withProxy() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.on");
+
+        // when
+        var coffeeShop = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.CoffeeShop.class);
+        var coffeeShop2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.CoffeeShop.class);
+
+        // then
+        assertThat(coffeeShop).isNotNull();
+        assertThat(coffeeShop2).isNotNull();
+        assertThat(coffeeShop).isEqualTo(coffeeShop2);
+        assertThat(coffeeShop.getBarista()).isNotEqualTo(coffeeShop2.getBarista());
+        assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop2.getBarista().getUuid());
+        assertThat(coffeeShop.getBarista()).isNotEqualTo(coffeeShop2.getBarista());
+        assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop2.getBarista().getUuid());
+    }
+
+    @DisplayName("Should inject implementations of Interface to Field in appropriate Order")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToFieldInOrder() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listfieldinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listfieldinjector.AField.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList().get(0)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.B.class);
+        assertThat(aBean.getList().get(1)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.D.class);
+        assertThat(aBean.getList().get(2)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.C.class);
+    }
 }

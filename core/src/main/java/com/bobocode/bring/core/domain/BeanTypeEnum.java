@@ -1,9 +1,6 @@
 package com.bobocode.bring.core.domain;
 
-import com.bobocode.bring.core.anotation.Bean;
-import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.core.anotation.Configuration;
-import com.bobocode.bring.core.anotation.Service;
+import com.bobocode.bring.core.anotation.*;
 import com.bobocode.bring.core.exception.BeanAnnotationMissingException;
 import com.bobocode.bring.core.utils.Pair;
 import lombok.Getter;
@@ -13,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
@@ -24,7 +22,13 @@ public enum BeanTypeEnum {
 
     SERVICE(3, Service.class),
 
-    COMPONENT(3, Component.class);
+    COMPONENT(3, Component.class),
+
+    PROFILE(3, Profile.class),
+
+    REST_CONTROLLER(4, RestController.class),
+
+    CONTROLLER(4, Controller.class);
 
     private final int order;
     
@@ -40,6 +44,7 @@ public enum BeanTypeEnum {
         
         return Arrays.stream(clazz.getAnnotations())
                 .map(annotation -> annotationToBeanType.get(annotation.annotationType()))
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElseThrow(() -> new BeanAnnotationMissingException(
                     "Unable to create Bean of type=[%s]. Class is not annotated with %s", 
@@ -52,6 +57,7 @@ public enum BeanTypeEnum {
 
         return Arrays.stream(method.getAnnotations())
             .map(annotation -> annotationToBeanType.get(annotation.annotationType()))
+            .filter(Objects::nonNull)
             .findFirst()
             .orElseThrow(() -> new BeanAnnotationMissingException(
                 "Unable to create Bean of type=[%s], methodName=[%s]. Method is not annotated with %s",
