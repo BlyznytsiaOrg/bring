@@ -1,6 +1,5 @@
 package com.bobocode.bring.core.domain;
 
-import com.bobocode.bring.core.utils.BeanScopeUtils;
 import lombok.Builder;
 import lombok.Getter;
 
