@@ -33,6 +33,7 @@ public class BringPropertySourceLoader implements BringSourceLoader {
 
     private static Map<String, String> loadProperties(String fileName) {
         String defaultFileName  = (fileName == null) ? APPLICATION_PROPERTIES : fileName;
+        log.debug("Load Property file {}", defaultFileName);
         Map<String, String> propertiesMap = new HashMap<>();
 
         try (InputStream source = BringPropertySourceLoader.class.getClassLoader().getResourceAsStream(defaultFileName)) {
