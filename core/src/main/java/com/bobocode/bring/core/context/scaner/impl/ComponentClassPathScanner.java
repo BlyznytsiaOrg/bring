@@ -2,11 +2,10 @@ package com.bobocode.bring.core.context.scaner.impl;
 
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.context.scaner.ClassPathScanner;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
-import java.util.Set;
+import java.lang.annotation.Annotation;
 
 /**
  * Implementation of ClassPathScanner that scans for classes annotated with @Component using Reflections.
@@ -19,20 +18,15 @@ import java.util.Set;
  *  @author Blyzhnytsia Team
  *  @since 1.0
  */
-@AllArgsConstructor
 @Slf4j
-public class ComponentClassPathScanner implements ClassPathScanner {
+public class ComponentClassPathScanner extends AbstractClassPathScanner {
 
-    /** The Reflections instance used for scanning classes. */
-    private final Reflections reflections;
+    public ComponentClassPathScanner(Reflections reflections) {
+        super(reflections);
+    }
 
-    /**
-     * Scans the classpath to retrieve classes annotated with @Component.
-     *
-     * @return a set of classes annotated with @Component
-     */
     @Override
-    public Set<Class<?>> scan() {
-        return reflections.getTypesAnnotatedWith(Component.class);
+    public Class<? extends Annotation> getAnnotation() {
+        return Component.class;
     }
 }

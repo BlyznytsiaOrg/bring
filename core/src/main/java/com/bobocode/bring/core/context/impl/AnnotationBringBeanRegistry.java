@@ -1,10 +1,10 @@
 package com.bobocode.bring.core.context.impl;
 
-import com.bobocode.bring.core.anotation.*;
-import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
-import com.bobocode.bring.core.anotation.resolver.impl.*;
+import com.bobocode.bring.core.anotation.Autowired;
+import com.bobocode.bring.core.anotation.Value;
 import com.bobocode.bring.core.context.BeanDefinitionRegistry;
 import com.bobocode.bring.core.context.BeanRegistry;
+import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.context.type.ParameterValueTypeInjector;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.CyclicBeanException;
@@ -13,7 +13,6 @@ import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
 import com.bobocode.bring.core.utils.ReflectionUtils;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
@@ -26,31 +25,23 @@ import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.function.Supplier;
 
+import static com.bobocode.bring.core.utils.ReflectionUtils.isAutowiredSetterMethod;
 import static com.bobocode.bring.core.utils.ReflectionUtils.setField;
 
-@RequiredArgsConstructor
 @Slf4j
 public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory implements BeanRegistry, BeanDefinitionRegistry {
-
-    private static final String SET_METHOD_START_PREFIX = "set";
-
-    private final List<AnnotationResolver> annotationResolvers = List.of(
-            new ComponentBeanNameAnnotationResolver(),
-            new ServiceBeanNameAnnotationResolver(),
-            new InterfaceBeanNameAnnotationResolver(),
-            new ConfigurationBeanNameAnnotationResolver(),
-            new ControllerBeanNameAnnotationResolver(),
-            new RestControllerBeanNameAnnotationResolver()
-    );
-
-    private final List<Class<? extends Annotation>> createdBeanAnnotations = List.of(
-            Component.class, Service.class, Configuration.class, RestController.class, Controller.class, Bean.class
-    );
-
+    private final ClassPathScannerFactory classPathScannerFactory;
+    protected final Set<Class<?>> beansToCreate;
     private final Set<String> currentlyCreatingBeans = new HashSet<>();
 
     @Getter
     private final Reflections reflections;
+
+    public AnnotationBringBeanRegistry(Reflections reflections) {
+        this.reflections = reflections;
+        this.classPathScannerFactory = new ClassPathScannerFactory(reflections);
+        this.beansToCreate = classPathScannerFactory.getBeansToCreate();
+    }
 
     @Override
     public void registerBean(String beanName, BeanDefinition beanDefinition) {
@@ -122,7 +113,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
     @Override
     public void registerBeanDefinition(BeanDefinition beanDefinition) {
-        String beanName = resolveBeanName(beanDefinition.getBeanClass());
+        String beanName = classPathScannerFactory.resolveBeanName(beanDefinition.getBeanClass());
         addBeanDefinition(beanName, beanDefinition);
     }
 
@@ -137,7 +128,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         for (Class<? extends T> implementation : implementations) {
             boolean hasRequiredAnnotation = Arrays.stream(implementation.getAnnotations())
                     .map(Annotation::annotationType)
-                    .anyMatch(createdBeanAnnotations::contains);
+                    .anyMatch(classPathScannerFactory.getCreatedBeanAnnotations()::contains);
 
             if (hasRequiredAnnotation) {
                 List<String> beanNames = Optional.ofNullable(getTypeToBeanNames().get(implementation))
@@ -187,7 +178,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             Optional<Object> injectViaProperties = getTypeResolverFactory().getParameterValueTypeInjectors().stream()
                     .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
                     .map(valueType -> {
-                        Object dependencyValue = valueType.setValueToSetter(parameter, createdBeanAnnotations);
+                        Object dependencyValue = valueType.setValueToSetter(parameter, classPathScannerFactory.getCreatedBeanAnnotations());
                         if (dependencyValue instanceof List) {
                             return injectListDependency((List<Class<?>>) dependencyValue);
                         }
@@ -272,7 +263,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
                 .forEach(field -> injectDependencyViaField(field, bean));
 
         Arrays.stream(clazz.getDeclaredMethods())
-                .filter(this::isAutowiredSetterMethod)
+                .filter(ReflectionUtils::isAutowiredSetterMethod)
                 .forEach(method -> injectDependencyViaMethod(method, bean));
     }
 
@@ -287,7 +278,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
             if (injectViaProperties.isEmpty()) {
                 Class<?> dependencyType = method.getParameterTypes()[0];
-                String dependencyBeanName = resolveBeanName(dependencyType);
+                String dependencyBeanName = classPathScannerFactory.resolveBeanName(dependencyType);
                 Object dependencyObject = getOrCreateBean(dependencyBeanName, dependencyType);
                 method.invoke(bean, dependencyObject);
             }
@@ -297,7 +288,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     @SneakyThrows
     private Object injectDependencyViaParameter(Method method, Parameter parameter, Object bean,
                                                 ParameterValueTypeInjector valueType) {
-        Object dependencyValue = valueType.setValueToSetter(parameter, createdBeanAnnotations);
+        Object dependencyValue = valueType.setValueToSetter(parameter, classPathScannerFactory.getCreatedBeanAnnotations());
         if (dependencyValue instanceof List) {
             var dependencyObjects = injectListDependency((List<Class<?>>) dependencyValue);
             method.invoke(bean, dependencyObjects);
@@ -313,7 +304,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
                 .filter(valueType -> valueType.hasAnnotatedWithValue(field))
 
                 .map(valueType -> {
-                    Object dependencyValue = valueType.setValueToField(field, bean, createdBeanAnnotations);
+                    Object dependencyValue = valueType.setValueToField(field, bean, classPathScannerFactory.getCreatedBeanAnnotations());
                     if (dependencyValue instanceof List listDependencyValue) {
                         setField(field, bean, injectListDependency(listDependencyValue));
                     } else {
@@ -324,7 +315,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
                 .findFirst();
 
         if (injectViaProperties.isEmpty()) {
-            String dependencyBeanName = resolveBeanName(field.getType());
+            String dependencyBeanName = classPathScannerFactory.resolveBeanName(field.getType());
             Object dependencyObject = getOrCreateBean(dependencyBeanName, field.getType());
             setField(field, bean, dependencyObject);
         }
@@ -333,25 +324,11 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     private List<Object> injectListDependency(List<Class<?>> value) {
         List<Object> dependencyObjects = new ArrayList<>();
         for (var impl : value) {
-            String implBeanName = resolveBeanName(impl);
+            String implBeanName = classPathScannerFactory.resolveBeanName(impl);
             Object dependecyObject = getOrCreateBean(implBeanName, impl);
             dependencyObjects.add(dependecyObject);
         }
 
         return dependencyObjects;
     }
-
-    private boolean isAutowiredSetterMethod(Method method) {
-        return method.isAnnotationPresent(Autowired.class) && method.getName().startsWith(SET_METHOD_START_PREFIX);
-    }
-
-    private String resolveBeanName(Class<?> clazz) {
-        return annotationResolvers.stream()
-                .filter(resolver -> resolver.isSupported(clazz))
-                .findFirst()
-                .map(annotationResolver -> annotationResolver.resolve(clazz))
-                .orElseThrow(
-                        () -> new IllegalStateException("No suitable resolver found for " + clazz.getName()));
-    }
-
 }

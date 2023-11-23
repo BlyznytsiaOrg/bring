@@ -1,13 +1,19 @@
 package com.bobocode.bring.core.context.scaner;
 
+import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
+import com.bobocode.bring.core.anotation.resolver.impl.*;
 import com.bobocode.bring.core.context.scaner.impl.*;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * The {@code ClassPathScannerFactory} class is responsible for creating a set of class path scanners,
@@ -46,6 +52,11 @@ public class ClassPathScannerFactory {
      */
     private final List<ClassPathScanner> classPathScanners;
 
+    @Getter
+    private final List<Class<? extends Annotation>> createdBeanAnnotations;
+
+    private final List<AnnotationResolver> annotationResolvers;
+
     /**
      * Constructs a new ClassPathScannerFactory with the specified Reflections instance.
      *
@@ -65,6 +76,19 @@ public class ClassPathScannerFactory {
                 new RestControllerClassPathScanner(reflections)
         );
 
+        this.createdBeanAnnotations = classPathScanners.stream()
+                        .map(ClassPathScanner::getAnnotation)
+                        .collect(toList());
+
+        this.annotationResolvers = List.of(
+                new ComponentBeanNameAnnotationResolver(),
+                new ServiceBeanNameAnnotationResolver(),
+                new InterfaceBeanNameAnnotationResolver(),
+                new ConfigurationBeanNameAnnotationResolver(),
+                new ControllerBeanNameAnnotationResolver(),
+                new RestControllerBeanNameAnnotationResolver()
+        );
+
         log.info("Register ClassPathScannerFactory {}", Arrays.toString(classPathScanners.toArray()));
     }
 
@@ -78,5 +102,21 @@ public class ClassPathScannerFactory {
         return classPathScanners.stream()
                 .flatMap(classPathScanner -> classPathScanner.scan().stream())
                 .collect(Collectors.toSet());
+    }
+
+    /**
+     * Resolves the name of the bean based on its class using registered annotation resolvers.
+     *
+     * @param clazz the class for which the bean name needs to be resolved
+     * @return the resolved name of the bean
+     * @throws IllegalStateException if no suitable resolver is found for the provided class
+     */
+    public String resolveBeanName(Class<?> clazz) {
+        return annotationResolvers.stream()
+                .filter(resolver -> resolver.isSupported(clazz))
+                .findFirst()
+                .map(annotationResolver -> annotationResolver.resolve(clazz))
+                .orElseThrow(
+                        () -> new IllegalStateException("No suitable resolver found for " + clazz.getName()));
     }
 }

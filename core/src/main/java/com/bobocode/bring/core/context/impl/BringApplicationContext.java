@@ -50,13 +50,9 @@ import java.util.*;
  */
 public class BringApplicationContext extends AnnotationBringBeanRegistry implements BringBeanFactory {
     
-    private final ClassPathScannerFactory classPathScannerFactory;
-    
     private final BeanPostProcessorFactory beanPostProcessorFactory;
 
     private final BeanPostProcessorDefinitionFactory beanPostProcessorDefinitionFactory;
-    
-    private final Set<Class<?>> beansToCreate;
 
     /**
      * Constructs a new BringApplicationContext with the specified base package for component scanning.
@@ -69,8 +65,6 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
      */
     public BringApplicationContext(String... basePackage) {
         super(new Reflections(basePackage));
-        this.classPathScannerFactory = new ClassPathScannerFactory(getReflections());
-        this.beansToCreate = classPathScannerFactory.getBeansToCreate();
         this.beanPostProcessorDefinitionFactory =  new BeanPostProcessorDefinitionFactory();
         // Create Bean definitions for classes annotated with annotations from ClassPathScanner
         register(beansToCreate);

@@ -2,11 +2,10 @@ package com.bobocode.bring.core.context.scaner.impl;
 
 import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.core.context.scaner.ClassPathScanner;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
-import java.util.Set;
+import java.lang.annotation.Annotation;
 
 
 /**
@@ -20,21 +19,16 @@ import java.util.Set;
  *  @author Blyzhnytsia Team
  *  @since 1.0
  */
-@AllArgsConstructor
 @Slf4j
-public class RestControllerClassPathScanner implements ClassPathScanner {
+public class RestControllerClassPathScanner extends AbstractClassPathScanner {
 
-    /** The Reflections instance used for scanning classes. */
-    private final Reflections reflections;
 
-    /**
-     * Scans the classpath to retrieve classes annotated with @RestController.
-     *
-     * @return a set of classes annotated with @RestController
-     */
-    @Override
-    public Set<Class<?>> scan() {
-        return reflections.getTypesAnnotatedWith(RestController.class);
+    public RestControllerClassPathScanner(Reflections reflections) {
+        super(reflections);
     }
-    
+
+    @Override
+    public Class<? extends Annotation> getAnnotation() {
+        return RestController.class;
+    }
 }

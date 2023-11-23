@@ -1,22 +1,21 @@
 package com.bobocode.bring.core.context.scaner.impl;
 
 import com.bobocode.bring.core.anotation.Configuration;
-import com.bobocode.bring.core.context.scaner.ClassPathScanner;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
-import java.util.Set;
+import java.lang.annotation.Annotation;
 
-@AllArgsConstructor
 @Slf4j
-public class ConfigurationClassPathScanner implements ClassPathScanner {
+public class ConfigurationClassPathScanner extends AbstractClassPathScanner {
 
-    private final Reflections reflections;
-    
-    @Override
-    public Set<Class<?>> scan() {
-        return reflections.getTypesAnnotatedWith(Configuration.class);
+    public ConfigurationClassPathScanner(Reflections reflections) {
+        super(reflections);
     }
-    
+
+    @Override
+    public Class<? extends Annotation> getAnnotation() {
+        return Configuration.class;
+    }
+
 }
