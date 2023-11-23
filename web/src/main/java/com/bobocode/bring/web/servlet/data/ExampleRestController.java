@@ -1,5 +1,6 @@
-package com.bobocode.bring.web.servlet;
+package com.bobocode.bring.web.servlet.data;
 
+import com.bobocode.bring.web.servlet.BringServlet;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.PostMapping;
@@ -11,7 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 //TODO need to delete them later
 //@RestController
 //@RequestMapping(path = "/example")
-public class ExampleRestController extends BaseServlet {
+public class ExampleRestController implements BringServlet {
 
     @GetMapping(path = "/hello")
     public String sayHello() {
@@ -38,9 +39,19 @@ public class ExampleRestController extends BaseServlet {
         return body;
     }
 
+    @PostMapping(path = "/reqBody")
+    public UserDto reqBody2(@RequestBody UserDto body) {
+        return body;
+    }
+
     @GetMapping(path = "/request")
-    public String response(HttpServletRequest request) {
+    public String request(HttpServletRequest request) {
         return request.getClass().getSimpleName();
+    }
+
+    @GetMapping(path = "/request")
+    public String duplicate() {
+        return "duplicate";
     }
 
     @GetMapping(path = "/header")

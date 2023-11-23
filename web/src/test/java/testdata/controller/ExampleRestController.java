@@ -1,6 +1,7 @@
 package testdata.controller;
 
 import com.bobocode.bring.core.anotation.RestController;
+import com.bobocode.bring.web.servlet.BringServlet;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.PostMapping;
@@ -9,7 +10,6 @@ import com.bobocode.bring.web.servlet.annotation.RequestBody;
 import com.bobocode.bring.web.servlet.annotation.RequestHeader;
 import com.bobocode.bring.web.servlet.annotation.RequestMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestParam;
-import com.bobocode.bring.web.servlet.BaseServlet;
 import com.bobocode.bring.web.servlet.annotation.ResponseStatus;
 import com.bobocode.bring.web.servlet.http.HttpStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,7 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/example")
-public class ExampleRestController extends BaseServlet {
+public class ExampleRestController implements BringServlet {
 
     private final ObjectMapper objectMapper;
 

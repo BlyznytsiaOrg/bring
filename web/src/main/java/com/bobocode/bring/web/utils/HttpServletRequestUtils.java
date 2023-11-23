@@ -16,4 +16,11 @@ public class HttpServletRequestUtils {
         }
         return requestURI;
     }
+
+    public static String getShortenedPath(String requestPath) {
+        String requestPathShortened;
+        int index = requestPath.lastIndexOf("/");
+        requestPathShortened = requestPath.substring(0, index + 1);
+        return requestPathShortened;
+    }
 }
