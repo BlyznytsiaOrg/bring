@@ -9,7 +9,6 @@ The @ScheduledTask annotation provides the following attributes for customizatio
 - period: Denotes the fixed rate in milliseconds between consecutive executions (default: 5000 milliseconds).
 - timeUnit: Specifies the time unit for initialDelay and period (default: TimeUnit.MILLISECONDS).
 
-
 ### Usage Example
 
 ```
@@ -36,6 +35,15 @@ public class MyScheduledTasks {
   - initialDelay = 1000: Sets the initial delay before the first execution of the task to 1000 milliseconds (1 second).
   - period = 5000: Specifies the interval between consecutive executions of the task to 5000 milliseconds (5 seconds).
   - timeUnit = TimeUnit.MILLISECONDS: Indicates that the time values (initial delay and period) are in milliseconds.
+
+### Classes worth exploring for a deeper understanding of triggering mechanisms.
+
+- CustomScheduleConfiguration -  Configures a custom schedule with a specific core pool size for executing scheduled tasks.
+This class sets up a scheduled executor service with a defined core pool size and creates a custom scheduler based on this executor service.
+- CustomScheduler - Represents a custom scheduler utilizing a ScheduledExecutorService for task scheduling. 
+This class wraps a ScheduledExecutorService and provides methods to schedule tasks, as well as to shut down the underlying executor service.
+- ScheduleBeanPostProcessor -  A BeanPostProcessor responsible for processing beans and registering methods annotated with @ScheduledTask 
+for scheduling via a CustomScheduler.
 
 
 The @ScheduledTask annotation simplifies the scheduling of recurring tasks within your application, enhancing efficiency by automating periodic executions.
