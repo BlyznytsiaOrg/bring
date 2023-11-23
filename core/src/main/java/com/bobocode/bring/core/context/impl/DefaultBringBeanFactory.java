@@ -15,14 +15,13 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toMap;
-
+@Getter
 public class DefaultBringBeanFactory implements BringBeanFactory {
 
     private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
 
     private final Map<Class<?>, List<String>> typeToBeanNames = new ConcurrentHashMap<>();
-    
+
     private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>();
 
     private final Map<String, Supplier<Object>> prototypeSuppliers = new ConcurrentHashMap<>();
@@ -30,15 +29,12 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
     private final Map<String, List<Object>> interfaceNameToImplementations = new ConcurrentHashMap<>();
 
     @Setter
-    @Getter
     private Map<String, String> properties = new ConcurrentHashMap<>();
 
     @Setter
-    @Getter
     private String profileName;
 
     @Setter
-    @Getter
     private TypeResolverFactory typeResolverFactory;
 
     @Override
@@ -49,62 +45,40 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
             throw new NoUniqueBeanException(type);
         }
 
-        return beans.values()
-                .stream()
+        return beans.values().stream()
                 .findFirst()
                 .orElseThrow(() -> new NoSuchBeanException(type));
     }
 
     @Override
     public <T> T getBean(Class<T> type, String name) throws BeansException {
-        Object obj = Optional.ofNullable(singletonObjects.get(name))
-                .orElse(Optional.ofNullable(prototypeSuppliers.get(name))
-                  .map(Supplier::get)
-                  .orElse(null));
-        
-        if (Objects.isNull(obj)) {
-            throw new NoSuchBeanException(type);
-        }
-        
-        return type.cast(obj);
+        Object bean = Optional.ofNullable(getBeanByName(name))
+                .orElseThrow(() -> new NoSuchBeanException(type));
+
+        return type.cast(bean);
     }
 
     @Override
     public <T> Map<String, T> getBeans(Class<T> type) throws BeansException {
-        List<String> beanNames = typeToBeanNames.entrySet()
-                .stream()
+        List<String> beanNames = typeToBeanNames.entrySet().stream()
                 .filter(entry -> type.isAssignableFrom(entry.getKey()))
                 .map(Map.Entry::getValue)
                 .flatMap(Collection::stream)
                 .toList();
-        
+
         return beanNames.stream()
                 .collect(Collectors.toMap(Function.identity(), name -> getBean(type, name)));
+    }
+
+    public Object getBeanByName(String beanName) {
+        return Optional.ofNullable(getPrototypeSuppliers().get(beanName))
+                .map(Supplier::get)
+                .orElse(getSingletonObjects().get(beanName));
     }
 
     @Override
     public <T> Map<String, T> getAllBeans() {
         return (Map<String, T>) singletonObjects;
-    }
-
-    protected Map<String, BeanDefinition> getBeanDefinitions() {
-        return beanDefinitionMap;
-    }
-    
-    protected Map<String, Object> getSingletonObjects() {
-        return singletonObjects;
-    }
-
-    protected Map<String, Supplier<Object>> getPrototypeSuppliers() {
-        return prototypeSuppliers;
-    }
-
-    protected Map<String, List<Object>> getInterfaceNameToImplementations() {
-        return interfaceNameToImplementations;
-    }
-    
-    protected Map<Class<?>, List<String>> getTypeToBeanNames() {
-        return typeToBeanNames;
     }
 
     protected List<Object> getInterfaceNameToImplementations(String beanName) {
@@ -132,15 +106,12 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
         beanNames.add(beanName);
         typeToBeanNames.put(beanDefinition.getBeanClass(), beanNames);
     }
-    
+
     public BeanDefinition getBeanDefinitionByName(String beanName) {
         return this.beanDefinitionMap.get(beanName);
     }
-    
+
     public List<String> getAllBeanDefinitionNames() {
-        return this.beanDefinitionMap.keySet()
-                .stream()
-                .toList();
+        return this.beanDefinitionMap.keySet().stream().toList();
     }
-    
 }
