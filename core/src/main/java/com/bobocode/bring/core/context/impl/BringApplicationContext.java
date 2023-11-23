@@ -98,11 +98,11 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
     public void refresh() {
         // Create additional Bean definitions i.e. for Beans in Configuration classes
         invokeBeanFactoryPostProcessors();
-        
-        invokeBeanPostProcessors();
-        
+
         // Create Singleton Bean objects from Bean definitions
         instantiateBeans();
+
+        invokeBeanPostProcessors();
     }
 
     private void invokeBeanFactoryPostProcessors() {
