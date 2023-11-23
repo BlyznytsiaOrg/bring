@@ -6,6 +6,7 @@ import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.BeansException;
 import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
+import java.util.Map.Entry;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -46,7 +47,7 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
         Map<String, T> beans = getBeans(type);
 
         if (beans.size() > 1) {
-            throw new NoUniqueBeanException(type);
+            return getPrimary(beans, type);
         }
 
         return beans.values()
@@ -74,7 +75,7 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
         List<String> beanNames = typeToBeanNames.entrySet()
                 .stream()
                 .filter(entry -> type.isAssignableFrom(entry.getKey()))
-                .map(Map.Entry::getValue)
+                .map(Entry::getValue)
                 .flatMap(Collection::stream)
                 .toList();
         
@@ -142,5 +143,15 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
                 .stream()
                 .toList();
     }
-    
+
+    private <T> T getPrimary (Map<String, T> beans, Class<T> type) {
+        List <T> foundBeans = beans.entrySet().stream().filter(entry -> getBeanDefinitionByName(entry.getKey()).isPrimary()).map(
+            Entry::getValue).toList();
+        if (foundBeans.size() != 1) {
+            throw new NoUniqueBeanException(type);
+        } else {
+            return foundBeans.get(0);
+        }
+    }
+
 }

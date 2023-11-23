@@ -13,8 +13,8 @@ import com.bobocode.bring.testdata.di.positive.prototype.off.CoffeeShop;
 import com.bobocode.bring.testdata.di.positive.prototype.off.SimpleClass;
 import com.bobocode.bring.testdata.di.positive.primary.bean.Employee;
 import com.bobocode.bring.testdata.di.positive.primary.component.C;
-import com.bobocode.bring.testdata.di.positive.qualifier.PrintService;
-import com.bobocode.bring.testdata.di.positive.qualifier.Printer;
+import com.bobocode.bring.testdata.di.positive.qualifier.constructor.MusicPlayer;
+import com.bobocode.bring.testdata.di.positive.qualifier.field.PrintService;
 import com.bobocode.bring.testdata.di.positive.setter.A;
 import com.bobocode.bring.testdata.di.positive.setter.B;
 import com.bobocode.bring.testdata.di.positive.setterproperties.ProfileBeanSetter;
@@ -186,51 +186,6 @@ class BringApplicationContextHappyCasesTest {
                 "restClient=RestClient{url='https://exterl.service', username='user100'}}, " +
                 "externalService2=ExternalService2{" +
                 "restClient2=RestClient{url='https://exterl.service2', username='user200'}}}");
-    }
-
-    @DisplayName("Should autowire appropriate bean when we have 2 implementations and one of them is marked by @Primary annotation")
-    @Test
-    void injectPrimaryComponent() {
-        // given
-        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".primary.component");
-
-        // when
-        C c = bringApplicationContext.getBean(C.class);
-
-        // then
-        assertThat(c).isNotNull();
-        assertThat(c.getField()).isNotNull();
-        assertThat(c.getField()).isInstanceOf(com.bobocode.bring.testdata.di.positive.primary.component.A.class);
-    }
-
-    @DisplayName("Should register appropriate bean when we have 2 methods with the same bean type to return and one of them is marked by @Primary annotation")
-    @Test
-    void registerPrimaryBean() {
-        // given
-        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".primary.bean");
-
-        // when
-        Employee employee = bringApplicationContext.getBean(Employee.class);
-
-        // then
-        assertThat(employee).isNotNull();
-        assertThat(employee.getName()).isEqualTo("Jerry");
-
-    }
-
-    @DisplayName("Should autowire appropriate bean when we have 2 implementations and @Qualifier annotation")
-    @Test
-    void registerQualifierComponent() {
-        // given
-        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".qualifier");
-
-        // when
-        PrintService printer = bringApplicationContext.getBean(PrintService.class);
-
-        // then
-        assertThat(printer).isNotNull();
-        assertThat(printer.getPrinter().print()).isEqualTo("Canon");
-
     }
 
     @DisplayName("Should inject implementations of Interface to Field")
@@ -415,5 +370,63 @@ class BringApplicationContextHappyCasesTest {
         assertThat(aBean.getList().get(0)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.B.class);
         assertThat(aBean.getList().get(1)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.D.class);
         assertThat(aBean.getList().get(2)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.C.class);
+    }
+
+    @DisplayName("Should autowire appropriate bean when we have 2 implementations and one of them is marked by @Primary annotation")
+    @Test
+    void ShouldInjectPrimaryComponent() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".primary.component");
+
+        // when
+        C c = bringApplicationContext.getBean(C.class);
+
+        // then
+        assertThat(c).isNotNull();
+        assertThat(c.getField()).isNotNull();
+        assertThat(c.getField()).isInstanceOf(com.bobocode.bring.testdata.di.positive.primary.component.A.class);
+    }
+
+    @DisplayName("Should register appropriate bean when we have 2 methods with the same bean type to return and one of them is marked by @Primary annotation")
+    @Test
+    void ShouldRegisterPrimaryBean() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".primary.bean");
+
+        // when
+        Employee employee = bringApplicationContext.getBean(Employee.class);
+
+        // then
+        assertThat(employee).isNotNull();
+        assertThat(employee.getName()).isEqualTo("Jerry");
+
+    }
+
+    @DisplayName("Should autowire appropriate bean when we have 2 implementations and @Qualifier annotation")
+    @Test
+    void ShouldRegisterQualifierComponent() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".qualifier.field");
+
+        // when
+        PrintService printer = bringApplicationContext.getBean(PrintService.class);
+
+        // then
+        assertThat(printer).isNotNull();
+        assertThat(printer.getPrinter().print()).isEqualTo("Canon");
+    }
+
+    @DisplayName("Should find appropriate bean when we have 2 implementations and @Qualifier annotation")
+    @Test
+    void ShouldInjectBeanViaConstructorByQualifier() {
+        // given
+        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".qualifier.constructor");
+
+        // when
+        MusicPlayer musicPlayer = bringApplicationContext.getBean(MusicPlayer.class);
+
+        // then
+        assertThat(musicPlayer).isNotNull();
+        assertThat(musicPlayer.playMusic()).isEqualTo("Beethoven - Moonlight Sonata Lynyrd Skynyrd - Sweet Home Alabama");
     }
 }

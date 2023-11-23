@@ -127,18 +127,18 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
     //Check for unambiguity:
     private boolean canBeInstantiated(String beanName, BeanDefinition beanDefinition) {
-        var beanNames = getTypeToBeanNames().get(beanDefinition.getBeanClass());
-        if (beanNames.size() > 1) {
-            var primaryBeanNames = beanNames.stream().filter(bn -> getBeanDefinition(bn).isPrimary()).toList();
-            if (primaryBeanNames.size() != 1) {
-                throw new NoUniqueBeanException(beanDefinition.getBeanClass());
-            }
-            if(beanName.equals(primaryBeanNames.get(0))) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+//        var beanNames = getTypeToBeanNames().get(beanDefinition.getBeanClass());
+//        if (beanNames.size() > 1) {
+//            var primaryBeanNames = beanNames.stream().filter(bn -> getBeanDefinition(bn).isPrimary()).toList();
+//            if (primaryBeanNames.size() != 1) {
+//                throw new NoUniqueBeanException(beanDefinition.getBeanClass());
+//            }
+//            if(beanName.equals(primaryBeanNames.get(0))) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        }
         return true;
     }
 
@@ -297,23 +297,32 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         } else if (beanNames.size() == 1) {
             return beanNames.get(0);
         } else {
-            return findPrimaryBeanNameOrByParameter(beanNames, paramName, clazz);
+            return findPrimaryBeanNameOrByQualifierOrbBParameter(beanNames, paramName, parameter);
         }
     }
 
-    private String findPrimaryBeanNameOrByParameter(List<String> beanNames, String paramName, Class<?>  parameterType) {
+    private String findPrimaryBeanNameOrByQualifierOrbBParameter(List<String> beanNames, String paramName, Parameter  parameter) {
+        Class<?>  parameterType = parameter.getType();
+        String qualifier = getQualifier(parameter);
         var primaryNames = beanNames.stream().filter(beanName -> getBeanDefinition(beanName).isPrimary()).toList();
-
         if(primaryNames.size() == 1) {
             return primaryNames.get(0);
         } else if (primaryNames.size() > 1) {
             throw new NoUniqueBeanException(parameterType);
-        } else {
+        } else if (qualifier != null) {
+            return beanNames.stream().filter(name -> name.equals(qualifier)).findFirst().orElseThrow(() -> new NoSuchBeanException(parameterType));
+        }
+        else {
             return beanNames.stream()
                     .filter(name -> name.equalsIgnoreCase(paramName))
                     .findFirst()
                     .orElseThrow(() -> new NoUniqueBeanException(parameterType, beanNames));
         }
+    }
+
+    private String getQualifier(Parameter  parameter) {
+        return parameter.isAnnotationPresent(Qualifier.class) ? parameter.getAnnotation(Qualifier.class).value() : null;
+
     }
 
     private Object getOrCreateBean(String beanName, Class<?> beanType, String qualifier) {

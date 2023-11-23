@@ -1,4 +1,4 @@
-package com.bobocode.bring.testdata.di.positive.qualifier;
+package com.bobocode.bring.testdata.di.positive.qualifier.field;
 
 import com.bobocode.bring.core.anotation.Autowired;
 import com.bobocode.bring.core.anotation.Qualifier;
