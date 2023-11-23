@@ -170,6 +170,9 @@ class BringApplicationContextHappyCasesTest {
         // when
         var useCase = bringApplicationContext.getBean(GetInfoFromExternalServicesUseCase.class);
 
+        //var bean = bringApplicationContext.getBean(
+        //   com.bobocode.bring.testdata.di.positive.fullinjection.RestClient.class);
+
         // then
         assertThat(useCase).isNotNull();
         assertThat(useCase.getInfoFromService())

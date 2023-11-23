@@ -9,9 +9,6 @@ import com.bobocode.bring.core.utils.BeanScopeUtils;
 import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.bpp.BeanPostProcessor;
 import com.bobocode.bring.core.postprocessor.BeanPostProcessorDefinitionFactory;
-import com.bobocode.bring.core.postprocessor.BeanPostProcessorFactory;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 import com.bobocode.bring.core.bpp.BeanPostProcessorFactory;
 import org.reflections.Reflections;
 

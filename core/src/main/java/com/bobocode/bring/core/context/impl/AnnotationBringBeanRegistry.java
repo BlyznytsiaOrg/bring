@@ -312,7 +312,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             return beanNames.stream()
                     .filter(name -> name.equalsIgnoreCase(paramName))
                     .findFirst()
-                    .orElseThrow(() -> new NoUniqueBeanException(clazz, beanNames));
+                    .orElseThrow(() -> new NoUniqueBeanException(parameterType, beanNames));
         }
     }
 
@@ -416,7 +416,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         List<Object> dependencyObjects = new ArrayList<>();
         for (var impl : value) {
             String implBeanName = resolveBeanName(impl);
-            Object dependecyObject = getOrCreateBean(implBeanName, impl);
+            Object dependecyObject = getOrCreateBean(implBeanName, impl, null);
             dependencyObjects.add(dependecyObject);
         }
 
