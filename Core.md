@@ -27,7 +27,7 @@ If we need diagram classes we should use Wiki and add link to it.
    - @Primary //TODO
    - @Qualifier //TODO
    - @Order
-   - [@Value](\features\core\Value.md)
+   - [@Value](/features/core/Value.md)
    - Prototype Beans into a Singleton
 
 
@@ -45,7 +45,7 @@ If we need diagram classes we should use Wiki and add link to it.
 
 
 - addition items:
-  - [Scheduling](\features\core\Scheduling.md)
+  - [Scheduling](/features/core/Scheduling.md)
   - Profile
   - Properties file support
   - Logging
