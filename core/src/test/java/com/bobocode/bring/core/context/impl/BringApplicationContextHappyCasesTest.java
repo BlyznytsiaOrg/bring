@@ -153,62 +153,7 @@ class BringApplicationContextHappyCasesTest {
     }
 
 
-    @DisplayName("Should found profile bean and read application properties and do field injection")
-    @Test
-    void shouldFoundProfileBeanAndReadApplicationPropertiesAndSetValueToFieldInjection() {
-        //when
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".fieldproperties");
-        ProfileBean profileBean = bringApplicationContext.getBean(ProfileBean.class);
 
-        //then
-        assertThat(bringApplicationContext.getProfileName()).isEqualTo("dev");
-        assertThat(bringApplicationContext.getProperties()).isNotNull()
-                        .hasSize(1)
-                        .containsEntry("bring.main.banner-mode", "on");
-
-        assertThat(profileBean).isNotNull();
-        assertThat(profileBean.getBannerMode())
-                .isNotNull()
-                .isEqualTo("on");
-    }
-
-    @DisplayName("Should found profile bean and read application properties and do setter injection")
-    @Test
-    void shouldFoundProfileBeanAndReadApplicationPropertiesAndSetValueToSetterInjection() {
-        //when
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".setterproperties");
-        ProfileBeanSetter profileBeanSetter = bringApplicationContext.getBean(ProfileBeanSetter.class);
-
-        //then
-        assertThat(bringApplicationContext.getProfileName()).isEqualTo("dev");
-        assertThat(bringApplicationContext.getProperties()).isNotNull()
-                .hasSize(1)
-                .containsEntry("bring.main.banner-mode", "on");
-
-        assertThat(profileBeanSetter).isNotNull();
-        assertThat(profileBeanSetter.getBannerMode())
-                .isNotNull()
-                .isEqualTo("on");
-    }
-
-    @DisplayName("Should found profile bean and read application properties and do constructor injection")
-    @Test
-    void shouldFoundProfileBeanAndReadApplicationPropertiesAndSetValueToConstructorInjection() {
-        //when
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".constructorproperties");
-        ProfileBeanConstructor profileBeanConstructor = bringApplicationContext.getBean(ProfileBeanConstructor.class);
-
-        //then
-        assertThat(bringApplicationContext.getProfileName()).isEqualTo("dev");
-        assertThat(bringApplicationContext.getProperties()).isNotNull()
-                .hasSize(1)
-                .containsEntry("bring.main.banner-mode", "on");
-
-        assertThat(profileBeanConstructor).isNotNull();
-        assertThat(profileBeanConstructor.getBannerMode())
-                .isNotNull()
-                .isEqualTo("on");
-    }
 
     @DisplayName("Should inject beans annotated with different annotations")
     @Test

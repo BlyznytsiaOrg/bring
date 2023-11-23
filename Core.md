@@ -27,7 +27,7 @@ If we need diagram classes we should use Wiki and add link to it.
    - @Primary //TODO
    - @Qualifier //TODO
    - @Order
-   - @Value
+   - @Value(\features\core\Value.md)
    - Prototype Beans into a Singleton
 
 

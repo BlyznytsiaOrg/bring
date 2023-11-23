@@ -15,7 +15,7 @@ Bring's adaptability addresses these distinct deployment needs, ensuring seamles
 The Bring Framework consists of features organized into two modules. 
 These modules are grouped into Core Container, Web as shown in the following diagram.
 
-<img width="922" alt="image" src="https://github.com/YevgenDemoTestOrganization/bring/assets/73576438/f659a4e7-5b66-44f9-b832-645d67a3d3f8">
+<img width="922" alt="image" src="https://github.com/YevgenDemoTestOrganization/bring/assets/73576438/04d93e80-b30d-42b7-8921-e85edbe77085">
 
 
 The **Core Container** is the backbone of the Bring framework, offering essential functionalities like the Inversion of Control (IoC) container and the ApplicationContext. 
