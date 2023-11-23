@@ -2,10 +2,12 @@ package com.bobocode.bring.core.context.scaner.impl;
 
 import com.bobocode.bring.core.context.scaner.ClassPathScanner;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
 import java.util.Set;
 
+@Slf4j
 @AllArgsConstructor
 public abstract class AbstractClassPathScanner implements ClassPathScanner  {
 
@@ -19,6 +21,8 @@ public abstract class AbstractClassPathScanner implements ClassPathScanner  {
      */
     @Override
     public Set<Class<?>> scan() {
-        return reflections.getTypesAnnotatedWith(getAnnotation());
+        Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(getAnnotation());
+        log.info("Found {} classes annotated with {}", typesAnnotatedWith.size(), getAnnotation().getName());
+        return typesAnnotatedWith;
     }
 }

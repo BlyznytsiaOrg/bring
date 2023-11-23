@@ -40,7 +40,7 @@ public class BringPropertiesSourceScanner implements BringSourceScanner {
      */
     @SneakyThrows
     private List<File> loadAllProperties(String type) {
-        log.info("Scanning for {} files", type);
+        log.debug("Scanning for {} files", type);
         List<File> refFiles = new ArrayList<>();
         String applicationProperties = APPLICATION + type;
 
@@ -58,6 +58,7 @@ public class BringPropertiesSourceScanner implements BringSourceScanner {
         if (Objects.nonNull(files)) {
             refFiles = Arrays.stream(files)
                     .filter(file -> file.isFile() && file.getName().endsWith(type))
+                    .peek(file -> log.debug("Found {} file {}", type, file.getName()))
                     .sorted(Comparator.comparing(File::getName).reversed())
                     .toList();
         }
