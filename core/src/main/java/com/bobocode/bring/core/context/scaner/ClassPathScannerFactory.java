@@ -68,6 +68,12 @@ public class ClassPathScannerFactory {
         log.info("Register ClassPathScannerFactory {}", Arrays.toString(classPathScanners.toArray()));
     }
 
+    /**
+     * Retrieves a set of classes representing beans to be created by aggregating scanned classes
+     * from multiple ClassPathScanner instances.
+     *
+     * @return a set of classes to be instantiated as beans
+     */
     public Set<Class<?>> getBeansToCreate() {
         return classPathScanners.stream()
                 .flatMap(classPathScanner -> classPathScanner.scan().stream())

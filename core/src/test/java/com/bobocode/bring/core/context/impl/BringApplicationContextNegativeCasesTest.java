@@ -4,6 +4,7 @@ import com.bobocode.bring.core.BringApplication;
 import com.bobocode.bring.core.exception.CyclicBeanException;
 import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
+import testdata.di.negative.oneinterfacetwodependency.Barista;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BringApplicationContextNegativeCasesTest {
 
-    private static final String DEMO_PACKAGE = "com.bobocode.bring.testdata.di.negative";
+    private static final String DEMO_PACKAGE = "testdata.di.negative";
 
     @DisplayName("Should throw exception when we have Cyclic dependency")
     @Test
@@ -51,13 +52,13 @@ class BringApplicationContextNegativeCasesTest {
     @Test
     void shouldThrowExceptionWhenWeHaveTwoDependenciesForOneInterface() {
         //given
-        var expectedMessage = "No qualifying bean of type 'interface com.bobocode.bring.testdata.di.negative.oneinterfacetwodependency.Drink'" +
+        var expectedMessage = "No qualifying bean of type 'interface testdata.di.negative.oneinterfacetwodependency.Drink'" +
                 " available: expected single matching bean but found 2: [Espresso,Latte]";
         //when
         Executable executable = () -> {
             var bringApplicationContext = BringApplication.run(DEMO_PACKAGE + ".oneinterfacetwodependency");
 
-            bringApplicationContext.getBean(com.bobocode.bring.testdata.di.negative.oneinterfacetwodependency.Barista.class);
+            bringApplicationContext.getBean(Barista.class);
         };
 
         // then
