@@ -1,9 +1,13 @@
 package com.bobocode.bring.core.context.scaner;
 
+import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
+import com.bobocode.bring.core.anotation.resolver.impl.*;
 import com.bobocode.bring.core.context.scaner.impl.*;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +50,11 @@ public class ClassPathScannerFactory {
      */
     private final List<ClassPathScanner> classPathScanners;
 
+    private final List<AnnotationResolver> annotationResolvers;
+
+    @Getter
+    private final List<Class<? extends Annotation>> createdBeanAnnotations;
+
     /**
      * Constructs a new ClassPathScannerFactory with the specified Reflections instance.
      *
@@ -65,6 +74,19 @@ public class ClassPathScannerFactory {
                 new RestControllerClassPathScanner(reflections)
         );
 
+        this.annotationResolvers = List.of(
+                new ComponentBeanNameAnnotationResolver(),
+                new ServiceBeanNameAnnotationResolver(),
+                new InterfaceBeanNameAnnotationResolver(),
+                new ConfigurationBeanNameAnnotationResolver(),
+                new ControllerBeanNameAnnotationResolver(),
+                new RestControllerBeanNameAnnotationResolver()
+        );
+
+        this.createdBeanAnnotations = classPathScanners.stream()
+                        .map(ClassPathScanner::getAnnotation)
+                        .collect(Collectors.toList());
+
         log.info("Register ClassPathScannerFactory {}", Arrays.toString(classPathScanners.toArray()));
     }
 
@@ -79,4 +101,14 @@ public class ClassPathScannerFactory {
                 .flatMap(classPathScanner -> classPathScanner.scan().stream())
                 .collect(Collectors.toSet());
     }
+
+    public String resolveBeanName(Class<?> clazz) {
+        return annotationResolvers.stream()
+                .filter(resolver -> resolver.isSupported(clazz))
+                .findFirst()
+                .map(annotationResolver -> annotationResolver.resolve(clazz))
+                .orElseThrow(
+                        () -> new IllegalStateException("No suitable resolver found for " + clazz.getName()));
+    }
+
 }
