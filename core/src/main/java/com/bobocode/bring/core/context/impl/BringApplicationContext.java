@@ -50,14 +50,8 @@ import java.util.*;
  * @see BeanPostProcessorDefinitionFactory
  */
 public class BringApplicationContext extends AnnotationBringBeanRegistry implements BringBeanFactory {
-    
-    private final ClassPathScannerFactory classPathScannerFactory;
-    
-    private final BeanPostProcessorFactory beanPostProcessorFactory;
 
     private final BeanPostProcessorDefinitionFactory beanPostProcessorDefinitionFactory;
-    
-    private final Set<Class<?>> beansToCreate;
 
     /**
      * Constructs a new BringApplicationContext with the specified base package for component scanning.
@@ -70,12 +64,10 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
      */
     public BringApplicationContext(String... basePackage) {
         super(new Reflections(basePackage));
-        this.classPathScannerFactory = new ClassPathScannerFactory(getReflections());
-        this.beansToCreate = classPathScannerFactory.getBeansToCreate();
+        var classPathScannerFactory = new ClassPathScannerFactory(getReflections());
         this.beanPostProcessorDefinitionFactory =  new BeanPostProcessorDefinitionFactory();
         // Create Bean definitions for classes annotated with annotations from ClassPathScanner
-        register(beansToCreate);
-        this.beanPostProcessorFactory = new BeanPostProcessorFactory();
+        register(classPathScannerFactory.getBeansToCreate());
     }
 
     public <T> BringApplicationContext(Class<T> componentClass) {
@@ -115,7 +107,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
     }
 
     private void invokeBeanPostProcessors() {
-        List<BeanPostProcessor> beanPostProcessors = beanPostProcessorFactory.getBeanPostProcessors();
+        List<BeanPostProcessor> beanPostProcessors = new BeanPostProcessorFactory(this).getBeanPostProcessors();
         getAllBeans().forEach((beanName, bean) -> {
             for (var beanPostProcessor : beanPostProcessors) {
                 Object beanAfterPostProcess = beanPostProcessor.postProcessInitialization(bean, beanName);

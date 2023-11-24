@@ -1,5 +1,8 @@
 package com.bobocode.bring.core.bpp.impl.schedule;
 
+import com.bobocode.bring.core.anotation.Bean;
+import com.bobocode.bring.core.anotation.Configuration;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -15,6 +18,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * @author Blyzhnytsia Team
  * @since 1.0
  */
+@Configuration
 public class CustomScheduleConfiguration {
 
     /** The core pool size for the scheduled executor service. */
@@ -26,6 +30,7 @@ public class CustomScheduleConfiguration {
      * @return a ScheduledExecutorService instance
      * @see java.util.concurrent.Executors#newScheduledThreadPool(int)
      */
+    @Bean
     public ScheduledExecutorService scheduledExecutorService() {
         return Executors.newScheduledThreadPool(CORE_POOL_SIZE);
     }
@@ -36,6 +41,7 @@ public class CustomScheduleConfiguration {
      * @return a CustomScheduler instance using the configured executor service
      * @see CustomScheduler
      */
+    @Bean
     public CustomScheduler customScheduler() {
         return new CustomScheduler(scheduledExecutorService());
     }

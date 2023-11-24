@@ -3,7 +3,6 @@ package com.bobocode.bring.core.bpp.impl;
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.anotation.ScheduledTask;
 import com.bobocode.bring.core.bpp.BeanPostProcessor;
-import com.bobocode.bring.core.bpp.impl.schedule.CustomScheduleConfiguration;
 import com.bobocode.bring.core.bpp.impl.schedule.CustomScheduler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,9 +32,8 @@ public class ScheduleBeanPostProcessor implements BeanPostProcessor {
     /** The CustomScheduler used for scheduling tasks. */
     private final CustomScheduler customScheduler;
 
-    public ScheduleBeanPostProcessor() {
-        //TODO should be created via bring
-        this.customScheduler = new CustomScheduleConfiguration().customScheduler();
+    public ScheduleBeanPostProcessor(CustomScheduler customScheduler) {
+        this.customScheduler = customScheduler;
     }
 
     /**

@@ -32,9 +32,7 @@ import com.bobocode.bring.core.context.impl.BringApplicationContext;
  *  @since 1.0
  */
 public class BringApplication {
-
-    //TODO uncomment later when all code will be merged need to change all test data packages
-    //private static final String BRING_PACKAGE = "com.bobocode.bring";
+    private static final String BRING_PACKAGE = "com.bobocode.bring";
 
     /**
      * Private constructor to prevent instantiation of the class.
@@ -52,7 +50,7 @@ public class BringApplication {
      */
     public static BringApplicationContext run(Class<?> clazz) {
         // Create context: register Bean definitions
-        String[] bringPackages = new String[]{/*BRING_PACKAGE,*/ clazz.getPackageName()};
+        String[] bringPackages = new String[]{BRING_PACKAGE, clazz.getPackageName()};
         BringApplicationContext context = new BringApplicationContext(bringPackages);
         
         // Invoke Bean Post Processors, create Bean objects
@@ -70,13 +68,38 @@ public class BringApplication {
      */
     public static BringApplicationContext run(String basePackage) {
         // Create context: register Bean definitions
-        String[] bringPackages = new String[]{/*BRING_PACKAGE,*/ basePackage};
+        String[] bringPackages = new String[]{BRING_PACKAGE, basePackage};
         BringApplicationContext context = new BringApplicationContext(bringPackages);
 
         // Invoke Bean Post Processors, create Bean objects
         context.refresh();
 
         return context;
+    }
+
+    /**
+     * Run the Bring application context based on the provided base package for component scanning.
+     *
+     * @param basePackages the base packages to scan for annotated beans
+     * @return the initialized {@link BringApplicationContext} instance
+     */
+    public static BringApplicationContext run(String... basePackages) {
+        // Create context: register Bean definitions
+        String[] bringPackages = basePackages(basePackages);
+
+        BringApplicationContext context = new BringApplicationContext(bringPackages);
+
+        // Invoke Bean Post Processors, create Bean objects
+        context.refresh();
+
+        return context;
+    }
+
+    private static String[] basePackages(String... basePackage) {
+        String[] bringPackages = new String[basePackage.length + 1];
+        bringPackages[0] = BRING_PACKAGE;
+        System.arraycopy(basePackage, 0, bringPackages, 1, basePackage.length);
+        return bringPackages;
     }
     
 }
