@@ -1,45 +1,34 @@
 package com.bobocode.bring.core.context.impl;
 
-import com.bobocode.bring.core.anotation.*;
 import com.bobocode.bring.core.context.BeanDefinitionRegistry;
 import com.bobocode.bring.core.context.BeanRegistry;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
-import com.bobocode.bring.core.context.type.ParameterValueTypeInjector;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.CyclicBeanException;
-import com.bobocode.bring.core.exception.NoConstructorWithAutowiredAnnotationBeanException;
 import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
-import com.bobocode.bring.core.utils.ReflectionUtils;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.*;
-import java.util.function.Supplier;
-
-import static com.bobocode.bring.core.utils.ReflectionUtils.isAutowiredSetterMethod;
-import static com.bobocode.bring.core.utils.ReflectionUtils.setField;
 
 @Slf4j
 public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory implements BeanRegistry, BeanDefinitionRegistry {
 
     protected ClassPathScannerFactory classPathScannerFactory;
-
+    private final ConfigurationBeanRegistrar configurationBeanRegistrar;
+    private final BeanCreator beanCreator;
     private final Set<String> currentlyCreatingBeans = new HashSet<>();
-
     @Getter
     private final Reflections reflections;
 
     public AnnotationBringBeanRegistry(Reflections reflections) {
         this.reflections = reflections;
-        this.classPathScannerFactory = new ClassPathScannerFactory(getReflections());
+        this.classPathScannerFactory = new ClassPathScannerFactory(reflections);
+        this.configurationBeanRegistrar = new ConfigurationBeanRegistrar(this);
+        this.beanCreator = new BeanCreator(this, classPathScannerFactory);
     }
 
     @Override
@@ -60,60 +49,39 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         currentlyCreatingBeans.add(beanName);
 
         if (beanDefinition.isConfigurationBean()) {
-            registerConfigurationBean(beanName, beanDefinition);
+            configurationBeanRegistrar.registerConfigurationBean(beanName, beanDefinition);
         } else {
-            Constructor<?> constructor = findAutowiredConstructor(clazz);
-            createBeanUsingConstructor(constructor, beanName, beanDefinition);
-
-            injectDependencies(clazz, beanName);
+            beanCreator.create(clazz, beanName, beanDefinition);
         }
 
         currentlyCreatingBeans.clear();
-    }
-
-    @SneakyThrows
-    private Object registerConfigurationBean(String beanName, BeanDefinition beanDefinition) {
-        Object configObj = Optional.ofNullable(getSingletonObjects().get(beanDefinition.getFactoryBeanName()))
-                .orElseThrow(() -> {
-                    log.info("Unable to register Bean from Configuration class [{}]: " +
-                            "Configuration class not annotated or is not of Singleton scope.", beanName);
-                    return new NoSuchBeanException(beanDefinition.getBeanClass());
-                });
-
-        List<String> methodParamNames = ReflectionUtils.getParameterNames(beanDefinition.getMethod());
-
-        List<Object> methodObjs = new ArrayList<>();
-        methodParamNames.forEach(
-                paramName -> {
-                    Object object = getBeanByName(paramName);
-
-            if (Objects.nonNull(object)) {
-                methodObjs.add(object);
-            } else {
-                BeanDefinition bd = Optional.ofNullable(getBeanDefinitionMap().get(paramName))
-                                .orElseThrow(() -> new NoSuchBeanException(beanDefinition.getBeanClass()));
-                        Object newObj = registerConfigurationBean(bd.getFactoryMethodName(), bd);
-                        methodObjs.add(newObj);
-                    }
-                });
-
-        Supplier<Object> supplier = ReflectionUtils.invokeBeanMethod(beanDefinition.getMethod(),
-                configObj, methodObjs.toArray());
-        Object bean = supplier.get();
-
-        if (beanDefinition.isPrototype()) {
-            addPrototypeBean(beanName, supplier);
-        } else {
-            addSingletonBean(beanName, bean);
-        }
-
-        return bean;
     }
 
     @Override
     public void registerBeanDefinition(BeanDefinition beanDefinition) {
         String beanName = classPathScannerFactory.resolveBeanName(beanDefinition.getBeanClass());
         addBeanDefinition(beanName, beanDefinition);
+    }
+
+    public Object getOrCreateBean(String beanName, Class<?> beanType, String qualifier) {
+        Object existingBean = getBeanByName(beanName);
+
+        if (Objects.nonNull(existingBean)) {
+            return existingBean;
+        }
+
+        BeanDefinition beanDefinition = getBeanDefinitionMap().get(beanName);
+
+        if (Objects.isNull(beanDefinition)) {
+            //TODO this is like workaround need to think how to populate bean definition for interface & dependencies
+            if (beanType.isInterface()) {
+                registerImplementations(beanName, beanType, qualifier);
+            }
+        } else {
+            registerBean(beanName, beanDefinition);
+        }
+
+        return getBeanByName(beanName);
     }
 
     private <T> void registerImplementations(String beanName, Class<T> interfaceType, String qualifier) {
@@ -143,14 +111,19 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         findPrimaryOrQualifierAndRegisterBean(beanName, beanDefinitionsForRegistration, interfaceType, qualifier);
     }
 
-    private <T> void findPrimaryOrQualifierAndRegisterBean (String beanName, List<BeanDefinition> beanDefinitions, Class<T> interfaceType, String qualifier) {
+    private <T> void findPrimaryOrQualifierAndRegisterBean (String beanName, List<BeanDefinition> beanDefinitions,
+                                                            Class<T> interfaceType, String qualifier) {
         if (beanDefinitions.size() > 1){
-            var beanDefinitionsForRegistration = beanDefinitions.stream().filter(BeanDefinition::isPrimary).toList();
+            var beanDefinitionsForRegistration = beanDefinitions.stream()
+                    .filter(BeanDefinition::isPrimary
+                    ).toList();
             if(beanDefinitionsForRegistration.size() > 1) {
                 throw new NoUniqueBeanException(interfaceType);
-            } else if (beanDefinitionsForRegistration.size() == 0) {
+            } else if (beanDefinitionsForRegistration.isEmpty()) {
                 //check qualifier
-                beanDefinitionsForRegistration = beanDefinitions.stream().filter(bd -> bd.getFactoryBeanName().equals(qualifier)).toList();
+                beanDefinitionsForRegistration = beanDefinitions.stream()
+                        .filter(bd -> bd.getFactoryBeanName().equals(qualifier))
+                        .toList();
                 if(beanDefinitionsForRegistration.size() != 1){
                     throw new NoUniqueBeanException(interfaceType);
                 }
@@ -161,199 +134,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         }
     }
 
-    private Constructor<?> findAutowiredConstructor(Class<?> clazz) {
-        Constructor<?>[] constructors = clazz.getConstructors();
-
-        if (constructors.length == 1) {
-            return constructors[0];
-        }
-
-        return Arrays.stream(constructors)
-                .filter(constructor -> constructor.isAnnotationPresent(Autowired.class))
-                .findFirst()
-                .orElseThrow(() -> new NoConstructorWithAutowiredAnnotationBeanException(
-                        clazz, Arrays.toString(constructors)));
-    }
-
-    private void createBeanUsingConstructor(Constructor<?> constructor, String beanName,
-                                            BeanDefinition beanDefinition) {
-        Parameter[] parameters = constructor.getParameters();
-        Object[] dependencies = new Object[parameters.length];
-
-        List<String> parameterNames = ReflectionUtils.getParameterNames(constructor);
-
-        for (int i = 0; i < parameters.length; i++) {
-            Parameter parameter = parameters[i];
-            int index = i;
-            Optional<Object> injectViaProperties = getTypeResolverFactory().getParameterValueTypeInjectors().stream()
-                    .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
-                    .map(valueType -> {
-                        Object dependencyValue = valueType.setValueToSetter(parameter, classPathScannerFactory.getCreatedBeanAnnotations());
-                        if (dependencyValue instanceof List) {
-                            return injectListDependency((List<Class<?>>) dependencyValue);
-                        }
-                        return dependencyValue;
-                    })
-                    .map(obj -> dependencies[index] = obj)
-                    .findFirst();
-
-            if (injectViaProperties.isEmpty()) {
-                String dependencyBeanName = findBeanNameForArgumentInConstructor(parameter, parameterNames);
-                Object dependencyObject = getOrCreateBean(dependencyBeanName, parameter.getType(), null);
-                dependencies[i] = dependencyObject;
-            }
-        }
-
-        Supplier<Object> supplier = ReflectionUtils.createNewInstance(constructor, dependencies,
-                beanDefinition.getBeanClass(), beanDefinition.isProxy());
-        Object bean = supplier.get();
-
-        for (var interfaceClass : bean.getClass().getInterfaces()) {
-            addInterfaceNameToImplementations(interfaceClass.getSimpleName(), bean);
-        }
-
-        if (beanDefinition.isPrototype()) {
-            addPrototypeBean(beanName, supplier);
-        } else {
-            addSingletonBean(beanName, bean);
-        }
-    }
-
-    private String findBeanNameForArgumentInConstructor(Parameter parameter, List<String> constructorParamNames) {
-        Class<?> clazz = parameter.getType();
-
-        List<String> beanNames = clazz.isInterface()
-                ? getTypeToBeanNames().entrySet().stream()
-                    .filter(entry -> clazz.isAssignableFrom(entry.getKey()))
-                    .map(Map.Entry::getValue)
-                    .flatMap(Collection::stream)
-                    .toList()
-                : Optional.ofNullable(getTypeToBeanNames().get(clazz)).orElse(Collections.emptyList());
-
-        if (beanNames.isEmpty()) {
-            throw new NoSuchBeanException(clazz);
-        } else if (beanNames.size() == 1) {
-            return beanNames.get(0);
-        } else {
-            String paramName = constructorParamNames.get(ReflectionUtils.extractParameterPosition(parameter));
-
-            return findPrimaryBeanNameOrByQualifierOrbBParameter(beanNames, paramName, parameter);
-        }
-    }
-
-    private String findPrimaryBeanNameOrByQualifierOrbBParameter(List<String> beanNames, String paramName, Parameter  parameter) {
-        Class<?>  parameterType = parameter.getType();
-        String qualifier = getQualifier(parameter);
-        var primaryNames = beanNames.stream().filter(beanName -> getBeanDefinitionByName(beanName).isPrimary()).toList();
-        if(primaryNames.size() == 1) {
-            return primaryNames.get(0);
-        } else if (primaryNames.size() > 1) {
-            throw new NoUniqueBeanException(parameterType);
-        } else if (qualifier != null) {
-            return beanNames.stream().filter(name -> name.equals(qualifier)).findFirst().orElseThrow(() -> new NoSuchBeanException(parameterType));
-        }
-        else {
-            return beanNames.stream()
-                    .filter(name -> name.equalsIgnoreCase(paramName))
-                    .findFirst()
-                    .orElseThrow(() -> new NoUniqueBeanException(parameterType, beanNames));
-        }
-    }
-
-    private String getQualifier(Parameter  parameter) {
-        return parameter.isAnnotationPresent(Qualifier.class) ? parameter.getAnnotation(Qualifier.class).value() : null;
-
-    }
-
-    private Object getOrCreateBean(String beanName, Class<?> beanType, String qualifier) {
-        Object existingBean = getBeanByName(beanName);
-
-        if (Objects.nonNull(existingBean)) {
-            return existingBean;
-        }
-
-        BeanDefinition beanDefinition = getBeanDefinitionMap().get(beanName);
-
-        if (Objects.isNull(beanDefinition)) {
-            //TODO this is like workaround need to think how to populate bean definition for interface & dependencies
-            if (beanType.isInterface()) {
-                registerImplementations(beanName, beanType, qualifier);
-            }
-        } else {
-            registerBean(beanName, beanDefinition);
-        }
-
-        return getBeanByName(beanName);
-    }
-
-    private void injectDependencies(Class<?> clazz, String beanName) {
-        Object bean = getSingletonObjects().get(beanName);
-
-        Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Autowired.class) || field.isAnnotationPresent(Value.class))
-                .forEach(field -> injectDependencyViaField(field, bean));
-
-        Arrays.stream(clazz.getDeclaredMethods())
-                .filter(ReflectionUtils::isAutowiredSetterMethod)
-                .forEach(method -> injectDependencyViaMethod(method, bean));
-    }
-
-    @SneakyThrows
-    private void injectDependencyViaMethod(Method method, Object bean) {
-        if (isAutowiredSetterMethod(method)) {
-            Parameter parameter = method.getParameters()[0];
-            Optional<Object> injectViaProperties = getTypeResolverFactory().getParameterValueTypeInjectors().stream()
-                    .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
-                    .map(valueType -> injectDependencyViaParameter(method, parameter, bean, valueType))
-                    .findFirst();
-
-            if (injectViaProperties.isEmpty()) {
-                Class<?> dependencyType = method.getParameterTypes()[0];
-                String dependencyBeanName = classPathScannerFactory.resolveBeanName(dependencyType);
-                Object dependencyObject = getOrCreateBean(dependencyBeanName, dependencyType, null);
-                method.invoke(bean, dependencyObject);
-            }
-        }
-    }
-
-    @SneakyThrows
-    private Object injectDependencyViaParameter(Method method, Parameter parameter, Object bean,
-                                                ParameterValueTypeInjector valueType) {
-        Object dependencyValue = valueType.setValueToSetter(parameter, classPathScannerFactory.getCreatedBeanAnnotations());
-        if (dependencyValue instanceof List) {
-            var dependencyObjects = injectListDependency((List<Class<?>>) dependencyValue);
-            method.invoke(bean, dependencyObjects);
-        } else {
-            method.invoke(bean, dependencyValue);
-        }
-        return dependencyValue;
-    }
-
-    @SneakyThrows
-    private void injectDependencyViaField(Field field, Object bean) {
-        Optional<Object> injectViaProperties = getTypeResolverFactory().getFieldValueTypeInjectors().stream()
-                .filter(valueType -> valueType.hasAnnotatedWithValue(field))
-
-                .map(valueType -> {
-                    Object dependencyValue = valueType.setValueToField(field, bean, classPathScannerFactory.getCreatedBeanAnnotations());
-                    if (dependencyValue instanceof List listDependencyValue) {
-                        setField(field, bean, injectListDependency(listDependencyValue));
-                    } else {
-                        setField(field, bean, dependencyValue);
-                    }
-                    return dependencyValue;
-                })
-                .findFirst();
-
-        if (injectViaProperties.isEmpty()) {
-            String dependencyBeanName = classPathScannerFactory.resolveBeanName(field.getType());
-            String qualifier = field.isAnnotationPresent(Qualifier.class) ? field.getAnnotation(Qualifier.class).value() : null;
-            Object dependencyObject = getOrCreateBean(dependencyBeanName, field.getType(), qualifier);
-            setField(field, bean, dependencyObject);
-        }
-    }
-
-    private List<Object> injectListDependency(List<Class<?>> value) {
+    public List<Object> injectListDependency(List<Class<?>> value) {
         List<Object> dependencyObjects = new ArrayList<>();
         for (var impl : value) {
             String implBeanName = classPathScannerFactory.resolveBeanName(impl);
