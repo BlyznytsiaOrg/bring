@@ -288,7 +288,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     private String findPrimaryBeanNameOrByQualifierOrbBParameter(List<String> beanNames, String paramName, Parameter  parameter) {
         Class<?>  parameterType = parameter.getType();
         String qualifier = getQualifier(parameter);
-        var primaryNames = beanNames.stream().filter(beanName -> getBeanDefinition(beanName).isPrimary()).toList();
+        var primaryNames = beanNames.stream().filter(beanName -> getBeanDefinitionByName(beanName).isPrimary()).toList();
         if(primaryNames.size() == 1) {
             return primaryNames.get(0);
         } else if (primaryNames.size() > 1) {
