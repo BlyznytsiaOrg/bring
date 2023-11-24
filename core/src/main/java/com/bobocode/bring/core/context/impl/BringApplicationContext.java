@@ -123,7 +123,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
     }
 
     private void instantiateBeans() {
-        getBeanDefinitions().entrySet()
+        getBeanDefinitionMap().entrySet()
                 .stream()
                 .sorted(Comparator.comparing(entry -> entry.getValue().getBeanType().getOrder()))
                 .forEach(entry -> registerBean(entry.getKey(), entry.getValue()));
