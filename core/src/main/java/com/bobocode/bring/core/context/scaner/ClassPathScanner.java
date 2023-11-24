@@ -1,5 +1,6 @@
 package com.bobocode.bring.core.context.scaner;
 
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 /**
@@ -18,4 +19,12 @@ public interface ClassPathScanner {
      * @return a set of classes discovered during the scan
      */
     Set<Class<?> > scan();
+
+
+    /**
+     * Retrieves the annotation type that the scanner is designed to search for.
+     *
+     * @return The {@code Class} object representing the annotation type.
+     */
+    Class<? extends Annotation> getAnnotation();
 }
