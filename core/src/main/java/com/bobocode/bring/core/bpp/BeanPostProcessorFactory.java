@@ -1,6 +1,8 @@
 package com.bobocode.bring.core.bpp;
 
 import com.bobocode.bring.core.bpp.impl.ScheduleBeanPostProcessor;
+import com.bobocode.bring.core.bpp.impl.schedule.CustomScheduler;
+import com.bobocode.bring.core.context.BringBeanFactory;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,9 +51,10 @@ public class BeanPostProcessorFactory {
      *
      * @see ScheduleBeanPostProcessor
      */
-    public BeanPostProcessorFactory() {
-        this.beanPostProcessors = Arrays.asList(
-                new ScheduleBeanPostProcessor()
+    public BeanPostProcessorFactory(BringBeanFactory beanFactory) {
+        CustomScheduler customScheduler = beanFactory.getBean(CustomScheduler.class);
+        this.beanPostProcessors = List.of(
+                new ScheduleBeanPostProcessor(customScheduler)
         );
 
         log.info("Register BeanPostProcessors {}", Arrays.toString(beanPostProcessors.toArray()));

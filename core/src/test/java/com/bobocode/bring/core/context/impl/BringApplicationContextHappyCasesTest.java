@@ -1,25 +1,24 @@
 package com.bobocode.bring.core.context.impl;
 
 import com.bobocode.bring.core.BringApplication;
-import com.bobocode.bring.testdata.di.positive.configuration.client.RestClient;
-import com.bobocode.bring.testdata.di.positive.configuration.configuration.TestConfiguration;
-import com.bobocode.bring.testdata.di.positive.configuration.service.BringService;
-import com.bobocode.bring.testdata.di.positive.constructor.BringBeansService;
-import com.bobocode.bring.testdata.di.positive.constructorproperties.ProfileBeanConstructor;
-import com.bobocode.bring.testdata.di.positive.contract.Barista;
-import com.bobocode.bring.testdata.di.positive.fieldproperties.ProfileBean;
-import com.bobocode.bring.testdata.di.positive.fullinjection.GetInfoFromExternalServicesUseCase;
-import com.bobocode.bring.testdata.di.positive.prototype.off.CoffeeShop;
-import com.bobocode.bring.testdata.di.positive.prototype.off.SimpleClass;
-import com.bobocode.bring.testdata.di.positive.primary.bean.Employee;
-import com.bobocode.bring.testdata.di.positive.primary.component.C;
-import com.bobocode.bring.testdata.di.positive.qualifier.constructor.MusicPlayer;
-import com.bobocode.bring.testdata.di.positive.qualifier.field.PrintService;
-import com.bobocode.bring.testdata.di.positive.setter.A;
-import com.bobocode.bring.testdata.di.positive.setter.B;
-import com.bobocode.bring.testdata.di.positive.setterproperties.ProfileBeanSetter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import testdata.di.positive.configuration.client.RestClient;
+import testdata.di.positive.configuration.configuration.TestConfiguration;
+import testdata.di.positive.configuration.service.BringService;
+import testdata.di.positive.constructor.BringBeansService;
+import testdata.di.positive.contract.Barista;
+import testdata.di.positive.fullinjection.GetInfoFromExternalServicesUseCase;
+import testdata.di.positive.listconstructorinjector.AConstructor;
+import testdata.di.positive.listfieldinjector.AField;
+import testdata.di.positive.listsetterinjector.ASetter;
+import testdata.di.positive.primary.bean.Employee;
+import testdata.di.positive.primary.component.A;
+import testdata.di.positive.primary.component.C;
+import testdata.di.positive.prototype.off.CoffeeShop;
+import testdata.di.positive.prototype.off.SimpleClass;
+import testdata.di.positive.qualifier.constructor.MusicPlayer;
+import testdata.di.positive.qualifier.field.PrintService;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class BringApplicationContextHappyCasesTest {
 
-    private static final String TEST_DATA_PACKAGE = "com.bobocode.bring.testdata.di.positive";
+    private static final String TEST_DATA_PACKAGE = "testdata.di.positive";
 
     @DisplayName("Should found one interface and inject it")
     @Test
@@ -51,8 +50,8 @@ class BringApplicationContextHappyCasesTest {
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".constructor");
 
         // when
-        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.constructor.A.class);
-        var bBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.constructor.B.class);
+        var aBean = bringApplicationContext.getBean(testdata.di.positive.constructor.A.class);
+        var bBean = bringApplicationContext.getBean(testdata.di.positive.constructor.B.class);
 
         // then
         assertThat(aBean).isNotNull();
@@ -68,8 +67,8 @@ class BringApplicationContextHappyCasesTest {
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".secondconstructor");
 
         // when
-        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.secondconstructor.A.class);
-        var bBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.secondconstructor.B.class);
+        var aBean = bringApplicationContext.getBean(testdata.di.positive.secondconstructor.A.class);
+        var bBean = bringApplicationContext.getBean(testdata.di.positive.secondconstructor.B.class);
 
         // then
         assertThat(aBean).isNotNull();
@@ -85,8 +84,8 @@ class BringApplicationContextHappyCasesTest {
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".field");
 
         // when
-        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.field.A.class);
-        var bBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.field.B.class);
+        var aBean = bringApplicationContext.getBean(testdata.di.positive.field.A.class);
+        var bBean = bringApplicationContext.getBean(testdata.di.positive.field.B.class);
 
         // then
         assertThat(aBean).isNotNull();
@@ -102,8 +101,8 @@ class BringApplicationContextHappyCasesTest {
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".setter");
 
         // when
-        var aBean = bringApplicationContext.getBean(A.class);
-        var bBean = bringApplicationContext.getBean(B.class);
+        var aBean = bringApplicationContext.getBean(testdata.di.positive.setter.A.class);
+        var bBean = bringApplicationContext.getBean(testdata.di.positive.setter.B.class);
 
         // then
         assertThat(aBean).isNotNull();
@@ -120,7 +119,7 @@ class BringApplicationContextHappyCasesTest {
         
         // when
         var bean = bringApplicationContext
-                .getBean(com.bobocode.bring.testdata.di.positive.contract2.Barista.class);
+                .getBean(testdata.di.positive.contract2.Barista.class);
         
         // then
         assertThat(bean).isNotNull();
@@ -195,7 +194,7 @@ class BringApplicationContextHappyCasesTest {
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listfieldinjector");
 
         // when
-        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listfieldinjector.AField.class);
+        var aBean = bringApplicationContext.getBean(AField.class);
 
         // then
         assertThat(aBean).isNotNull();
@@ -210,7 +209,7 @@ class BringApplicationContextHappyCasesTest {
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listconstructorinjector");
 
         // when
-        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listconstructorinjector.AConstructor.class);
+        var aBean = bringApplicationContext.getBean(AConstructor.class);
 
         // then
         assertThat(aBean).isNotNull();
@@ -225,7 +224,7 @@ class BringApplicationContextHappyCasesTest {
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listsetterinjector");
 
         // when
-        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listsetterinjector.ASetter.class);
+        var aBean = bringApplicationContext.getBean(ASetter.class);
 
         // then
         assertThat(aBean).isNotNull();
@@ -240,8 +239,8 @@ class BringApplicationContextHappyCasesTest {
         BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.off");
 
         // when
-        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.off.Barista.class);
-        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.off.Barista.class);
+        var barista = bringApplicationContext.getBean(testdata.di.positive.prototype.off.Barista.class);
+        var barista2 = bringApplicationContext.getBean(testdata.di.positive.prototype.off.Barista.class);
 
         // then
         assertThat(barista).isNotNull();
@@ -291,8 +290,8 @@ class BringApplicationContextHappyCasesTest {
         BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.on");
 
         // when
-        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.Barista.class);
-        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.Barista.class);
+        var barista = bringApplicationContext.getBean(testdata.di.positive.prototype.on.Barista.class);
+        var barista2 = bringApplicationContext.getBean(testdata.di.positive.prototype.on.Barista.class);
 
         // then
         assertThat(barista).isNotNull();
@@ -308,8 +307,8 @@ class BringApplicationContextHappyCasesTest {
         BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.onwithinterface");
 
         // when
-        var barista = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.onwithinterface.Barista.class);
-        var barista2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.onwithinterface.Barista.class);
+        var barista = bringApplicationContext.getBean(testdata.di.positive.prototype.onwithinterface.Barista.class);
+        var barista2 = bringApplicationContext.getBean(testdata.di.positive.prototype.onwithinterface.Barista.class);
 
         // then
         assertThat(barista).isNotNull();
@@ -325,8 +324,8 @@ class BringApplicationContextHappyCasesTest {
         BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.on");
 
         // when
-        var bean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.SimpleClass.class);
-        var bean2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.SimpleClass.class);
+        var bean = bringApplicationContext.getBean(testdata.di.positive.prototype.on.SimpleClass.class);
+        var bean2 = bringApplicationContext.getBean(testdata.di.positive.prototype.on.SimpleClass.class);
 
         // then vi
         assertThat(bean).isNotNull();
@@ -342,8 +341,8 @@ class BringApplicationContextHappyCasesTest {
         BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".prototype.on");
 
         // when
-        var coffeeShop = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.CoffeeShop.class);
-        var coffeeShop2 = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.prototype.on.CoffeeShop.class);
+        var coffeeShop = bringApplicationContext.getBean(testdata.di.positive.prototype.on.CoffeeShop.class);
+        var coffeeShop2 = bringApplicationContext.getBean(testdata.di.positive.prototype.on.CoffeeShop.class);
 
         // then
         assertThat(coffeeShop).isNotNull();
@@ -362,14 +361,14 @@ class BringApplicationContextHappyCasesTest {
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listfieldinjector");
 
         // when
-        var aBean = bringApplicationContext.getBean(com.bobocode.bring.testdata.di.positive.listfieldinjector.AField.class);
+        var aBean = bringApplicationContext.getBean(testdata.di.positive.listfieldinjector.AField.class);
 
         // then
         assertThat(aBean).isNotNull();
         assertThat(aBean.getList()).isNotNull();
-        assertThat(aBean.getList().get(0)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.B.class);
-        assertThat(aBean.getList().get(1)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.D.class);
-        assertThat(aBean.getList().get(2)).isInstanceOf(com.bobocode.bring.testdata.di.positive.listfieldinjector.C.class);
+        assertThat(aBean.getList().get(0)).isInstanceOf(testdata.di.positive.listfieldinjector.B.class);
+        assertThat(aBean.getList().get(1)).isInstanceOf(testdata.di.positive.listfieldinjector.D.class);
+        assertThat(aBean.getList().get(2)).isInstanceOf(testdata.di.positive.listfieldinjector.C.class);
     }
 
     @DisplayName("Should autowire appropriate bean when we have 2 implementations and one of them is marked by @Primary annotation")
@@ -384,7 +383,7 @@ class BringApplicationContextHappyCasesTest {
         // then
         assertThat(c).isNotNull();
         assertThat(c.getField()).isNotNull();
-        assertThat(c.getField()).isInstanceOf(com.bobocode.bring.testdata.di.positive.primary.component.A.class);
+        assertThat(c.getField()).isInstanceOf(A.class);
     }
 
     @DisplayName("Should register appropriate bean when we have 2 methods with the same bean type to return and one of them is marked by @Primary annotation")
