@@ -1,7 +1,5 @@
 package com.bobocode.bring.core.context.impl;
 
-import com.bobocode.bring.core.anotation.Autowired;
-import com.bobocode.bring.core.anotation.Value;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.context.type.ParameterValueTypeInjector;
 import com.bobocode.bring.core.utils.ReflectionUtils;
