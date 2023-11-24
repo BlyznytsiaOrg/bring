@@ -1,8 +1,9 @@
-package com.bobocode.bring.web.servlet.mapping;
+package com.bobocode.bring.web.servlet.mapping.request;
 
 import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.web.servlet.annotation.GetMapping;
+import com.bobocode.bring.web.servlet.annotation.PostMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestMethod;
+import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,24 +12,25 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class GetParamsResolver
-        implements ParamsResolver {
+public class PostParamsResolver
+        implements RequestParamsResolver {
     @Override
     public Class<? extends Annotation> getAnnotation() {
-        return GetMapping.class;
+        return PostMapping.class;
     }
 
     @Override
-    public void handleAnnotation(String requestMappingPath, Method method,
+    public void handleAnnotation(Object instance, Method method, String requestMappingPath,
                                  Map<String, List<RestControllerParams>> restConrollerParamsMap) {
-        GetMapping annotation = method.getAnnotation(GetMapping.class);
+        PostMapping annotation = method.getAnnotation(PostMapping.class);
         String methodPath = getMethodPath(annotation.path());
         String path = requestMappingPath + methodPath;
-        RestControllerParams params = new RestControllerParams(method, RequestMethod.GET, path);
+        RestControllerParams params = new RestControllerParams(instance, method,
+                RequestMethod.POST, path);
         List<RestControllerParams> getMethodParamsList = Optional.ofNullable(
-                restConrollerParamsMap.get(RequestMethod.GET.name()))
+                restConrollerParamsMap.get(RequestMethod.POST.name()))
                 .orElse(new ArrayList<>());
         addSorted(params, getMethodParamsList);
-        restConrollerParamsMap.put(RequestMethod.GET.name(), getMethodParamsList);
+        restConrollerParamsMap.put(RequestMethod.POST.name(), getMethodParamsList);
     }
 }
