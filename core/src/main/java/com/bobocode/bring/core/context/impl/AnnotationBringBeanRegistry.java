@@ -67,6 +67,11 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             return;
         }
 
+        //TODO: maybe better to move this check to recursive method registerConfigurationBean?
+        if (!canBeInstantiated(beanName, beanDefinition)) {
+            return;
+        }
+
         currentlyCreatingBeans.add(beanName);
 
         if (beanDefinition.isConfigurationBean()) {
@@ -89,7 +94,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
                             "Configuration class not annotated or is not of Singleton scope.", beanName);
                     return new NoSuchBeanException(beanDefinition.getBeanClass());
                 });
-        
+
         List<String> methodParamNames = ReflectionUtils.getParameterNames(beanDefinition.getMethod());
 
         List<Object> methodObjs = new ArrayList<>();
@@ -97,20 +102,20 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
                 paramName -> {
                     Object object = getBeanByName(paramName);
 
-                    if (Objects.nonNull(object)) {
-                        methodObjs.add(object);
-                    } else {
-                        BeanDefinition bd = Optional.ofNullable(getBeanDefinitionMap().get(paramName))
+            if (Objects.nonNull(object)) {
+                methodObjs.add(object);
+            } else {
+                BeanDefinition bd = Optional.ofNullable(getBeanDefinitionMap().get(paramName))
                                 .orElseThrow(() -> new NoSuchBeanException(beanDefinition.getBeanClass()));
                         Object newObj = registerConfigurationBean(bd.getFactoryMethodName(), bd);
                         methodObjs.add(newObj);
                     }
                 });
 
-        Supplier<Object> supplier = ReflectionUtils.invokeBeanMethod(beanDefinition.getMethod(), 
+        Supplier<Object> supplier = ReflectionUtils.invokeBeanMethod(beanDefinition.getMethod(),
                 configObj, methodObjs.toArray());
         Object bean = supplier.get();
-        
+
         if (beanDefinition.isPrototype()) {
             addPrototypeBean(beanName, supplier);
         } else {
@@ -120,19 +125,39 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         return bean;
     }
 
+    //Check for unambiguity:
+    private boolean canBeInstantiated(String beanName, BeanDefinition beanDefinition) {
+//        var beanNames = getTypeToBeanNames().get(beanDefinition.getBeanClass());
+//        if (beanNames.size() > 1) {
+//            var primaryBeanNames = beanNames.stream().filter(bn -> getBeanDefinition(bn).isPrimary()).toList();
+//            if (primaryBeanNames.size() != 1) {
+//                throw new NoUniqueBeanException(beanDefinition.getBeanClass());
+//            }
+//            if(beanName.equals(primaryBeanNames.get(0))) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        }
+        return true;
+    }
+
     @Override
     public void registerBeanDefinition(BeanDefinition beanDefinition) {
         String beanName = resolveBeanName(beanDefinition.getBeanClass());
         addBeanDefinition(beanName, beanDefinition);
     }
 
-    private <T> void registerImplementations(String beanName, Class<T> interfaceType) {
+    private <T> void registerImplementations(String beanName, Class<T> interfaceType, String qualifier) {
         if (interfaceType.isAssignableFrom(List.class)) {
             registerListImplementations(interfaceType);
             return;
         }
 
         Set<Class<? extends T>> implementations = reflections.getSubTypesOf(interfaceType);
+
+        List<BeanDefinition> beanDefinitionsForRegistration = new ArrayList<>();
+
 
         for (Class<? extends T> implementation : implementations) {
             boolean hasRequiredAnnotation = Arrays.stream(implementation.getAnnotations())
@@ -149,11 +174,32 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
                 String implementationBeanName = beanNames.get(0);
                 BeanDefinition beanDefinition = getBeanDefinitionMap().get(implementationBeanName);
-                registerBean(beanName, beanDefinition);
+                beanDefinitionsForRegistration.add(beanDefinition);
+     //           registerBean(beanName, beanDefinition);
             }
         }
-
+        findPrimaryOrQualifierAndRegisterBean(beanName, beanDefinitionsForRegistration, interfaceType, qualifier);
     }
+
+    private <T> void findPrimaryOrQualifierAndRegisterBean (String beanName, List<BeanDefinition> beanDefinitions, Class<T> interfaceType, String qualifier) {
+        if (beanDefinitions.size() > 1){
+            var beanDefinitionsForRegistration = beanDefinitions.stream().filter(BeanDefinition::isPrimary).toList();
+            if(beanDefinitionsForRegistration.size() > 1) {
+                throw new NoUniqueBeanException(interfaceType);
+            } else if (beanDefinitionsForRegistration.size() == 0) {
+                //check qualifier
+                beanDefinitionsForRegistration = beanDefinitions.stream().filter(bd -> bd.getFactoryBeanName().equals(qualifier)).toList();
+                if(beanDefinitionsForRegistration.size() != 1){
+                    throw new NoUniqueBeanException(interfaceType);
+                }
+            }
+            registerBean(beanName, beanDefinitionsForRegistration.get(0));
+        } else if (beanDefinitions.size() == 1) {
+            registerBean(beanName, beanDefinitions.get(0));
+        }
+    }
+
+
 
     private <T> void registerListImplementations(Class<T> interfaceType) {
         throw new UnsupportedOperationException("Not implemented yet");
@@ -175,7 +221,6 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
     private void createBeanUsingConstructor(Constructor<?> constructor, String beanName,
                                             BeanDefinition beanDefinition) {
-
         Parameter[] parameters = constructor.getParameters();
         Object[] dependencies = new Object[parameters.length];
 
@@ -198,12 +243,12 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
             if (injectViaProperties.isEmpty()) {
                 String dependencyBeanName = findBeanNameForArgumentInConstructor(parameter, parameterNames);
-                Object dependencyObject = getOrCreateBean(dependencyBeanName, parameter.getType());
+                Object dependencyObject = getOrCreateBean(dependencyBeanName, parameter.getType(), null);
                 dependencies[i] = dependencyObject;
             }
         }
 
-        Supplier<Object> supplier = ReflectionUtils.createNewInstance(constructor, dependencies, 
+        Supplier<Object> supplier = ReflectionUtils.createNewInstance(constructor, dependencies,
                 beanDefinition.getBeanClass(), beanDefinition.isProxy());
         Object bean = supplier.get();
 
@@ -236,14 +281,35 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         } else {
             String paramName = constructorParamNames.get(ReflectionUtils.extractParameterPosition(parameter));
 
-            return beanNames.stream()
-                    .filter(name -> name.equalsIgnoreCase(paramName))
-                    .findFirst()
-                    .orElseThrow(() -> new NoUniqueBeanException(clazz, beanNames));
+            return findPrimaryBeanNameOrByQualifierOrbBParameter(beanNames, paramName, parameter);
         }
     }
 
-    private Object getOrCreateBean(String beanName, Class<?> beanType) {
+    private String findPrimaryBeanNameOrByQualifierOrbBParameter(List<String> beanNames, String paramName, Parameter  parameter) {
+        Class<?>  parameterType = parameter.getType();
+        String qualifier = getQualifier(parameter);
+        var primaryNames = beanNames.stream().filter(beanName -> getBeanDefinitionByName(beanName).isPrimary()).toList();
+        if(primaryNames.size() == 1) {
+            return primaryNames.get(0);
+        } else if (primaryNames.size() > 1) {
+            throw new NoUniqueBeanException(parameterType);
+        } else if (qualifier != null) {
+            return beanNames.stream().filter(name -> name.equals(qualifier)).findFirst().orElseThrow(() -> new NoSuchBeanException(parameterType));
+        }
+        else {
+            return beanNames.stream()
+                    .filter(name -> name.equalsIgnoreCase(paramName))
+                    .findFirst()
+                    .orElseThrow(() -> new NoUniqueBeanException(parameterType, beanNames));
+        }
+    }
+
+    private String getQualifier(Parameter  parameter) {
+        return parameter.isAnnotationPresent(Qualifier.class) ? parameter.getAnnotation(Qualifier.class).value() : null;
+
+    }
+
+    private Object getOrCreateBean(String beanName, Class<?> beanType, String qualifier) {
         Object existingBean = getBeanByName(beanName);
 
         if (Objects.nonNull(existingBean)) {
@@ -255,7 +321,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         if (Objects.isNull(beanDefinition)) {
             //TODO this is like workaround need to think how to populate bean definition for interface & dependencies
             if (beanType.isInterface()) {
-                registerImplementations(beanName, beanType);
+                registerImplementations(beanName, beanType, qualifier);
             }
         } else {
             registerBean(beanName, beanDefinition);
@@ -288,7 +354,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             if (injectViaProperties.isEmpty()) {
                 Class<?> dependencyType = method.getParameterTypes()[0];
                 String dependencyBeanName = resolveBeanName(dependencyType);
-                Object dependencyObject = getOrCreateBean(dependencyBeanName, dependencyType);
+                Object dependencyObject = getOrCreateBean(dependencyBeanName, dependencyType, null);
                 method.invoke(bean, dependencyObject);
             }
         }
@@ -325,7 +391,8 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
         if (injectViaProperties.isEmpty()) {
             String dependencyBeanName = resolveBeanName(field.getType());
-            Object dependencyObject = getOrCreateBean(dependencyBeanName, field.getType());
+            String qualifier = field.isAnnotationPresent(Qualifier.class) ? field.getAnnotation(Qualifier.class).value() : null;
+            Object dependencyObject = getOrCreateBean(dependencyBeanName, field.getType(), qualifier);
             setField(field, bean, dependencyObject);
         }
     }
@@ -334,7 +401,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         List<Object> dependencyObjects = new ArrayList<>();
         for (var impl : value) {
             String implBeanName = resolveBeanName(impl);
-            Object dependecyObject = getOrCreateBean(implBeanName, impl);
+            Object dependecyObject = getOrCreateBean(implBeanName, impl, null);
             dependencyObjects.add(dependecyObject);
         }
 
