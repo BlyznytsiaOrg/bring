@@ -17,6 +17,7 @@ import java.util.*;
 @Slf4j
 public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory implements BeanRegistry, BeanDefinitionRegistry {
 
+    @Getter
     protected ClassPathScannerFactory classPathScannerFactory;
     private final ConfigurationBeanRegistrar configurationBeanRegistrar;
     private final BeanCreator beanCreator;
@@ -132,17 +133,6 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         } else if (beanDefinitions.size() == 1) {
             registerBean(beanName, beanDefinitions.get(0));
         }
-    }
-
-    public List<Object> injectListDependency(List<Class<?>> value) {
-        List<Object> dependencyObjects = new ArrayList<>();
-        for (var impl : value) {
-            String implBeanName = classPathScannerFactory.resolveBeanName(impl);
-            Object dependecyObject = getOrCreateBean(implBeanName, impl, null);
-            dependencyObjects.add(dependecyObject);
-        }
-
-        return dependencyObjects;
     }
 
 }

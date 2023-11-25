@@ -57,13 +57,7 @@ public class ConstructorBeanInjection {
             Optional<Object> injectViaProperties = beanRegistry.getTypeResolverFactory()
                     .getParameterValueTypeInjectors().stream()
                     .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
-                    .map(valueType -> {
-                        Object dependencyValue = valueType.setValueToSetter(parameter, createdBeanAnnotations);
-                        if (dependencyValue instanceof List) {
-                            return beanRegistry.injectListDependency((List<Class<?>>) dependencyValue);
-                        }
-                        return dependencyValue;
-                    })
+                    .map(valueType -> valueType.setValueToSetter(parameter, createdBeanAnnotations))
                     .map(obj -> dependencies[index] = obj)
                     .findFirst();
 

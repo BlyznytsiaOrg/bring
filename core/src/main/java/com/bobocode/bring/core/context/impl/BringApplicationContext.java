@@ -102,7 +102,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
         beanPostProcessorDefinitionFactory.getBeanFactoryPostProcessors()
                 .forEach(processor -> processor.postProcessBeanFactory(this));
 
-        setTypeResolverFactory(new TypeResolverFactory(getProperties(), getReflections()));
+        setTypeResolverFactory(new TypeResolverFactory(getProperties(), getReflections(), this));
     }
 
     private void invokeBeanPostProcessors() {
