@@ -8,13 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 public class BeanCreator {
     private final AnnotationBringBeanRegistry beanRegistry;
     private final ConstructorBeanInjection createBeanUsingConstructor;
-
     private final FieldBeanInjection fieldBeanInjection;
-
     private final SetterBeanInjection setterBeanInjection;
 
-    public BeanCreator(AnnotationBringBeanRegistry beanRegistry,
-                       ClassPathScannerFactory classPathScannerFactory) {
+    public BeanCreator(AnnotationBringBeanRegistry beanRegistry, ClassPathScannerFactory classPathScannerFactory) {
         this.beanRegistry = beanRegistry;
         this.createBeanUsingConstructor = new ConstructorBeanInjection(beanRegistry, classPathScannerFactory);
         this.fieldBeanInjection = new FieldBeanInjection(beanRegistry, classPathScannerFactory);

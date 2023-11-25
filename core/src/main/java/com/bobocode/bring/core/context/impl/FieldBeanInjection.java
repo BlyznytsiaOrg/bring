@@ -4,10 +4,12 @@ import com.bobocode.bring.core.anotation.Autowired;
 import com.bobocode.bring.core.anotation.Qualifier;
 import com.bobocode.bring.core.anotation.Value;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
+import com.bobocode.bring.core.context.type.FieldValueTypeInjector;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -34,15 +36,7 @@ public class FieldBeanInjection {
         Optional<Object> injectViaProperties = beanRegistry.getTypeResolverFactory()
                 .getFieldValueTypeInjectors().stream()
                 .filter(valueType -> valueType.hasAnnotatedWithValue(field))
-                .map(valueType -> {
-                    Object dependencyValue = valueType.setValueToField(field, bean, createdBeanAnnotations);
-                    if (dependencyValue instanceof List listDependencyValue) {
-                        setField(field, bean, beanRegistry.injectListDependency(listDependencyValue));
-                    } else {
-                        setField(field, bean, dependencyValue);
-                    }
-                    return dependencyValue;
-                })
+                .map(valueType -> setFieldDependency(field, bean, valueType, createdBeanAnnotations))
                 .findFirst();
 
         if (injectViaProperties.isEmpty()) {
@@ -51,5 +45,12 @@ public class FieldBeanInjection {
             Object dependencyObject = beanRegistry.getOrCreateBean(dependencyBeanName, field.getType(), qualifier);
             setField(field, bean, dependencyObject);
         }
+    }
+
+    private static Object setFieldDependency(Field field, Object bean, FieldValueTypeInjector valueType,
+                                             List<Class<? extends Annotation>> createdBeanAnnotations) {
+        Object dependency = valueType.setValueToField(field, bean, createdBeanAnnotations);
+        setField(field, bean, dependency);
+        return dependency;
     }
 }

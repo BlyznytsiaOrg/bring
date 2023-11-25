@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.isAutowiredSetterMethod;
@@ -50,13 +49,8 @@ public class SetterBeanInjection {
     @SneakyThrows
     private Object injectDependencyViaParameter(Method method, Parameter parameter, Object bean,
                                                 ParameterValueTypeInjector valueType) {
-        Object dependencyValue = valueType.setValueToSetter(parameter, classPathScannerFactory.getCreatedBeanAnnotations());
-        if (dependencyValue instanceof List) {
-            var dependencyObjects = beanRegistry.injectListDependency((List<Class<?>>) dependencyValue);
-            method.invoke(bean, dependencyObjects);
-        } else {
-            method.invoke(bean, dependencyValue);
-        }
-        return dependencyValue;
+        Object dependency = valueType.setValueToSetter(parameter, classPathScannerFactory.getCreatedBeanAnnotations());
+        method.invoke(bean, dependency);
+        return dependency;
     }
 }
