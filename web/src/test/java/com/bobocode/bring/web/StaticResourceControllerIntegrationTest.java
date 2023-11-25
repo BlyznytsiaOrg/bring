@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Blyzhnytsia Team
  * @version 1.0
- * @since 2023-11-22
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class StaticResourceControllerIntegrationTest {

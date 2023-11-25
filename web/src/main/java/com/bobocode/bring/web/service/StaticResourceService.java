@@ -8,7 +8,6 @@ import java.nio.file.Path;
  *
  * @author Blyzhnytsia Team
  * @version 1.0
- * @since 2023-11-22
  */
 public interface StaticResourceService {
 

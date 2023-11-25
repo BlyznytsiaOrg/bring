@@ -19,7 +19,6 @@ import java.util.Objects;
  *
  * @author Blyzhnytsia Team
  * @version 1.0
- * @since 2023-11-22
  */
 @Service
 @Slf4j

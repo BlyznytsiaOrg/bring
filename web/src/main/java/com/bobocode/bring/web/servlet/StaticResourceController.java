@@ -21,7 +21,6 @@ import java.nio.file.Path;
  * @since 1.0
  */
 @RestController
-@RequestMapping
 @RequiredArgsConstructor
 public class StaticResourceController implements BringServlet {
 
