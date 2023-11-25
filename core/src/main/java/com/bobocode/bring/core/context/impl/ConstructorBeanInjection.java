@@ -57,13 +57,7 @@ public class ConstructorBeanInjection {
             Optional<Object> injectViaProperties = beanRegistry.getTypeResolverFactory()
                     .getParameterValueTypeInjectors().stream()
                     .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
-                    .map(valueType -> {
-                        Object dependencyValue = valueType.setValueToSetter(parameter, createdBeanAnnotations);
-                        if (dependencyValue instanceof List) {
-                            return beanRegistry.injectListDependency((List<Class<?>>) dependencyValue);
-                        }
-                        return dependencyValue;
-                    })
+                    .map(valueType -> valueType.setValueToSetter(parameter, createdBeanAnnotations))
                     .map(obj -> dependencies[index] = obj)
                     .findFirst();
 
@@ -77,10 +71,6 @@ public class ConstructorBeanInjection {
         Supplier<Object> supplier = ReflectionUtils.createNewInstance(constructor, dependencies,
                 beanDefinition.getBeanClass(), beanDefinition.isProxy());
         Object bean = supplier.get();
-
-        for (var interfaceClass : bean.getClass().getInterfaces()) {
-            beanRegistry.addInterfaceNameToImplementations(interfaceClass.getSimpleName(), bean);
-        }
 
         if (beanDefinition.isPrototype()) {
             beanRegistry.addPrototypeBean(beanName, supplier);

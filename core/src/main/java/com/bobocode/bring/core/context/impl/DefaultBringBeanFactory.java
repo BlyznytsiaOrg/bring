@@ -27,8 +27,6 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
 
     private final Map<String, Supplier<Object>> prototypeSuppliers = new ConcurrentHashMap<>();
 
-    private final Map<String, List<Object>> interfaceNameToImplementations = new ConcurrentHashMap<>();
-
     @Setter
     private Map<String, String> properties = new ConcurrentHashMap<>();
 
@@ -82,22 +80,12 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
         return (Map<String, T>) singletonObjects;
     }
 
-    protected List<Object> getInterfaceNameToImplementations(String beanName) {
-        return interfaceNameToImplementations.getOrDefault(beanName, new ArrayList<>());
-    }
-
     void addSingletonBean(String beanName, Object bean) {
         singletonObjects.put(beanName, bean);
     }
 
     void addPrototypeBean(String beanName, Supplier<Object> supplier) {
         prototypeSuppliers.put(beanName, supplier);
-    }
-
-    void addInterfaceNameToImplementations(String interfaceName, Object implementation) {
-        List<Object> implementations = interfaceNameToImplementations.getOrDefault(interfaceName, new ArrayList<>());
-        implementations.add(implementation);
-        interfaceNameToImplementations.put(interfaceName, implementations);
     }
 
     public void addBeanDefinition(String beanName, BeanDefinition beanDefinition) {
@@ -117,13 +105,15 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
     }
 
     private <T> T getPrimary (Map<String, T> beans, Class<T> type) {
-        List <T> foundBeans = beans.entrySet().stream().filter(entry -> getBeanDefinitionByName(entry.getKey()).isPrimary()).map(
-            Entry::getValue).toList();
+        List <T> foundBeans = beans.entrySet()
+                .stream()
+                .filter(entry -> getBeanDefinitionByName(entry.getKey()).isPrimary())
+                .map(Entry::getValue)
+                .toList();
         if (foundBeans.size() != 1) {
             throw new NoUniqueBeanException(type);
         } else {
             return foundBeans.get(0);
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package com.bobocode.bring.core.context.type;
 
+import com.bobocode.bring.core.context.impl.AnnotationBringBeanRegistry;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -18,15 +19,16 @@ public class TypeResolverFactory {
 
     private final Map<String, String> properties;
 
-    public TypeResolverFactory(Map<String, String> properties, Reflections reflections) {
+    public TypeResolverFactory(Map<String, String> properties, Reflections reflections,
+                               AnnotationBringBeanRegistry beanRegistry) {
         this.properties = properties;
         this.fieldValueTypeInjectors = List.of(
                 new PropertyFieldValueTypeInjector(properties),
-                new FieldListValueTypeInjector(reflections)
+                new FieldListValueTypeInjector(reflections, beanRegistry, beanRegistry.getClassPathScannerFactory())
         );
         this.parameterValueTypeInjectors = List.of(
                 new PropertyParameterValueTypeInjector(properties),
-                new ParameterListValueTypeInjector(reflections)
+                new ParameterListValueTypeInjector(reflections, beanRegistry, beanRegistry.getClassPathScannerFactory())
         );
     }
 }
