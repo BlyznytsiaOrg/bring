@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 
@@ -33,6 +34,11 @@ public class ProfileClassPathScanner implements ClassPathScanner {
      */
     @Override
     public Set<Class<?>> scan() {
-        return reflections.getTypesAnnotatedWith(Profile.class);
+        return reflections.getTypesAnnotatedWith(getAnnotation());
+    }
+
+    @Override
+    public Class<? extends Annotation> getAnnotation() {
+        return Profile.class;
     }
 }

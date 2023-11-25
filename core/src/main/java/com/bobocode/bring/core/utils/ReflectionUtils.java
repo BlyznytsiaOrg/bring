@@ -1,5 +1,6 @@
 package com.bobocode.bring.core.utils;
 
+import com.bobocode.bring.core.anotation.Autowired;
 import com.bobocode.bring.core.context.type.OrderComparator;
 import com.bobocode.bring.core.exception.BringGeneralException;
 import com.thoughtworks.paranamer.AnnotationParanamer;
@@ -23,6 +24,12 @@ public final class ReflectionUtils {
     private final OrderComparator ORDER_COMPARATOR = new OrderComparator();
     private final Paranamer info = new CachingParanamer(new AnnotationParanamer(new BytecodeReadingParanamer()));
     private static final String ARG = "arg";
+
+    private static final String SET_METHOD_START_PREFIX = "set";
+
+    public static boolean isAutowiredSetterMethod(Method method) {
+        return method.isAnnotationPresent(Autowired.class) && method.getName().startsWith(SET_METHOD_START_PREFIX);
+    }
 
     @SneakyThrows
     public static void setField(Field field, Object obj, Object value) {

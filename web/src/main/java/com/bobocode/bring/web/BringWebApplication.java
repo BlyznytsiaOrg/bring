@@ -70,11 +70,15 @@ public class BringWebApplication {
         // Invoke Bean Post Processors, create Bean objects
         context.refresh();
 
+        // Start Web Server and add bringContext to it.
+        var webStarter = context.getBean(WebStarter.class);
+        webStarter.run(context);
+
         return context;
     }
 
     private static String[] basePackages(String... basePackage) {
-        String[] bringPackages = new String[basePackage.length + 1];
+        String[] bringPackages = new String[basePackage.length + 2];
         bringPackages[0] = BRING_CORE_PACKAGE;
         bringPackages[1] = BRING_WEB_PACKAGE;
         System.arraycopy(basePackage, 0, bringPackages, 2, basePackage.length);
