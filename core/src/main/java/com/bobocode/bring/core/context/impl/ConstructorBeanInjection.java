@@ -72,10 +72,6 @@ public class ConstructorBeanInjection {
                 beanDefinition.getBeanClass(), beanDefinition.isProxy());
         Object bean = supplier.get();
 
-        for (var interfaceClass : bean.getClass().getInterfaces()) {
-            beanRegistry.addInterfaceNameToImplementations(interfaceClass.getSimpleName(), bean);
-        }
-
         if (beanDefinition.isPrototype()) {
             beanRegistry.addPrototypeBean(beanName, supplier);
         } else {
