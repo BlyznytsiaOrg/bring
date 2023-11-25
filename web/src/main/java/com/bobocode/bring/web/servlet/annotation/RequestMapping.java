@@ -5,10 +5,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.TYPE, ElementType.METHOD})
+/**
+ * Annotation used to indicate the mapping of a request to a specific controller class.
+ * This annotation is applied at the class level to define the base path or URL pattern
+ * for all handler methods within the controller.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
+ */
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequestMapping {
-    String path() default "";
 
-    RequestMethod[] method() default {};
+    /**
+     * The URL path or pattern for mapping HTTP requests to the annotated class.
+     * If not specified, the controller will respond to requests for the base path
+     * or URL pattern.
+     *
+     * @return the URL path or pattern for requests to the annotated class
+     */
+    String path() default "";
 }

@@ -7,6 +7,9 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class ParameterTypeUtils {
 
+    public static final String TRUE = "true";
+    public static final String FALSE = "false";
+
     public static Object parseToParameterType(String pathVariable, Class<?> type) {
         Object obj;
         try {
@@ -24,10 +27,12 @@ public class ParameterTypeUtils {
                 obj = Byte.parseByte(pathVariable);
             } else if (type.equals(Short.class) || type.equals(short.class)) {
                 obj = Short.parseShort(pathVariable);
+            } else if (type.equals(Character.class) || type.equals(char.class)) {
+               obj = pathVariable.charAt(0);
             } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
-                if (pathVariable.equals("true")) {
+                if (pathVariable.equals(TRUE)) {
                     obj = Boolean.TRUE;
-                } else if (pathVariable.equals("false")) {
+                } else if (pathVariable.equals(FALSE)) {
                     obj = Boolean.FALSE;
                 } else {
                     throw new MethodArgumentTypeMismatchException(

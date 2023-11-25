@@ -13,7 +13,7 @@ public interface RequestParamsResolver {
     Class<? extends Annotation> getAnnotation();
 
     void handleAnnotation(Object instance, Method method, String requestMappingPath,
-                          Map<String, List<RestControllerParams>> restConrollerParamsMap);
+                          Map<String, List<RestControllerParams>> restControllerParamsMap);
 
     default String getMethodPath(String path) {
         if (path.contains("{") && path.contains("}")) {

@@ -21,16 +21,16 @@ public class PostParamsResolver
 
     @Override
     public void handleAnnotation(Object instance, Method method, String requestMappingPath,
-                                 Map<String, List<RestControllerParams>> restConrollerParamsMap) {
+                                 Map<String, List<RestControllerParams>> restControllerParamsMap) {
         PostMapping annotation = method.getAnnotation(PostMapping.class);
         String methodPath = getMethodPath(annotation.path());
         String path = requestMappingPath + methodPath;
         RestControllerParams params = new RestControllerParams(instance, method,
                 RequestMethod.POST, path);
         List<RestControllerParams> getMethodParamsList = Optional.ofNullable(
-                restConrollerParamsMap.get(RequestMethod.POST.name()))
+                restControllerParamsMap.get(RequestMethod.POST.name()))
                 .orElse(new ArrayList<>());
         addSorted(params, getMethodParamsList);
-        restConrollerParamsMap.put(RequestMethod.POST.name(), getMethodParamsList);
+        restControllerParamsMap.put(RequestMethod.POST.name(), getMethodParamsList);
     }
 }

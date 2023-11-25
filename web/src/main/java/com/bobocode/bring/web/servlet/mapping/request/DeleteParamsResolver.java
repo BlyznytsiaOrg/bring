@@ -21,15 +21,15 @@ public class DeleteParamsResolver
 
     @Override
     public void handleAnnotation(Object instance, Method method, String requestMappingPath,
-                                 Map<String, List<RestControllerParams>> restConrollerParamsMap) {
+                                 Map<String, List<RestControllerParams>> restControllerParamsMap) {
         DeleteMapping annotation = method.getAnnotation(DeleteMapping.class);
         String methodPath = getMethodPath(annotation.path());
         String path = requestMappingPath + methodPath;
         RestControllerParams params = new RestControllerParams(instance, method, RequestMethod.DELETE, path);
         List<RestControllerParams> getMethodParamsList = Optional.ofNullable(
-                        restConrollerParamsMap.get(RequestMethod.DELETE.name()))
+                        restControllerParamsMap.get(RequestMethod.DELETE.name()))
                 .orElse(new ArrayList<>());
         addSorted(params, getMethodParamsList);
-        restConrollerParamsMap.put(RequestMethod.DELETE.name(), getMethodParamsList);
+        restControllerParamsMap.put(RequestMethod.DELETE.name(), getMethodParamsList);
     }
 }

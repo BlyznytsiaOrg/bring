@@ -14,7 +14,7 @@ public class HttpServletRequestUtils {
         if (requestURI.startsWith(contextPath)) {
             requestURI = requestURI.replace(contextPath, EMPTY);
         }
-        return requestURI;
+        return requestURI.equals("/") ? "" : requestURI;
     }
 
     public static String getShortenedPath(String requestPath) {

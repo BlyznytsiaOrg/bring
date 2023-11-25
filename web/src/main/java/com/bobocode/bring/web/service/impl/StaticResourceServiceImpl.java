@@ -51,7 +51,7 @@ public class StaticResourceServiceImpl implements StaticResourceService {
 
         Path resourceAbsolutePath = Paths.get(folderPath.toString(), pathToFile);
         checkPathFile(resourceAbsolutePath, pathToFile);
-        
+
         return resourceAbsolutePath;
     }
 
