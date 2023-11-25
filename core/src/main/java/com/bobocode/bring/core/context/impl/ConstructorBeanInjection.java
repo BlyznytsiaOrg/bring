@@ -84,10 +84,10 @@ public class ConstructorBeanInjection {
 
         List<String> beanNames = clazz.isInterface()
                 ? beanRegistry.getTypeToBeanNames().entrySet().stream()
-                .filter(entry -> clazz.isAssignableFrom(entry.getKey()))
-                .map(Map.Entry::getValue)
-                .flatMap(Collection::stream)
-                .toList()
+                    .filter(entry -> clazz.isAssignableFrom(entry.getKey()))
+                    .map(Map.Entry::getValue)
+                    .flatMap(Collection::stream)
+                    .toList()
                 : Optional.ofNullable(beanRegistry.getTypeToBeanNames().get(clazz)).orElse(Collections.emptyList());
 
         if (beanNames.isEmpty()) {
@@ -124,7 +124,7 @@ public class ConstructorBeanInjection {
         }
     }
 
-    private String getQualifier(Parameter  parameter) {
+    private String getQualifier(Parameter parameter) {
         return parameter.isAnnotationPresent(Qualifier.class) ? parameter.getAnnotation(Qualifier.class).value() : null;
     }
 }

@@ -19,7 +19,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
     @Getter
     protected ClassPathScannerFactory classPathScannerFactory;
-    private final ConfigurationBeanRegistrar configurationBeanRegistrar;
+    private final ConfigurationBeanRegistry configurationBeanRegistry;
     private final BeanCreator beanCreator;
     private final Set<String> currentlyCreatingBeans = new HashSet<>();
     @Getter
@@ -28,7 +28,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     public AnnotationBringBeanRegistry(Reflections reflections) {
         this.reflections = reflections;
         this.classPathScannerFactory = new ClassPathScannerFactory(reflections);
-        this.configurationBeanRegistrar = new ConfigurationBeanRegistrar(this);
+        this.configurationBeanRegistry = new ConfigurationBeanRegistry(this);
         this.beanCreator = new BeanCreator(this, classPathScannerFactory);
     }
 
@@ -42,7 +42,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             throw new CyclicBeanException(currentlyCreatingBeans);
         }
 
-        if (getSingletonObjects().containsKey(beanName) || getPrototypeSuppliers().containsKey(beanName)) {
+        if (isBeanCreated(beanName)) {
             log.info("Bean with name [{}] already created, no need to register it again.", beanName);
             return;
         }
@@ -50,7 +50,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         currentlyCreatingBeans.add(beanName);
 
         if (beanDefinition.isConfigurationBean()) {
-            configurationBeanRegistrar.registerConfigurationBean(beanName, beanDefinition);
+            configurationBeanRegistry.registerConfigurationBean(beanName, beanDefinition);
         } else {
             beanCreator.create(clazz, beanName, beanDefinition);
         }
@@ -89,7 +89,6 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         Set<Class<? extends T>> implementations = reflections.getSubTypesOf(interfaceType);
 
         List<BeanDefinition> beanDefinitionsForRegistration = new ArrayList<>();
-
 
         for (Class<? extends T> implementation : implementations) {
             boolean hasRequiredAnnotation = Arrays.stream(implementation.getAnnotations())

@@ -26,9 +26,7 @@ public enum BeanTypeEnum {
 
     PROFILE(3, Profile.class),
 
-    REST_CONTROLLER(4, RestController.class),
-
-    CONTROLLER(4, Controller.class);
+    UNDEFINED(1);
 
     private final int order;
     
@@ -46,10 +44,7 @@ public enum BeanTypeEnum {
                 .map(annotation -> annotationToBeanType.get(annotation.annotationType()))
                 .filter(Objects::nonNull)
                 .findFirst()
-                .orElseThrow(() -> new BeanAnnotationMissingException(
-                    "Unable to create Bean of type=[%s]. Class is not annotated with %s", 
-                    clazz.getSimpleName(),
-                    Arrays.stream(values()).map(BeanTypeEnum::getAnnotationClasses).flatMap(Collection::stream).toList()));
+                .orElse(BeanTypeEnum.UNDEFINED);
     }
 
     public static BeanTypeEnum findBeanType(Method method) {
@@ -60,10 +55,9 @@ public enum BeanTypeEnum {
             .filter(Objects::nonNull)
             .findFirst()
             .orElseThrow(() -> new BeanAnnotationMissingException(
-                "Unable to create Bean of type=[%s], methodName=[%s]. Method is not annotated with %s",
+                "Unable to create Bean of type=[%s], methodName=[%s]. Method is not annotated with @Bean annotation",
                 method.getReturnType(), 
-                method.getName(),
-                Arrays.stream(values()).map(BeanTypeEnum::getAnnotationClasses).flatMap(Collection::stream).toList()));
+                method.getName()));
     }
     
     private static Map<Class<?>, BeanTypeEnum> getAnnotationToBeanType() {

@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 @Slf4j
 @AllArgsConstructor
-public class ConfigurationBeanRegistrar {
+public class ConfigurationBeanRegistry {
 
     private final DefaultBringBeanFactory beanRegistry;
 
@@ -38,7 +38,7 @@ public class ConfigurationBeanRegistrar {
                     } else {
                         BeanDefinition bd = Optional.ofNullable(beanRegistry.getBeanDefinitionMap().get(paramName))
                                 .orElseThrow(() -> new NoSuchBeanException(beanDefinition.getBeanClass()));
-                        Object newObj = registerConfigurationBean(bd.getFactoryMethodName(), bd);
+                        Object newObj = registerConfigurationBean(beanName, bd);
                         methodObjs.add(newObj);
                     }
                 });
