@@ -15,7 +15,7 @@ Bring's adaptability addresses these distinct deployment needs, ensuring seamles
 The Bring Framework consists of features organized into two modules. 
 These modules are grouped into Core Container, Web as shown in the following diagram.
 
-<img width="922" alt="image" src="https://github.com/YevgenDemoTestOrganization/bring/assets/73576438/04d93e80-b30d-42b7-8921-e85edbe77085">
+<img width="922" alt="image" src="https://github.com/YevgenDemoTestOrganization/bring/assets/73576438/eff5591f-ddb3-41f1-9c18-b476836abcf0">
 
 
 The **Core Container** is the backbone of the Bring framework, offering essential functionalities like the Inversion of Control (IoC) container and the ApplicationContext. 
@@ -54,5 +54,5 @@ If you have a solution in mind or a suggested fix, you can submit a pull request
 # Getting Started
 
 If you're new to Bring, consider initiating your experience with a [Bring playground application repo](https://github.com/YevgenDemoTestOrganization/bring-playground) with a variety of examples of how to use it.. 
-Bring Boot offers a swift and opinionated method to develop a Bring-based application ready for production. 
+Bring Boot offers a swift and opinionated method to develop a Bring-based application ready for play. 
 Leveraging the Bring Framework, it prioritizes conventions over extensive configurations, aiming to accelerate your setup process and swiftly get you up and running.

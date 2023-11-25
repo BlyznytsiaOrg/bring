@@ -1,12 +1,16 @@
 package com.bobocode.bring.core.postprocessor;
 
 import com.bobocode.bring.core.postprocessor.impl.ConfigurationClassPostProcessor;
-import com.bobocode.bring.core.postprocessor.impl.ValuePropertiesPostProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.reflections.Reflections;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.bobocode.bring.core.utils.ReflectionUtils.ORDER_COMPARATOR;
+import static com.bobocode.bring.core.utils.ReflectionUtils.getConstructorWithOutParameters;
 
 /**
  * The {@code BeanPostProcessorDefinitionFactory} class is responsible for creating and managing a list
@@ -48,11 +52,12 @@ public class BeanPostProcessorDefinitionFactory {
      *
      * @see ConfigurationClassPostProcessor
      */
-    public BeanPostProcessorDefinitionFactory() {
-        beanFactoryPostProcessors = List.of(
-                new ValuePropertiesPostProcessor(),
-                new ConfigurationClassPostProcessor()
-        );
+    public BeanPostProcessorDefinitionFactory(Reflections reflections) {
+        this.beanFactoryPostProcessors = reflections.getSubTypesOf(BeanFactoryPostProcessor.class)
+                .stream()
+                .sorted(ORDER_COMPARATOR)
+                .map(clazz -> clazz.cast(getConstructorWithOutParameters(clazz)))
+                .collect(Collectors.toList());
 
         log.info("Register BeanFactoryPostProcessors {}", Arrays.toString(beanFactoryPostProcessors.toArray()));
     }

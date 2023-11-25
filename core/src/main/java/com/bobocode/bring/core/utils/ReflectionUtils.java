@@ -21,8 +21,8 @@ import java.util.function.Supplier;
 @UtilityClass
 public final class ReflectionUtils {
 
-    private final OrderComparator ORDER_COMPARATOR = new OrderComparator();
-    private final Paranamer info = new CachingParanamer(new AnnotationParanamer(new BytecodeReadingParanamer()));
+    public static final OrderComparator ORDER_COMPARATOR = new OrderComparator();
+    private static final Paranamer info = new CachingParanamer(new AnnotationParanamer(new BytecodeReadingParanamer()));
     private static final String ARG = "arg";
 
     private static final String SET_METHOD_START_PREFIX = "set";
@@ -32,16 +32,28 @@ public final class ReflectionUtils {
     }
 
     @SneakyThrows
+    public static Object getConstructorWithParameters(Class<?> clazz, Class<?> parameterTypes, Object instance) {
+        Constructor<?> constructor = clazz.getConstructor(parameterTypes);
+        return constructor.newInstance(instance);
+    }
+
+    @SneakyThrows
+    public static Object getConstructorWithOutParameters(Class<?> clazz) {
+        Constructor<?> constructor = clazz.getConstructor();
+        return constructor.newInstance();
+    }
+
+    @SneakyThrows
     public static void setField(Field field, Object obj, Object value) {
         field.setAccessible(true);
         field.set(obj, value);
     }
     
-    public List<String> getParameterNames(AccessibleObject methodOrConstructor) {
+    public static List<String> getParameterNames(AccessibleObject methodOrConstructor) {
         return Arrays.stream(info.lookupParameterNames(methodOrConstructor)).toList();
     }
     
-    public int extractParameterPosition(Parameter parameter) {
+    public static int extractParameterPosition(Parameter parameter) {
         String name = parameter.getName();
         return Integer.parseInt(name.substring(name.indexOf(ARG) + ARG.length()));
     }

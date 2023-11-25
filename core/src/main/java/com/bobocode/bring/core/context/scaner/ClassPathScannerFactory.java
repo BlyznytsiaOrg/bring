@@ -1,8 +1,10 @@
 package com.bobocode.bring.core.context.scaner;
 
+import com.bobocode.bring.core.anotation.BeanProcessor;
 import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
-import com.bobocode.bring.core.anotation.resolver.impl.*;
-import com.bobocode.bring.core.context.scaner.impl.*;
+import com.bobocode.bring.core.context.scaner.impl.ComponentClassPathScanner;
+import com.bobocode.bring.core.context.scaner.impl.ConfigurationClassPathScanner;
+import com.bobocode.bring.core.context.scaner.impl.ServiceClassPathScanner;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
@@ -12,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.bobocode.bring.core.utils.ReflectionUtils.*;
 
 /**
  * The {@code ClassPathScannerFactory} class is responsible for creating a set of class path scanners,
@@ -65,23 +69,18 @@ public class ClassPathScannerFactory {
      * @see ConfigurationClassPathScanner
      */
     public ClassPathScannerFactory(Reflections reflections) {
-        this.classPathScanners = Arrays.asList(
-                new ComponentClassPathScanner(reflections),
-                new ServiceClassPathScanner(reflections),
-                new ConfigurationClassPathScanner(reflections),
-                new ProfileClassPathScanner(reflections),
-                new ControllerClassPathScanner(reflections),
-                new RestControllerClassPathScanner(reflections)
-        );
+        this.classPathScanners = reflections.getSubTypesOf(ClassPathScanner.class)
+                .stream()
+                .filter(clazz -> clazz.isAnnotationPresent(BeanProcessor.class))
+                .sorted(ORDER_COMPARATOR)
+                .map(clazz -> clazz.cast(getConstructorWithParameters(clazz, Reflections.class, reflections)))
+                .collect(Collectors.toList());
 
-        this.annotationResolvers = List.of(
-                new ComponentBeanNameAnnotationResolver(),
-                new ServiceBeanNameAnnotationResolver(),
-                new InterfaceBeanNameAnnotationResolver(),
-                new ConfigurationBeanNameAnnotationResolver(),
-                new ControllerBeanNameAnnotationResolver(),
-                new RestControllerBeanNameAnnotationResolver()
-        );
+        this.annotationResolvers = reflections.getSubTypesOf(AnnotationResolver.class)
+                .stream()
+                .filter(clazz -> clazz.isAnnotationPresent(BeanProcessor.class))
+                .map(clazz -> clazz.cast(getConstructorWithOutParameters(clazz)))
+                .collect(Collectors.toList());
 
         this.createdBeanAnnotations = classPathScanners.stream()
                         .map(ClassPathScanner::getAnnotation)

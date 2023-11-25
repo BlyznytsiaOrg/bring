@@ -1,5 +1,7 @@
 package com.bobocode.bring.core.postprocessor.impl;
 
+import com.bobocode.bring.core.anotation.BeanProcessor;
+import com.bobocode.bring.core.anotation.Order;
 import com.bobocode.bring.core.anotation.Profile;
 import com.bobocode.bring.core.context.impl.DefaultBringBeanFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
@@ -17,6 +19,8 @@ import java.util.Map;
  *  @since 1.0
  */
 
+@Order(Integer.MIN_VALUE)
+@BeanProcessor
 public class ValuePropertiesPostProcessor implements BeanFactoryPostProcessor {
 
     public static final String PROPERTIES = ".properties";
