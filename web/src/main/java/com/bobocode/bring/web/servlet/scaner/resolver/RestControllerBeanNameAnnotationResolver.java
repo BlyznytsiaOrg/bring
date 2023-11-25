@@ -1,5 +1,6 @@
-package com.bobocode.bring.core.anotation.resolver.impl;
+package com.bobocode.bring.web.servlet.scaner.resolver;
 
+import com.bobocode.bring.core.anotation.BeanProcessor;
 import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
 
@@ -16,6 +17,7 @@ import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
  * @author Blyzhnytsia Team
  * @since 1.0
  */
+@BeanProcessor
 public class RestControllerBeanNameAnnotationResolver implements AnnotationResolver {
 
     /**

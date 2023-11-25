@@ -1,6 +1,6 @@
 package com.bobocode.bring.core.bpp.impl;
 
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.anotation.BeanProcessor;
 import com.bobocode.bring.core.anotation.ScheduledTask;
 import com.bobocode.bring.core.bpp.BeanPostProcessor;
 import com.bobocode.bring.core.bpp.impl.schedule.CustomScheduler;
@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Method;
 
 /**
- * A BeanPostProcessor responsible for processing beans and registering methods annotated with @ScheduledTask
+ * A BeanProcessor responsible for processing beans and registering methods annotated with @ScheduledTask
  * for scheduling via a CustomScheduler.
  * <p>
  * This class scans for methods annotated with @ScheduledTask in Spring-managed beans and schedules them for execution
@@ -25,8 +25,8 @@ import java.lang.reflect.Method;
  *  @author Blyzhnytsia Team
  *  @since 1.0
  */
-@Component
 @Slf4j
+@BeanProcessor
 public class ScheduleBeanPostProcessor implements BeanPostProcessor {
 
     /** The CustomScheduler used for scheduling tasks. */

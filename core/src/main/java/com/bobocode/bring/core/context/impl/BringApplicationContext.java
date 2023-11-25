@@ -64,7 +64,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
      */
     public BringApplicationContext(String... basePackage) {
         super(new Reflections(basePackage));
-        this.beanPostProcessorDefinitionFactory =  new BeanPostProcessorDefinitionFactory();
+        this.beanPostProcessorDefinitionFactory =  new BeanPostProcessorDefinitionFactory(getReflections());
         // Create Bean definitions for classes annotated with annotations from ClassPathScanner
         register(classPathScannerFactory.getBeansToCreate());
     }
@@ -106,7 +106,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
     }
 
     private void invokeBeanPostProcessors() {
-        List<BeanPostProcessor> beanPostProcessors = new BeanPostProcessorFactory(this).getBeanPostProcessors();
+        List<BeanPostProcessor> beanPostProcessors = new BeanPostProcessorFactory(this, getReflections()).getBeanPostProcessors();
         getAllBeans().forEach((beanName, bean) -> {
             for (var beanPostProcessor : beanPostProcessors) {
                 Object beanAfterPostProcess = beanPostProcessor.postProcessInitialization(bean, beanName);

@@ -1,5 +1,6 @@
 package com.bobocode.bring.core.anotation.resolver.impl;
 
+import com.bobocode.bring.core.anotation.BeanProcessor;
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.anotation.Qualifier;
 import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
@@ -18,6 +19,7 @@ import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
  * @author Blyzhnytsia Team
  * @since 1.0
  */
+@BeanProcessor
 public class ComponentBeanNameAnnotationResolver implements AnnotationResolver {
 
     /**
