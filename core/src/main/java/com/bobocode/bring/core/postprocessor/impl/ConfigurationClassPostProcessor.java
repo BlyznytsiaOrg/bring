@@ -1,6 +1,7 @@
 package com.bobocode.bring.core.postprocessor.impl;
 
 import com.bobocode.bring.core.anotation.Bean;
+import com.bobocode.bring.core.anotation.BeanProcessor;
 import com.bobocode.bring.core.anotation.Primary;
 import com.bobocode.bring.core.context.impl.DefaultBringBeanFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
@@ -12,6 +13,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+@BeanProcessor
 public class ConfigurationClassPostProcessor implements BeanFactoryPostProcessor {
     
     @Override

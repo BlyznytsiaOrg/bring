@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Method;
 
 /**
- * A BeanPostProcessor responsible for processing beans and registering methods annotated with @ScheduledTask
+ * A BeanProcessor responsible for processing beans and registering methods annotated with @ScheduledTask
  * for scheduling via a CustomScheduler.
  * <p>
  * This class scans for methods annotated with @ScheduledTask in Spring-managed beans and schedules them for execution
