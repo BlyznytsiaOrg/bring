@@ -2,6 +2,7 @@ package com.bobocode.bring.core.context.type;
 
 import com.bobocode.bring.core.anotation.Value;
 import com.bobocode.bring.core.exception.PropertyValueNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Objects;
@@ -10,7 +11,11 @@ import java.util.Optional;
 /**
  * An abstract class that serves as a foundation for injecting property values based on annotations.
  * Implementations of this class are responsible for retrieving property values from a provided Map.
+ *
+ * @author Blyzhnytsia Team
+ * @version 1.0
  */
+@Slf4j
 public abstract class AbstractPropertyValueTypeInjector {
 
     private static final String VALUE_NOT_FOUND_MESSAGE = "Property value not found for the specified key: %s, field: %s.";
@@ -45,6 +50,8 @@ public abstract class AbstractPropertyValueTypeInjector {
         String key = keyAndDefaultValue[KEY_INDEX];
         String value = properties.get(key);
         if (Objects.isNull(value) && COUNT_OF_PARAMETERS > keyAndDefaultValue.length) {
+
+            log.error(String.format(VALUE_NOT_FOUND_MESSAGE, key, fieldName));
             throw new PropertyValueNotFoundException(String.format(VALUE_NOT_FOUND_MESSAGE, key, fieldName));
         }
 

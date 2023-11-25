@@ -28,9 +28,7 @@ public class StaticResourceServiceImpl implements StaticResourceService {
     // Constants for error messages
     private static final String STATIC_FILE_NOT_FOUND_MESSAGE = "Can't find the File: %s.";
     private static final String STATIC_FOLDER_NOT_FOUND_MESSAGE = "Static folder can't be Null";
-
-    // Injected server properties for static folder information
-    private final ServerProperties serverProperties;
+    private static final String STATIC_FOLDER = "static";
 
     /**
      * Retrieves the absolute path for the requested static file.
@@ -42,8 +40,7 @@ public class StaticResourceServiceImpl implements StaticResourceService {
     @Override
     @SneakyThrows
     public Path getStaticFile(String pathToFile) {
-        URL folderUrl = StaticResourceServiceImpl.class.getClassLoader()
-                .getResource(serverProperties.getStaticFolder());
+        URL folderUrl = StaticResourceServiceImpl.class.getClassLoader().getResource(STATIC_FOLDER);
         Objects.requireNonNull(folderUrl, STATIC_FOLDER_NOT_FOUND_MESSAGE);
 
         Path folderPath = Paths.get(folderUrl.toURI()).resolve("..").normalize();
@@ -63,8 +60,7 @@ public class StaticResourceServiceImpl implements StaticResourceService {
      * @throws StaticFileNotFoundException If the file is not found or doesn't meet specified conditions.
      */
     private void checkPathFile(Path path, String requestUri) {
-        if (!Files.exists(path) || Files.isDirectory(path)
-                || !path.toString().contains(serverProperties.getStaticFolder())) {
+        if (!Files.exists(path) || Files.isDirectory(path) || !path.toString().contains(STATIC_FOLDER)) {
 
             log.error(String.format(STATIC_FILE_NOT_FOUND_MESSAGE, requestUri));
             throw new StaticFileNotFoundException(String.format(STATIC_FILE_NOT_FOUND_MESSAGE, requestUri));

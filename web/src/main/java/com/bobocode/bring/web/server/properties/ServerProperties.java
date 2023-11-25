@@ -48,22 +48,4 @@ public class ServerProperties {
     @Value("server.withStackTrace")
     private boolean withStackTrace;
 
-    /**
-     * The folder where static resources are located for the web server.
-     */
-    @Value("server.staticFolder")
-    private String staticFolder;
-
-
-    /**
-     * The regular expression used for matching static URLs served by the web server.
-     */
-    @Value("server.regexStaticUrl")
-    private String regexStaticUrl;
-
-    /**
-     * The URL delimiter used in the application
-     */
-    @Value("server.urlDelimiter")
-    private String urlDelimiter;
 }
