@@ -6,7 +6,7 @@ import com.bobocode.bring.core.anotation.Configuration;
 @Configuration
 public class AppConfiguration {
     
-    @Bean
+    @Bean("restClient1")
     public RestClient restClient() {
         return RestClient.builder()
                 .url("https://exterl.service")

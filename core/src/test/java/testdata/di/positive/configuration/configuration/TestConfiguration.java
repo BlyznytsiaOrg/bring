@@ -27,9 +27,5 @@ public class TestConfiguration {
         return new BringService(bringRestClient);
     }
 
-//    @Bean
-//    public BringService bringServiceInterBean() {
-//        return new BringService(bringRestClient());
-//    }
     
 }

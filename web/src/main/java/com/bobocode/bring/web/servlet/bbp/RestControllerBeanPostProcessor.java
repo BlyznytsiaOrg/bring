@@ -1,7 +1,7 @@
 package com.bobocode.bring.web.servlet.bbp;
 
 import com.bobocode.bring.core.anotation.BeanProcessor;
-import com.bobocode.bring.core.anotation.RestController;
+import com.bobocode.bring.web.servlet.annotation.RestController;
 import com.bobocode.bring.core.bpp.BeanPostProcessor;
 import com.bobocode.bring.web.servlet.BringServlet;
 import com.bobocode.bring.web.servlet.exception.MissingBringServletImplException;

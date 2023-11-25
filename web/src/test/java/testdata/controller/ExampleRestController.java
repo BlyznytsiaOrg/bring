@@ -1,6 +1,6 @@
 package testdata.controller;
 
-import com.bobocode.bring.core.anotation.RestController;
+import com.bobocode.bring.web.servlet.annotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;

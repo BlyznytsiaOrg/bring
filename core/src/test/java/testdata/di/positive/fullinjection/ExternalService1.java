@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class ExternalService1 implements ExternalService {
     
-    private final RestClient restClient;
+    private final RestClient restClient1;
     
     public List<String> getInfo() {
         List<String> infoList = new ArrayList<>();
@@ -24,7 +24,7 @@ public class ExternalService1 implements ExternalService {
     @Override
     public String toString() {
         return "ExternalService1{" +
-                "restClient=" + restClient +
+                "restClient=" + restClient1 +
                 '}';
     }
     

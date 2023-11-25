@@ -21,8 +21,6 @@ public class BeanDefinition {
     
     private Method method;
     
-    private String factoryMethodName;
-    
     private String factoryBeanName;
 
     private boolean isPrimary;
