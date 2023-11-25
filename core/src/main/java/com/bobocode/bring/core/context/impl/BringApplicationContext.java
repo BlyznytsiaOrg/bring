@@ -106,7 +106,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
     }
 
     private void invokeBeanPostProcessors() {
-        List<BeanPostProcessor> beanPostProcessors = new BeanPostProcessorFactory(this).getBeanPostProcessors();
+        List<BeanPostProcessor> beanPostProcessors = new BeanPostProcessorFactory(this, getReflections()).getBeanPostProcessors();
         getAllBeans().forEach((beanName, bean) -> {
             for (var beanPostProcessor : beanPostProcessors) {
                 Object beanAfterPostProcess = beanPostProcessor.postProcessInitialization(bean, beanName);

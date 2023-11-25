@@ -2,6 +2,7 @@ package com.bobocode.bring.core.utils;
 
 import com.bobocode.bring.core.anotation.Autowired;
 import com.bobocode.bring.core.context.type.OrderComparator;
+import com.bobocode.bring.core.exception.BeanPostProcessorConstructionLimitationException;
 import com.bobocode.bring.core.exception.BringGeneralException;
 import com.thoughtworks.paranamer.AnnotationParanamer;
 import com.thoughtworks.paranamer.BytecodeReadingParanamer;
@@ -31,16 +32,27 @@ public final class ReflectionUtils {
         return method.isAnnotationPresent(Autowired.class) && method.getName().startsWith(SET_METHOD_START_PREFIX);
     }
 
-    @SneakyThrows
+
     public static Object getConstructorWithParameters(Class<?> clazz, Class<?> parameterTypes, Object instance) {
-        Constructor<?> constructor = clazz.getConstructor(parameterTypes);
-        return constructor.newInstance(instance);
+        try {
+            Constructor<?> constructor = clazz.getConstructor(parameterTypes);
+            return constructor.newInstance(instance);
+        } catch (Exception ex) {
+            throw new BeanPostProcessorConstructionLimitationException(
+                    String.format("BeanProcessor '%s' should have only one constructor "
+                            + "with Reflections params", clazz.getSimpleName()));
+        }
     }
 
-    @SneakyThrows
     public static Object getConstructorWithOutParameters(Class<?> clazz) {
-        Constructor<?> constructor = clazz.getConstructor();
-        return constructor.newInstance();
+        try {
+            Constructor<?> constructor = clazz.getConstructor();
+            return constructor.newInstance();
+        } catch (Exception ex) {
+            throw new BeanPostProcessorConstructionLimitationException(
+                    String.format("BeanProcessor '%s' should have only default constructor "
+                            + "without params", clazz.getSimpleName()));
+        }
     }
 
     @SneakyThrows

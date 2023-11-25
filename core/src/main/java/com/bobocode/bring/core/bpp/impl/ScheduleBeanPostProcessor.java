@@ -1,6 +1,6 @@
 package com.bobocode.bring.core.bpp.impl;
 
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.anotation.BeanProcessor;
 import com.bobocode.bring.core.anotation.ScheduledTask;
 import com.bobocode.bring.core.bpp.BeanPostProcessor;
 import com.bobocode.bring.core.bpp.impl.schedule.CustomScheduler;
@@ -25,8 +25,8 @@ import java.lang.reflect.Method;
  *  @author Blyzhnytsia Team
  *  @since 1.0
  */
-@Component
 @Slf4j
+@BeanProcessor
 public class ScheduleBeanPostProcessor implements BeanPostProcessor {
 
     /** The CustomScheduler used for scheduling tasks. */
