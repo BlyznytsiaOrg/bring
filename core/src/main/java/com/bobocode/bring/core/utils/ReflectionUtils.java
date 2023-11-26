@@ -10,6 +10,7 @@ import com.thoughtworks.paranamer.CachingParanamer;
 import com.thoughtworks.paranamer.Paranamer;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @UtilityClass
+@Slf4j
 public final class ReflectionUtils {
 
     public static final OrderComparator ORDER_COMPARATOR = new OrderComparator();
@@ -57,6 +59,7 @@ public final class ReflectionUtils {
 
     @SneakyThrows
     public static void setField(Field field, Object obj, Object value) {
+        log.trace("Setting into field \"{}\" of {} the value {}", field.getName(), obj, value);
         field.setAccessible(true);
         field.set(obj, value);
     }
@@ -77,6 +80,7 @@ public final class ReflectionUtils {
             if (actualTypeArgument instanceof Class actualTypeArgumentClass) {
                 String name = actualTypeArgumentClass.getName();
                 Class<?> interfaceClass = Class.forName(name);
+                log.trace("Extracting implementations of {} for injection", interfaceClass.getName());
 
                 return (List<Class<?>>) reflections.getSubTypesOf(interfaceClass)
                         .stream()

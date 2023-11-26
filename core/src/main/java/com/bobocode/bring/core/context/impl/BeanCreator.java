@@ -38,7 +38,9 @@ public class BeanCreator {
      * @param beanDefinition The definition of the bean being created.
      */
     public void create(Class<?> clazz, String beanName, BeanDefinition beanDefinition) {
+        log.debug("Creating Bean \"{}\" of [{}]", beanName, clazz.getName());
         createBeanUsingConstructor.create(clazz, beanName, beanDefinition);
+        log.debug("Injecting dependencies to Bean \"{}\"", beanName);
         injectDependencies(clazz, beanName);
     }
 

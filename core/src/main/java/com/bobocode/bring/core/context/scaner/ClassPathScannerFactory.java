@@ -79,6 +79,7 @@ public class ClassPathScannerFactory {
      * @throws IllegalStateException If no suitable resolver is found for the given class.
      */
     public String resolveBeanName(Class<?> clazz) {
+        log.info("Resolving bean name for class [{}]", clazz.getName());
         return annotationResolvers.stream()
                 .filter(resolver -> resolver.isSupported(clazz))
                 .findFirst()
