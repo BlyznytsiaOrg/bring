@@ -1,9 +1,9 @@
 package testdata.requestbody;
 
-import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;
 import com.bobocode.bring.web.servlet.annotation.PostMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestBody;
+import com.bobocode.bring.web.servlet.annotation.RestController;
 import java.util.Map;
 
 @RestController

@@ -1,11 +1,11 @@
 package testdata.contextcreation.duplicate;
 
-import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.PutMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestMapping;
+import com.bobocode.bring.web.servlet.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/example")

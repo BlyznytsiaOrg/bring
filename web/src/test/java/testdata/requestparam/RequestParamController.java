@@ -1,9 +1,9 @@
 package testdata.requestparam;
 
-import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestParam;
+import com.bobocode.bring.web.servlet.annotation.RestController;
 
 @RestController
 public class RequestParamController implements BringServlet {

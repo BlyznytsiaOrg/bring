@@ -1,9 +1,9 @@
 package testdata.requestheader;
 
-import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestHeader;
+import com.bobocode.bring.web.servlet.annotation.RestController;
 
 @RestController
 public class RequestHeaderController implements BringServlet {
