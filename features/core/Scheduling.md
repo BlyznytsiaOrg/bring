@@ -29,7 +29,7 @@ public class MyScheduledTasks {
 
 ### Explanation
 
-- @Service: Annotation indicating that the class is a Spring service component.
+- @Service: Annotation indicating that the class is a Bring service component.
 - @ScheduledTask: Applied to a method, marking it as a scheduled task.
   - value = "myTask": Assigns a specific name ("myTask") to this scheduled task.
   - initialDelay = 1000: Sets the initial delay before the first execution of the task to 1000 milliseconds (1 second).

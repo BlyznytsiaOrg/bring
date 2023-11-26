@@ -12,11 +12,11 @@ import java.lang.reflect.Method;
  * A BeanProcessor responsible for processing beans and registering methods annotated with @ScheduledTask
  * for scheduling via a CustomScheduler.
  * <p>
- * This class scans for methods annotated with @ScheduledTask in Spring-managed beans and schedules them for execution
+ * This class scans for methods annotated with @ScheduledTask in Bring-managed beans and schedules them for execution
  * using the provided CustomScheduler.
  * <p>
  * Example usage:
- * This processor can be registered in a Spring context to automatically schedule methods annotated with @ScheduledTask
+ * This processor can be registered in a Bring context to automatically schedule methods annotated with @ScheduledTask
  * at specified intervals.
  *
  * @see com.bobocode.bring.core.bpp.BeanPostProcessor

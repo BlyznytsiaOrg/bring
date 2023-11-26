@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Indicates that the annotated element is to be resolved to a value.
  * This annotation is typically used to inject values into fields, method parameters,
- * constructor parameters, or method return values in Spring applications.
+ * constructor parameters, or method return values in Bring applications.
  * <p>
  * The value provided in this annotation represents the key or expression to resolve
  * from property sources or other value providers.

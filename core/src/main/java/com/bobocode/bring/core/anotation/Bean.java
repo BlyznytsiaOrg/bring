@@ -45,7 +45,7 @@ public @interface Bean {
     /**
      * The name of the Bring bean. If not specified, the bean name will be generated based on the method name.
      *
-     * @return the name of the Spring bean
+     * @return the name of the Bring bean
      */
     String value() default "";
 }
