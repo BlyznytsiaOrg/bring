@@ -1,4 +1,4 @@
-package com.bobocode.bring.core.postprocessor;
+package com.bobocode.bring.core.bfpp;
 
 import com.bobocode.bring.core.context.impl.DefaultBringBeanFactory;
 

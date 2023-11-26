@@ -12,12 +12,27 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+/**
+ * Responsible for registering configuration beans within the DefaultBringBeanFactory context.
+ * This class facilitates the instantiation and management of beans defined within configuration classes.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
+ */
 @Slf4j
 @AllArgsConstructor
 public class ConfigurationBeanRegistry {
 
     private final DefaultBringBeanFactory beanRegistry;
 
+    /**
+     * Registers a configuration bean in the context based on the provided bean name and definition.
+     * Resolves dependencies and instantiates the configuration bean within the context.
+     *
+     * @param beanName       The name of the configuration bean to be registered.
+     * @param beanDefinition The definition of the configuration bean.
+     * @return The registered configuration bean.
+     */
     public Object registerConfigurationBean(String beanName, BeanDefinition beanDefinition) {
         Object configObj = Optional.ofNullable(beanRegistry.getSingletonObjects().get(beanDefinition.getFactoryBeanName()))
                 .orElseThrow(() -> {
@@ -37,7 +52,13 @@ public class ConfigurationBeanRegistry {
                         methodObjs.add(object);
                     } else {
                         BeanDefinition bd = Optional.ofNullable(beanRegistry.getBeanDefinitionMap().get(paramName))
-                                .orElseThrow(() -> new NoSuchBeanException(beanDefinition.getBeanClass()));
+                                .orElseThrow(() -> {
+                                    if (beanDefinition.getBeanClass().isInterface()) {
+                                        return new NoSuchBeanException(String.format("No such bean that implements this %s",
+                                                beanDefinition.getBeanClass()));
+                                    }
+                                    return new NoSuchBeanException(beanDefinition.getBeanClass());
+                                });
                         Object newObj = registerConfigurationBean(beanName, bd);
                         methodObjs.add(newObj);
                     }

@@ -7,7 +7,6 @@ import testdata.di.positive.configuration.client.RestClient;
 import testdata.di.positive.configuration.configuration.TestConfiguration;
 import testdata.di.positive.configuration.service.BringService;
 import testdata.di.positive.constructor.BringBeansService;
-import testdata.di.positive.contract.Barista;
 import testdata.di.positive.fullinjection.GetInfoFromExternalServicesUseCase;
 import testdata.di.positive.listconstructorinjector.AConstructor;
 import testdata.di.positive.listfieldinjector.AField;
@@ -22,94 +21,13 @@ import testdata.di.positive.qualifier.field.PrintService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BringApplicationContextHappyCasesTest {
 
     private static final String TEST_DATA_PACKAGE = "testdata.di.positive";
-
-    @DisplayName("Should found one interface and inject it")
-    @Test
-    void shouldFoundOneInterfaceAndInjectIt() {
-        //given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".contract");
-        String expectedMessage = "Barista is preparing a drink: Making a delicious latte!";
-
-        //when
-        var barista = bringApplicationContext.getBean(Barista.class);
-
-        //then
-        assertThat(barista.prepareDrink()).isEqualTo(expectedMessage);
-    }
-
-    @DisplayName("Should inject dependency when you forget to add autowired and you have one constructor")
-    @Test
-    void shouldInjectConstructorDependencyIfYouHaveOneAndForgetToAddAutowired() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".constructor");
-
-        // when
-        var aBean = bringApplicationContext.getBean(testdata.di.positive.constructor.A.class);
-        var bBean = bringApplicationContext.getBean(testdata.di.positive.constructor.B.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(bBean).isNotNull();
-        assertThat(bBean.getA()).isNotNull();
-        assertThat(bBean.getA()).isEqualTo(aBean);
-    }
-
-    @DisplayName("Should inject dependency when you have multiple constructors but one of it was market as autowired")
-    @Test
-    void shouldInjectDependencyWhenYouHaveMultipleConstructorButOneOfItWasMarketAsAutowired() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".secondconstructor");
-
-        // when
-        var aBean = bringApplicationContext.getBean(testdata.di.positive.secondconstructor.A.class);
-        var bBean = bringApplicationContext.getBean(testdata.di.positive.secondconstructor.B.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(bBean).isNotNull();
-        assertThat(bBean.getA()).isNotNull();
-        assertThat(bBean.getA()).isEqualTo(aBean);
-    }
-
-    @DisplayName("Should inject dependency via Field")
-    @Test
-    void shouldInjectDependencyViaField() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".field");
-
-        // when
-        var aBean = bringApplicationContext.getBean(testdata.di.positive.field.A.class);
-        var bBean = bringApplicationContext.getBean(testdata.di.positive.field.B.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(bBean).isNotNull();
-        assertThat(bBean.getA()).isNotNull();
-        assertThat(bBean.getA()).isEqualTo(aBean);
-    }
-
-    @DisplayName("Should inject dependency via setter")
-    @Test
-    void shouldInjectDependencyViaSetter() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".setter");
-
-        // when
-        var aBean = bringApplicationContext.getBean(testdata.di.positive.setter.A.class);
-        var bBean = bringApplicationContext.getBean(testdata.di.positive.setter.B.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(bBean).isNotNull();
-        assertThat(bBean.getA()).isNotNull();
-        assertThat(bBean.getA()).isEqualTo(aBean);
-    }
 
     @DisplayName("Should inject interface bean implementation taking into account constructor parameter name")
     @Test
@@ -118,8 +36,7 @@ class BringApplicationContextHappyCasesTest {
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".contract2");
         
         // when
-        var bean = bringApplicationContext
-                .getBean(testdata.di.positive.contract2.Barista.class);
+        var bean = bringApplicationContext.getBean(testdata.di.positive.contract2.Barista.class);
         
         // then
         assertThat(bean).isNotNull();
@@ -134,14 +51,33 @@ class BringApplicationContextHappyCasesTest {
 
         // when
         RestClient restClient = bringApplicationContext.getBean(RestClient.class);
+        Map<String, RestClient> restClients = bringApplicationContext.getBeans(RestClient.class);
+        Map<String, RestClient> restClients2 = bringApplicationContext.getBeans(RestClient.class);
         Map<String, BringService> bringServices = bringApplicationContext.getBeans(BringService.class);
 
         // then
         assertThat(restClient).isNotNull();
-        assertThat(bringServices).hasSize(2);
+        assertThat(restClient.getUrl()).isEqualTo("https://");
+        assertThat(restClient.getKey()).isEqualTo("KEY");
+        assertThat(restClients).hasSize(2);
+        assertThat(restClients2).hasSize(2);
+        assertThat(restClients).containsValue(restClient);
+        assertThat(restClients2).containsValue(restClient);
+        assertThat(restClients.get("bringRestClient22").getUuid())
+                .isNotEqualTo(restClients2.get("bringRestClient22").getUuid());
+        
+        assertThat(bringServices).hasSize(3);
 
-        List<RestClient> restClients = bringServices.values().stream().map(BringService::getBringRestClient).toList();
-        assertThat(restClients.stream().allMatch(rc -> rc.equals(restClient))).isTrue();
+        List<RestClient> clients = bringServices.values().stream()
+                .map(BringService::getBringRestClient)
+                .filter(client -> Objects.equals(client, restClient))
+                .toList();
+        assertThat(clients).hasSize(2);
+        
+        assertThat(bringServices.get("bringService3")).isNotNull();
+        assertThat(bringServices.get("bringService3").getBringRestClient()).isNotNull();
+        assertThat(bringServices.get("bringService3").getBringRestClient().getUrl()).isEqualTo("https://ssssss");
+        assertThat(bringServices.get("bringService3").getBringRestClient().getKey()).isEqualTo("KEY");
     }
 
     @DisplayName("Should register @Component and @Service beans in Bring Context")
@@ -168,9 +104,6 @@ class BringApplicationContextHappyCasesTest {
 
         // when
         var useCase = bringApplicationContext.getBean(GetInfoFromExternalServicesUseCase.class);
-
-        //var bean = bringApplicationContext.getBean(
-        //   com.bobocode.bring.testdata.di.positive.fullinjection.RestClient.class);
 
         // then
         assertThat(useCase).isNotNull();

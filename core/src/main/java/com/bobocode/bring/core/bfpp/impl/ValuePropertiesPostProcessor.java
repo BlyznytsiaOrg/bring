@@ -1,4 +1,4 @@
-package com.bobocode.bring.core.postprocessor.impl;
+package com.bobocode.bring.core.bfpp.impl;
 
 import com.bobocode.bring.core.anotation.BeanProcessor;
 import com.bobocode.bring.core.anotation.Order;
@@ -6,7 +6,7 @@ import com.bobocode.bring.core.anotation.Profile;
 import com.bobocode.bring.core.context.impl.DefaultBringBeanFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.env.impl.ProfileSourceResolve;
-import com.bobocode.bring.core.postprocessor.BeanFactoryPostProcessor;
+import com.bobocode.bring.core.bfpp.BeanFactoryPostProcessor;
 
 import java.util.Map;
 

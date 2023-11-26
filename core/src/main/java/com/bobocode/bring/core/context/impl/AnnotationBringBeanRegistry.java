@@ -97,7 +97,12 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
             if (hasRequiredAnnotation) {
                 List<String> beanNames = Optional.ofNullable(getTypeToBeanNames().get(implementation))
-                        .orElseThrow(() -> new NoSuchBeanException(implementation));
+                        .orElseThrow(() -> {
+                            if (implementation.isInterface()) {
+                                return new NoSuchBeanException(String.format("No such bean that implements this %s ", implementation));
+                            }
+                            return new NoSuchBeanException(implementation);
+                        });
 
                 if (beanNames.size() != 1) {
                     throw new NoUniqueBeanException(implementation);

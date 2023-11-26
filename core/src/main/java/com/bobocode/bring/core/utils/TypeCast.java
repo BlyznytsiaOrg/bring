@@ -5,9 +5,9 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class TypeCast {
 
-    private static final char NULL_VALUE = '\u0000';
+    private final char NULL_VALUE = '\u0000';
 
-    public static Object cast(Object value, Class<?> type) {
+    public Object cast(Object value, Class<?> type) {
         if (value == null || type == null) {
             return null;
         }
