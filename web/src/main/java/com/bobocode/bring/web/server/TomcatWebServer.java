@@ -12,6 +12,38 @@ import org.apache.catalina.startup.Tomcat;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the {@link WebServer} interface for the Apache Tomcat server.
+ * This class encapsulates the embedded Tomcat server and provides methods to start,
+ * stop, and retrieve information about the server.
+ * <p>
+ * The {@code TomcatWebServer} constructor takes a configured {@link Tomcat} instance
+ * and initializes the server. The server is started in a separate thread to trigger
+ * initialization listeners. Additionally, a blocking non-daemon thread is created to
+ * prevent immediate shutdown of the server.
+ * </p>
+ *
+ * <p>
+ * The {@code start} method starts the Tomcat server, and the {@code stop} method stops
+ * the server. Both methods are synchronized to ensure thread safety during server
+ * state changes.
+ * </p>
+ *
+ * <p>
+ * This class uses a monitor object for synchronization and a volatile boolean flag
+ * ({@code started}) to track the server's state. It also contains methods for checking
+ * whether connectors have started, getting a description of ports, and obtaining the
+ * context path.
+ * </p>
+ *
+ * @see WebServer
+ * @see WebServerException
+ * @see ConnectorStartFailedException
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
+ */
+
 @Slf4j
 public class TomcatWebServer implements WebServer {
     @Getter

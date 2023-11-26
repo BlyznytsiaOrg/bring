@@ -1,16 +1,19 @@
 package com.bobocode.bring.core.postprocessor.impl;
 
 import com.bobocode.bring.core.anotation.Bean;
+import com.bobocode.bring.core.anotation.BeanProcessor;
+import com.bobocode.bring.core.anotation.Primary;
 import com.bobocode.bring.core.context.impl.DefaultBringBeanFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
-import com.bobocode.bring.core.utils.BeanScopeUtils;
 import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.postprocessor.BeanFactoryPostProcessor;
+import com.bobocode.bring.core.utils.BeanScopeUtils;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+@BeanProcessor
 public class ConfigurationClassPostProcessor implements BeanFactoryPostProcessor {
     
     @Override
@@ -41,11 +44,16 @@ public class ConfigurationClassPostProcessor implements BeanFactoryPostProcessor
             .scope(BeanScopeUtils.findBeanScope(method))
             .proxyMode(BeanScopeUtils.findProxyMode(method))
             .method(method)
-            .factoryMethodName(method.getName())
             .factoryBeanName(beanName)
+            .isPrimary(method.isAnnotationPresent(Primary.class))
             .build();
         
-          defaultBeanFactory.addBeanDefinition(beanDefinition.getFactoryMethodName(), beanDefinition);
+          defaultBeanFactory.addBeanDefinition(resolveBeanName(method), beanDefinition);
+      }
+      
+      private String resolveBeanName(Method method) {
+          String value = method.getAnnotation(Bean.class).value();
+          return value.isEmpty() ? method.getName() : value;
       }
 
 }

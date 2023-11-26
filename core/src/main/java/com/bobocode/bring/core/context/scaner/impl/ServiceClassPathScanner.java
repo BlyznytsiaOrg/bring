@@ -1,11 +1,13 @@
 package com.bobocode.bring.core.context.scaner.impl;
 
+import com.bobocode.bring.core.anotation.BeanProcessor;
 import com.bobocode.bring.core.anotation.Service;
 import com.bobocode.bring.core.context.scaner.ClassPathScanner;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
+import java.lang.annotation.Annotation;
 import java.util.Set;
 
 
@@ -20,6 +22,7 @@ import java.util.Set;
  *  @author Blyzhnytsia Team
  *  @since 1.0
  */
+@BeanProcessor
 @AllArgsConstructor
 @Slf4j
 public class ServiceClassPathScanner implements ClassPathScanner {
@@ -34,7 +37,17 @@ public class ServiceClassPathScanner implements ClassPathScanner {
      */
     @Override
     public Set<Class<?>> scan() {
-        return reflections.getTypesAnnotatedWith(Service.class);
+        return reflections.getTypesAnnotatedWith(getAnnotation());
     }
-    
+
+    /**
+     * Retrieves the annotation type scanned by this class path scanner.
+     *
+     * @return The Class object representing the annotation scanned by this class path scanner.
+     */
+    @Override
+    public Class<? extends Annotation> getAnnotation() {
+        return Service.class;
+    }
+
 }

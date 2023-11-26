@@ -1,10 +1,10 @@
 package com.bobocode.bring.core.injection.value;
 
 import com.bobocode.bring.core.BringApplication;
-import com.bobocode.bring.testdata.di.negative.fieldproperties.NotFoundValue;
-import com.bobocode.bring.testdata.di.positive.constructorproperties.ProfileBeanConstructor;
-import com.bobocode.bring.testdata.di.positive.fieldproperties.ProfileBean;
-import com.bobocode.bring.testdata.di.positive.setterproperties.ProfileBeanSetter;
+import testdata.di.negative.fieldproperties.NotFoundValue;
+import testdata.di.positive.constructorproperties.ProfileBeanConstructor;
+import testdata.di.positive.fieldproperties.ProfileBean;
+import testdata.di.positive.setterproperties.ProfileBeanSetter;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class BringValueInjectionTest {
 
-    private static final String TEST_DATA_POSITIVE_PACKAGE = "com.bobocode.bring.testdata.di.positive";
-    private static final String TEST_DATA_NEGATIVE_PACKAGE = "com.bobocode.bring.testdata.di.negative";
+    private static final String TEST_DATA_POSITIVE_PACKAGE = "testdata.di.positive";
+    private static final String TEST_DATA_NEGATIVE_PACKAGE = "testdata.di.negative";
 
     @DisplayName("Should found profile bean and read application properties and do field injection")
     @Test

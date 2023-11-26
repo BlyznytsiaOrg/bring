@@ -20,8 +20,7 @@ import java.util.Optional;
  * and customize error handling in a Servlet container.
  *
  * @author Blyzhnytsia Team
- * @version 1.0
- * @since 2023-11-17
+ * @since  1.0
  */
 @Component
 @RequiredArgsConstructor

@@ -1,37 +1,107 @@
 # Bring Framework Documentation
 
 - [Overview](Overview.md)  History, Design Philosophy, Feedback, Getting Started.
-- [Core](Core.md)  IoC Container, Resources, Type Conversion, Scheduling, SpEL, AOP, AOT.
+- [Core](Core.md)  IoC Container, Resources, Type Conversion, Scheduling.
 - [Web](Web.md)  Bring Web.
 
 
-This is a simple Bring library that provides a basic Dependency injection container and Web framework
-The library is designed to be easy to use and includes the following functionality:
+## Getting Started
 
-- ...
+If you're new to Bring, consider initiating your experience with a [Bring playground application repo](https://github.com/YevgenDemoTestOrganization/bring-playground) with a variety of examples of how to use it.
+Bring Boot offers a swift and opinionated method to develop a Bring-based application ready for play.
+Leveraging the Bring Framework, it prioritizes conventions over extensive configurations, aiming to accelerate your setup process and swiftly get you up and running.
 
-# Arch 
- - DI 
- - Web
-
-
-## Web flow diagram
-
-TODO
 
 ## Installation
 
-To use this library, you can include the JAR file in your Java project. You can either build the JAR file from the provided source code or download a pre-built JAR file. Here are the steps for both options:
+- Open your Maven Project:
+
+Open the Maven project where you want to add the Bring framework dependencies.
+
+- Edit pom.xml:
+
+Locate the pom.xml file in your project.
+
+- Add Repository Configuration:
+
+Inside the <repositories> section of your pom.xml, add the following repository configuration:
+
+```
+<repositories>
+    <repository>
+        <id>repsy</id>
+        <name>My Private Maven Repository on Repsy</name>
+        <url>https://repo.repsy.io/mvn/levik/bring</url>
+    </repository>
+</repositories>
+
+```
+
+This configuration informs Maven about the repository location where it can find the Bring framework artifacts.
+
+- Include Dependency:
+
+Within the <dependencies> section of your pom.xml, add the Bring framework dependency (You will have web & core):
+
+```
+<dependencies>
+    <dependency>
+        <groupId>com.bobocode.bring.web</groupId>
+        <artifactId>web</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+
+```
+
+if you would like to work with core only then you need to add core dependency
+
+
+```
+<dependencies>
+    <dependency>
+        <groupId>com.bobocode.bring.core</groupId>
+        <artifactId>core</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+
+```
+
+Ensure the groupId, artifactId, and version values are accurate for the Bring framework you intend to use.
+
+
+- Save Changes:
+
+Save the pom.xml file after adding the repository and dependency configurations.
+
+- Build the Project:
+
+Run a Maven build for your project. You can do this through your IDE or by using the command line:
+
+```
+mvn clean install
+```
+
+Maven will download the required dependencies from the specified repository and add them to your project's classpath.
+
+- Verify Dependency Addition:
+
+Check the build logs for any errors or warnings related to dependency resolution. If the build completes successfully, it indicates that the Bring framework dependencies are successfully added to your project.
+
+## Feedback and Contributions
+
+If you suspect an issue within the Bring Framework or wish to propose a new feature, kindly utilize [GitHub Issues](https://github.com/YevgenDemoTestOrganization/bring/issues/new) for reporting problems or submitting feature suggestions
+If you have a solution in mind or a suggested fix, you can submit a pull request on [Github](https://github.com/YevgenDemoTestOrganization/bring). In addition, please read and configure you idea to follow our [Setup Code Style Guidelines](https://github.com/YevgenDemoTestOrganization/bring/wiki/Setup-Code-Style-Guidelines)
 
 
 ## License
 
-This Calculator library is provided under the [MIT License](LICENSE). Feel free to use, modify, and distribute it as needed. If you find any issues or have suggestions for improvements, please [open an issue](link-to-issues) on this repository.
+This Calculator library is provided under the [MIT License](LICENSE). Feel free to use, modify, and distribute it as needed. If you find any issues or have suggestions for improvements, please [open an issue](https://github.com/YevgenDemoTestOrganization/bring/issues) on this repository.
 
 ## Contact
 
 If you have any questions or need assistance, please feel free to contact the author:
 
-Author: Your Name
-Email: your@email.com
-GitHub: [Your GitHub Profile](link-to-your-github)
+Author: Blyzhnytsia Team
+GitHub: [Your GitHub Profile](https://github.com/YevgenDemoTestOrganization)

@@ -5,10 +5,9 @@ import com.bobocode.bring.web.server.properties.ServerProperties;
 import com.bobocode.bring.web.service.StaticResourceService;
 import com.bobocode.bring.web.servlet.exception.StaticFileNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
 import java.net.URL;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,7 +29,6 @@ public class StaticResourceServiceImpl implements StaticResourceService {
     // Constants for error messages
     private static final String STATIC_FILE_NOT_FOUND_MESSAGE = "Can't find the File: %s.";
     private static final String STATIC_FOLDER_NOT_FOUND_MESSAGE = "Static folder can't be Null";
-    private static final String EMPTY_STRING = "";
 
     // Injected server properties for static folder information
     private final ServerProperties serverProperties;
@@ -43,35 +41,18 @@ public class StaticResourceServiceImpl implements StaticResourceService {
      * @throws StaticFileNotFoundException If the file is not found or doesn't meet specified conditions.
      */
     @Override
+    @SneakyThrows
     public Path getStaticFile(String pathToFile) {
-        URL folderUrl = StaticResourceServiceImpl.class.getClassLoader().getResource(serverProperties.getStaticFolder());
+        URL folderUrl = StaticResourceServiceImpl.class.getClassLoader()
+                .getResource(serverProperties.getStaticFolder());
         Objects.requireNonNull(folderUrl, STATIC_FOLDER_NOT_FOUND_MESSAGE);
 
-        Path resourceAbsolutePath = Paths.get(getPathForStaticFolder(folderUrl), getPathForStaticFile(pathToFile));
+        Path folderPath = Paths.get(folderUrl.toURI()).resolve("..").normalize();
+
+        Path resourceAbsolutePath = Paths.get(folderPath.toString(), pathToFile);
         checkPathFile(resourceAbsolutePath, pathToFile);
 
         return resourceAbsolutePath;
-    }
-
-    /**
-     * Converts the path of the requested static file by replacing URL delimiters with system-dependent separators.
-     *
-     * @param pathToFile The path of the requested static file.
-     * @return The converted path with system-dependent separators.
-     */
-    private String getPathForStaticFile(String pathToFile) {
-        return pathToFile.replace(serverProperties.getUrlDelimiter(), FileSystems.getDefault().getSeparator());
-    }
-
-    /**
-     * Extracts the path of the static folder from the URL, removing the static folder part.
-     *
-     * @param folderUrl The URL of the static folder.
-     * @return The path of the static folder.
-     */
-    private String getPathForStaticFolder(URL folderUrl) {
-        return folderUrl.getPath().replace(
-                FileSystems.getDefault().getSeparator() + serverProperties.getStaticFolder(), EMPTY_STRING);
     }
 
     /**
@@ -84,7 +65,7 @@ public class StaticResourceServiceImpl implements StaticResourceService {
      */
     private void checkPathFile(Path path, String requestUri) {
         if (!Files.exists(path) || Files.isDirectory(path)
-            || !path.toString().contains(serverProperties.getStaticFolder())) {
+                || !path.toString().contains(serverProperties.getStaticFolder())) {
 
             log.error(String.format(STATIC_FILE_NOT_FOUND_MESSAGE, requestUri));
             throw new StaticFileNotFoundException(String.format(STATIC_FILE_NOT_FOUND_MESSAGE, requestUri));

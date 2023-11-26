@@ -1,5 +1,7 @@
 package com.bobocode.bring.core.context.type;
 
+import com.bobocode.bring.core.context.impl.AnnotationBringBeanRegistry;
+import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
@@ -10,11 +12,13 @@ import java.util.List;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.extractImplClasses;
 
-public class FieldListValueTypeInjector implements FieldValueTypeInjector {
+public class FieldListValueTypeInjector extends AbstractValueTypeInjector implements FieldValueTypeInjector{
 
     private final Reflections reflections;
 
-    public FieldListValueTypeInjector(Reflections reflections) {
+    public FieldListValueTypeInjector(Reflections reflections, AnnotationBringBeanRegistry beanRegistry,
+                                      ClassPathScannerFactory classPathScannerFactory) {
+        super(beanRegistry, classPathScannerFactory);
         this.reflections = reflections;
     }
 
@@ -26,6 +30,7 @@ public class FieldListValueTypeInjector implements FieldValueTypeInjector {
     @Override
     public Object setValueToField(Field field, Object bean, List<Class<? extends Annotation>> createdBeanAnnotations) {
         ParameterizedType genericTypeOfField = (ParameterizedType) field.getGenericType();
-        return extractImplClasses(genericTypeOfField, reflections, createdBeanAnnotations);
+        List<Class<?>> dependencies = extractImplClasses(genericTypeOfField, reflections, createdBeanAnnotations);
+        return injectListDependency(dependencies);
     }
 }

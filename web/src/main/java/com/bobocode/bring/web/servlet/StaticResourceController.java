@@ -1,6 +1,6 @@
 package com.bobocode.bring.web.servlet;
 
-import com.bobocode.bring.core.anotation.RestController;
+import com.bobocode.bring.web.servlet.annotation.RestController;
 import com.bobocode.bring.web.service.StaticResourceService;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestMapping;
@@ -18,8 +18,7 @@ import java.nio.file.Path;
  * Provides an endpoint to retrieve static files based on the requested URI.
  *
  * @author Blyzhnytsia Team
- * @version 1.0
- * @since 2023-11-22
+ * @since 1.0
  */
 @RestController
 @RequestMapping

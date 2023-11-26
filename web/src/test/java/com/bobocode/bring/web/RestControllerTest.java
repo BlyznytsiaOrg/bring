@@ -1,7 +1,9 @@
 package com.bobocode.bring.web;
 
+import static com.bobocode.bring.web.utils.TestUtils.getHttpGetRequest;
+import static com.bobocode.bring.web.utils.TestUtils.getHttpPutRequest;
 import static org.assertj.core.api.Assertions.assertThat;
-import static testdata.controller.ExampleRestController.User;
+import static testdata.generalintegrationtest.ExampleRestController.User;
 
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
 import com.bobocode.bring.web.server.properties.ServerProperties;
@@ -26,21 +28,20 @@ public class RestControllerTest {
     public static final String NUMBER_PATH = "/example/number";
     public static final String REQUEST_PATH = "/example/request";
     public static final String RESPONSE_PATH = "/example/response";
-    public static final String BODY_AS_STRING = "/example/bodyAsString";
-    public static final String BODY_AS_ENTITY = "/example/bodyAsEntity";
     public static final String NOT_EXIST_PATH = "/not-exist";
-    public static final String HEADER = "/example/header";
     public static final String STATUS = "/example/status";
     public static final String CUSTOM_EXCEPTION_PATH = "/example/custom-exception";
     public static final String DEFAULT_EXCEPTION_PATH = "/example/default-exception";
     public static final String URL = "http://localhost:%s%s";
+    public static final String APPLICATION_JSON = "application/json";
+    public static final String PACKAGE = "testdata.generalintegrationtest";
     private static ObjectMapper objectMapper;
     private static ServerProperties serverProperties;
     private HttpClient httpClient;
 
     @BeforeAll
     static void beforeAll() {
-        BringApplicationContext bringApplicationContext = BringWebApplication.run("testdata");
+        BringApplicationContext bringApplicationContext = BringWebApplication.run(PACKAGE);
         objectMapper = bringApplicationContext.getBean(ObjectMapper.class);
         serverProperties = bringApplicationContext.getBean(ServerProperties.class);
     }
@@ -52,7 +53,7 @@ public class RestControllerTest {
 
     @Test
     @DisplayName("should return 'Hello'")
-    void hello_ok() throws URISyntaxException, IOException, InterruptedException {
+    void shouldReturnHello() throws URISyntaxException, IOException, InterruptedException {
         //given
         String expectedValue = "Hello";
         String url = getHost() + HELLO_PATH;
@@ -82,7 +83,7 @@ public class RestControllerTest {
 
     @Test
     @DisplayName("should return 'This application has no explicit mapping for 'path'")
-    void notExistingPath_notOk() throws URISyntaxException, IOException, InterruptedException {
+    void shouldThrowExceptionOnInvalidMapping() throws URISyntaxException, IOException, InterruptedException {
         //given
         String url = getHost() + NOT_EXIST_PATH;
         HttpRequest request = getHttpGetRequest(url);
@@ -95,21 +96,6 @@ public class RestControllerTest {
 
         //then
         assertThat(errorResponse.getMessage()).isEqualTo(expectedValue);
-    }
-
-    @Test
-    @DisplayName("should return the value of path variable")
-    void pathVariable_ok() throws URISyntaxException, IOException, InterruptedException {
-        //given
-        String pathVariable = "20";
-        String url = getHost() + "/example/" + pathVariable;
-        HttpRequest request = getHttpGetRequest(url);
-
-        //when
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-
-        //then
-        assertThat(actualResponse).isEqualTo(pathVariable);
     }
 
     @Test
@@ -149,85 +135,8 @@ public class RestControllerTest {
     }
 
     @Test
-    @DisplayName("should return boolean 'true'")
-    void shouldReturnBooleanTrue() throws URISyntaxException, IOException, InterruptedException {
-        //given
-        String pathVariable = "true";
-        String url = getHost() + "/example/variable1/" + pathVariable;
-        HttpRequest request = getHttpGetRequest(url);
-
-        //when
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-
-        //then
-        assertThat(actualResponse).isEqualTo(pathVariable);
-    }
-
-    @Test
-    @DisplayName("should throw exception with message for invalid boolean value")
-    void shouldThrowException() throws URISyntaxException, IOException, InterruptedException {
-        //given
-        String pathVariable = "non_boolean";
-        String expectedMessage = String.format("Failed to convert value of type 'java.lang.String' "
-                + "to required type 'boolean'; Invalid value [%s]", pathVariable);
-        String url = getHost() + "/example/variable1/" + pathVariable;
-        HttpRequest request = getHttpGetRequest(url);
-
-        // when
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-        ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
-
-        // then
-        assertThat(errorResponse.getMessage()).isEqualTo(expectedMessage);
-    }
-
-    @Test
-    @DisplayName("should return request parameters")
-    void shouldReturnRequestParams() throws URISyntaxException, IOException, InterruptedException {
-        //given
-        String nameParam = "name";
-        String nameValue = "Bob";
-        String idParam = "id";
-        String idValue = "15";
-        String expectedValue = nameValue + " - " + idValue;
-        String url = getHost() + "/example/reqParam?" + nameParam + "=" + nameValue
-                + "&" + idParam + "=" + idValue;
-        HttpRequest request = getHttpGetRequest(url);
-
-        //when
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-
-        //then
-        assertThat(actualResponse).isEqualTo(expectedValue);
-    }
-
-    @Test
-    @DisplayName("should return exception for absense of required request parameter")
-    void shouldReturnExceptionForParameterAbsense()
-            throws URISyntaxException, IOException, InterruptedException {
-        //given
-        String nameParam = "name1";
-        String nameValue = "Bob";
-        String idParam = "id";
-        String idValue = "15";
-        String expectedMessage = "Required request parameter 'name' "
-                + "for method parameter type 'String' is not present";
-        String url = getHost() + "/example/reqParam?" + nameParam + "=" + nameValue
-                + "&" + idParam + "=" + idValue;
-        HttpRequest request = getHttpGetRequest(url);
-
-        //when
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-        ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
-        String actualValue = errorResponse.getMessage();
-
-        //then
-        assertThat(actualValue).isEqualTo(expectedMessage);
-    }
-
-    @Test
     @DisplayName("should return Content-Length from HttpServletRequest")
-    void request() throws URISyntaxException, IOException, InterruptedException {
+    void shouldUseHttpServletRequest() throws URISyntaxException, IOException, InterruptedException {
         //given
         String body = "I am sending PUT request";
         int expectedValue = body.length();
@@ -243,9 +152,8 @@ public class RestControllerTest {
 
     @Test
     @DisplayName("should return Content-Type from HttpServletResponse")
-    void response() throws URISyntaxException, IOException, InterruptedException {
+    void shouldUseHttpServletResponse() throws URISyntaxException, IOException, InterruptedException {
         //given
-        String expectedValue = "application/json";
         String url = getHost() + RESPONSE_PATH;
         HttpRequest request = getHttpGetRequest(url);
 
@@ -253,65 +161,12 @@ public class RestControllerTest {
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
 
         //then
-        assertThat(actualResponse).isEqualTo(expectedValue);
-    }
-
-    @Test
-    @DisplayName("should return body as String")
-    void shouldReturnBodyAsStringAndCheckIt()
-            throws URISyntaxException, IOException, InterruptedException {
-        //given
-        String body = "{  \"name\": \"Bob\",  \"age\": 22}";
-        String url = getHost() + BODY_AS_STRING;
-        HttpRequest request = getHttpPostRequest(url, body);
-
-        //when
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-
-        //then
-        assertThat(actualResponse).isEqualTo(body);
-    }
-
-    @Test
-    @DisplayName("should return entity Object")
-    void bodyAsEntity() throws URISyntaxException, IOException, InterruptedException {
-        // given
-        User user = new User("Bob", 20);
-        String body = objectMapper.writeValueAsString(user);
-        String url = getHost() + BODY_AS_ENTITY;
-        HttpRequest request = getHttpPostRequest(url, body);
-        String expectedValue = user.toString();
-
-        //when
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-
-        //then
-        assertThat(actualResponse).isEqualTo(expectedValue);
-    }
-
-    @Test
-    @DisplayName("should return request header")
-    void header() throws URISyntaxException, IOException, InterruptedException {
-        //given
-        String url = getHost() + HEADER;
-        String headerName = "Content-Type";
-        String headerValue = "application/json";
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .header(headerName, headerValue)
-                .uri(new URI(url))
-                .build();
-
-        //when
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-
-        //then
-        assertThat(actualResponse).isEqualTo(headerValue);
+        assertThat(actualResponse).isEqualTo(APPLICATION_JSON);
     }
 
     @Test
     @DisplayName("should set a response status")
-    void status() throws URISyntaxException, IOException, InterruptedException {
+    void shouldReturnResponseStatus() throws URISyntaxException, IOException, InterruptedException {
         //given
         String url = getHost() + STATUS;
         HttpRequest request = getHttpGetRequest(url);
@@ -325,8 +180,8 @@ public class RestControllerTest {
     }
 
     @Test
-    @DisplayName("should return several arguments")
-    void several() throws IOException, URISyntaxException, InterruptedException {
+    @DisplayName("should except several arguments")
+    void shouldExceptSeveralArguments() throws IOException, URISyntaxException, InterruptedException {
         //given
         String pathVariable = "10";
         String url = getHost() + "/example/severalArg/" + pathVariable;
@@ -335,7 +190,7 @@ public class RestControllerTest {
         User user = new User(userName, userAge);
         String body = objectMapper.writeValueAsString(user);
         String headerNameContentType = "Content-Type";
-        String headerValueContentValue = "application/json";
+        String headerValueContentValue = APPLICATION_JSON;
         String headerNameAccept = "Accept";
         String headerValueAccept = "xml";
         String expectedResponseStatus = "200";
@@ -367,28 +222,6 @@ public class RestControllerTest {
         assertThat(actualUserAge).isEqualTo(userAge);
         assertThat(actualValueForHeaderContentType).isEqualTo(headerValueContentValue);
         assertThat(actualStatus).isEqualTo(expectedResponseStatus);
-    }
-
-
-    private HttpRequest getHttpGetRequest(String url) throws URISyntaxException {
-        return HttpRequest.newBuilder()
-                .GET()
-                .uri(new URI(url))
-                .build();
-    }
-
-    private HttpRequest getHttpPutRequest(String url, String body) throws URISyntaxException {
-        return HttpRequest.newBuilder()
-                .PUT(HttpRequest.BodyPublishers.ofString(body))
-                .uri(new URI(url))
-                .build();
-    }
-
-    private HttpRequest getHttpPostRequest(String url, String body) throws URISyntaxException {
-        return HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .uri(new URI(url))
-                .build();
     }
 
     private String getHost() {

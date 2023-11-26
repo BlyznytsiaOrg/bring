@@ -1,6 +1,8 @@
 package com.bobocode.bring.core.utils;
 
+import com.bobocode.bring.core.anotation.Autowired;
 import com.bobocode.bring.core.context.type.OrderComparator;
+import com.bobocode.bring.core.exception.BeanPostProcessorConstructionLimitationException;
 import com.bobocode.bring.core.exception.BringGeneralException;
 import com.thoughtworks.paranamer.AnnotationParanamer;
 import com.thoughtworks.paranamer.BytecodeReadingParanamer;
@@ -20,9 +22,38 @@ import java.util.function.Supplier;
 @UtilityClass
 public final class ReflectionUtils {
 
-    private final OrderComparator ORDER_COMPARATOR = new OrderComparator();
-    private final Paranamer info = new CachingParanamer(new AnnotationParanamer(new BytecodeReadingParanamer()));
+    public static final OrderComparator ORDER_COMPARATOR = new OrderComparator();
+    private static final Paranamer info = new CachingParanamer(new AnnotationParanamer(new BytecodeReadingParanamer()));
     private static final String ARG = "arg";
+
+    private static final String SET_METHOD_START_PREFIX = "set";
+
+    public static boolean isAutowiredSetterMethod(Method method) {
+        return method.isAnnotationPresent(Autowired.class) && method.getName().startsWith(SET_METHOD_START_PREFIX);
+    }
+
+
+    public static Object getConstructorWithParameters(Class<?> clazz, Class<?> parameterTypes, Object instance) {
+        try {
+            Constructor<?> constructor = clazz.getConstructor(parameterTypes);
+            return constructor.newInstance(instance);
+        } catch (Exception ex) {
+            throw new BeanPostProcessorConstructionLimitationException(
+                    String.format("BeanProcessor '%s' should have only one constructor "
+                            + "with Reflections params", clazz.getSimpleName()));
+        }
+    }
+
+    public static Object getConstructorWithOutParameters(Class<?> clazz) {
+        try {
+            Constructor<?> constructor = clazz.getConstructor();
+            return constructor.newInstance();
+        } catch (Exception ex) {
+            throw new BeanPostProcessorConstructionLimitationException(
+                    String.format("BeanProcessor '%s' should have only default constructor "
+                            + "without params", clazz.getSimpleName()));
+        }
+    }
 
     @SneakyThrows
     public static void setField(Field field, Object obj, Object value) {
@@ -30,11 +61,11 @@ public final class ReflectionUtils {
         field.set(obj, value);
     }
     
-    public List<String> getParameterNames(AccessibleObject methodOrConstructor) {
+    public static List<String> getParameterNames(AccessibleObject methodOrConstructor) {
         return Arrays.stream(info.lookupParameterNames(methodOrConstructor)).toList();
     }
     
-    public int extractParameterPosition(Parameter parameter) {
+    public static int extractParameterPosition(Parameter parameter) {
         String name = parameter.getName();
         return Integer.parseInt(name.substring(name.indexOf(ARG) + ARG.length()));
     }

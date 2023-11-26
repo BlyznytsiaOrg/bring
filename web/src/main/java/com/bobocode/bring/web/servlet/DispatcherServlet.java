@@ -1,146 +1,126 @@
 package com.bobocode.bring.web.servlet;
 
+import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getRequestPath;
+import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getShortenedPath;
+import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterType;
+
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.web.server.properties.ServerProperties;
-import com.bobocode.bring.web.servlet.annotation.*;
+import com.bobocode.bring.web.servlet.annotation.PathVariable;
+import com.bobocode.bring.web.servlet.annotation.RequestBody;
+import com.bobocode.bring.web.servlet.annotation.RequestHeader;
+import com.bobocode.bring.web.servlet.annotation.RequestParam;
 import com.bobocode.bring.web.servlet.exception.MissingApplicationMappingException;
-import com.bobocode.bring.web.servlet.exception.MissingRequestHeaderAnnotationValueException;
-import com.bobocode.bring.web.servlet.exception.MissingServletRequestParameterException;
-import com.bobocode.bring.web.servlet.mapping.ParamsResolver;
+import com.bobocode.bring.web.servlet.exception.MissingRequestParamException;
 import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
 import com.bobocode.bring.web.servlet.mapping.RestControllerProcessResult;
+import com.bobocode.bring.web.servlet.mapping.response.ResponseAnnotationResolver;
 import com.bobocode.bring.web.utils.ReflectionUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getRequestPath;
-import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterType;
 
 @Component
 @Slf4j
 public class DispatcherServlet extends FrameworkServlet {
-    private final List<BringServlet> bringServlets;
-    private final List<ParamsResolver> paramsResolvers;
+    public static final String REST_CONTROLLER_PARAMS = "REST_CONTROLLER_PARAMS";
+    private final List<ResponseAnnotationResolver> responseAnnotationResolver;
     private final ObjectMapper objectMapper;
     private final ServerProperties serverProperties;
 
-    public DispatcherServlet(List<BringServlet> bringServlets,
-                             List<ParamsResolver> paramsResolvers,
+    public DispatcherServlet(List<ResponseAnnotationResolver> responseAnnotationResolver,
                              ObjectMapper objectMapper,
                              ServerProperties serverProperties) {
-        this.bringServlets = bringServlets;
-        this.paramsResolvers = paramsResolvers;
+        this.responseAnnotationResolver = responseAnnotationResolver;
         this.objectMapper = objectMapper;
         this.serverProperties = serverProperties;
     }
 
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) {
-        BringServlet servlet = bringServlets.stream()
-                .filter(bringServlet -> controllerIsPresent(bringServlet, req, resp))
-                .findFirst()
+        RestControllerParams restControllerParams = getRestControllerParams(req);
+        processRestControllerRequest(restControllerParams, req, resp);
+    }
+
+    @SuppressWarnings("unchecked")
+    private RestControllerParams getRestControllerParams(HttpServletRequest req) {
+        String requestPath = getRequestPath(req);
+        String methodName = req.getMethod();
+        var restControllerParams = (Map<String, List<RestControllerParams>>) req.getServletContext()
+                .getAttribute(REST_CONTROLLER_PARAMS);
+
+        var methodParamsList = restControllerParams.get(methodName);
+        return Optional.ofNullable(methodParamsList)
+                .stream()
+                .flatMap(Collection::stream)
+                .filter(params -> checkParams(requestPath, params))
+                .findAny()
                 .orElseThrow(() -> new MissingApplicationMappingException(
                         String.format("This application has no explicit mapping for '%s'", getRequestPath(req))));
-
-        processRestControllerRequest(servlet, req, resp);
-    }
-
-    @SneakyThrows
-    public void performResponse(RestControllerProcessResult result, HttpServletResponse resp) {
-        Method method = result.method();
-        if (method.isAnnotationPresent(ResponseStatus.class)) {
-            ResponseStatus annotation = method.getAnnotation(ResponseStatus.class);
-            int statusValue = annotation.value().getValue();
-            resp.setStatus(statusValue);
-        }
-        try (PrintWriter writer = resp.getWriter()) {
-            Object response = result.result();
-            writer.print(response);
-            writer.flush();
-        }
-    }
-
-    @SneakyThrows
-    public void processRestControllerRequest(BringServlet bringServlet,
-                                             HttpServletRequest req,
-                                             HttpServletResponse resp) {
-        String requestPath = getRequestPath(req);
-        String methodName = req.getMethod();
-        var restControllerParamsMap = getRestControllerParams(bringServlet.getClass());
-        var methodParamsList = restControllerParamsMap.get(methodName);
-        if (methodParamsList != null) {
-            for (RestControllerParams params : methodParamsList) {
-                Method method = params.method();
-                Parameter[] parameters = method.getParameters();
-                if (parameters.length == 0 && requestPath.equals(params.path())) {
-                    getRestControllerProcessResult(bringServlet, method, resp);
-                } else {
-                    String requestPathShortened = "";
-                    if (checkIfPathVariableAnnotationIsPresent(parameters)) {
-                        requestPathShortened = getShortenedPath(requestPath);
-                    }
-                    if (requestPathShortened.equals(params.path())
-                        || requestPath.equals(params.path())
-                        || checkIfUrlIsStatic(requestPath, params.path())) {
-                        Object[] args = prepareArgs(req, resp, requestPath, method);
-                        getRestControllerProcessResult(bringServlet, method, resp, args);
-                    }
-
-                }
-            }
-        }
-    }
-
-    private boolean controllerIsPresent(BringServlet bringServlet, HttpServletRequest req, HttpServletResponse resp) {
-        String requestPath = getRequestPath(req);
-        String methodName = req.getMethod();
-        var restControllerParamsMap = getRestControllerParams(bringServlet.getClass());
-        var methodParamsList = restControllerParamsMap.get(methodName);
-        if (methodParamsList != null) {
-            return methodParamsList.stream()
-                    .filter(params -> checkParams(requestPath, params))
-                    .findAny()
-                    .map(params -> Boolean.TRUE)
-                    .orElse(Boolean.FALSE);
-        }
-        return Boolean.FALSE;
     }
 
     private boolean checkParams(String requestPath, RestControllerParams params) {
         Method method = params.method();
         Parameter[] parameters = method.getParameters();
-        String requestPathShortened = "";
         if (checkIfPathVariableAnnotationIsPresent(parameters)) {
-            requestPathShortened = getShortenedPath(requestPath);
+            String requestPathShortened = getShortenedPath(requestPath);
+            return requestPathShortened.equals(params.path());
         }
-        return requestPath.equals(params.path()) || requestPathShortened.equals(params.path())
-               || checkIfUrlIsStatic(requestPath, params.path());
+        return requestPath.equals(params.path()) || checkIfUrlIsStatic(requestPath, params.path());
     }
 
-    private String getShortenedPath(String requestPath) {
-        String requestPathShortened;
-        int index = requestPath.lastIndexOf("/");
-        requestPathShortened = requestPath.substring(0, index + 1);
-        return requestPathShortened;
+    @SneakyThrows
+    private void processRestControllerRequest(RestControllerParams params,
+                                              HttpServletRequest req,
+                                              HttpServletResponse resp) {
+        String requestPath = getRequestPath(req);
+        Object instance = params.instance();
+        Method method = params.method();
+        Parameter[] parameters = method.getParameters();
+        if (parameters.length == 0) {
+            getRestControllerProcessResult(instance, method, resp);
+        } else {
+            Object[] args = prepareArgs(req, resp, requestPath, method);
+            getRestControllerProcessResult(instance, method, resp, args);
+        }
     }
 
     private void getRestControllerProcessResult(
-            BringServlet bringServlet, Method method, HttpServletResponse resp, Object... args)
+            Object instance, Method method, HttpServletResponse resp, Object... args)
             throws IllegalAccessException, InvocationTargetException {
-        Optional.ofNullable(method.invoke(bringServlet, args))
+        Optional.ofNullable(method.invoke(instance, args))
                 .ifPresent(result -> performResponse(new RestControllerProcessResult(method, result), resp));
+    }
+
+    @SneakyThrows
+    private void performResponse(RestControllerProcessResult processResult,
+                                 HttpServletResponse resp) {
+        Method method = processResult.method();
+        HttpServletResponse httpServletResponse = responseAnnotationResolver.stream()
+                .filter(resolver -> method.isAnnotationPresent(resolver.getAnnotation()))
+                .findFirst()
+                .map(resolver -> resolver.handleAnnotation(resp, method))
+                .orElse(resp);
+
+        try (PrintWriter writer = httpServletResponse.getWriter()) {
+            Object response = processResult.result();
+            writer.print(response);
+            writer.flush();
+        }
     }
 
     private boolean checkIfUrlIsStatic(String requestPath, String paramPath) {
@@ -180,11 +160,6 @@ public class DispatcherServlet extends FrameworkServlet {
                                            Parameter[] parameters, int i) {
         RequestHeader annotation = parameters[i].getAnnotation(RequestHeader.class);
         String value = annotation.value();
-        if (value == null) {
-            throw new MissingRequestHeaderAnnotationValueException(
-                    String.format("Required value for @RequestHeader annotation "
-                                  + "for parameter '%s' is not present", parameters[i].getName()));
-        }
         String header = req.getHeader(value);
         args[i] = header;
     }
@@ -195,12 +170,17 @@ public class DispatcherServlet extends FrameworkServlet {
         Class<?> type = parameters[i].getType();
         if (type.equals(String.class)) {
             args[i] = req.getReader().lines().collect(Collectors.joining());
+        } else if (type.equals(Map.class)) {
+            args[i] = objectMapper.readValue(req.getReader(), Map.class);
+        } else if (type.equals(byte[].class)) {
+            args[i] = objectMapper.readValue(req.getInputStream(), byte[].class);
         } else {
             args[i] = objectMapper.readValue(req.getReader(), type);
         }
     }
 
-    private static void extractRequestParam(HttpServletRequest req, Method method, Object[] args, int i,
+    private static void extractRequestParam(HttpServletRequest req, Method method, Object[] args,
+                                            int i,
                                             Parameter[] parameters) {
         List<String> parameterNames = ReflectionUtils.getParameterNames(method);
         String parameterName = parameterNames.get(i);
@@ -209,9 +189,9 @@ public class DispatcherServlet extends FrameworkServlet {
         if (parameterValue != null) {
             args[i] = parseToParameterType(parameterValue, type);
         } else {
-            throw new MissingServletRequestParameterException(
+            throw new MissingRequestParamException(
                     String.format("Required request parameter '%s' "
-                                  + "for method parameter type '%s' is not present",
+                                    + "for method parameter type '%s' is not present",
                             parameterName, type.getSimpleName()));
         }
     }
@@ -222,21 +202,5 @@ public class DispatcherServlet extends FrameworkServlet {
         String pathVariable = requestPath.substring(index + 1);
         Class<?> type = parameters[i].getType();
         args[i] = parseToParameterType(pathVariable, type);
-    }
-
-    public Map<String, List<RestControllerParams>> getRestControllerParams(Class<?> clazz) {
-        Map<String, List<RestControllerParams>> restConrollerParamsMap = new HashMap<>();
-        if (clazz.isAnnotationPresent(RequestMapping.class)) {
-            String requestMappingPath = clazz.getAnnotation(RequestMapping.class).path();
-
-            for (Method method : clazz.getMethods()) {
-                paramsResolvers.stream()
-                        .filter(resolver -> method.isAnnotationPresent(resolver.getAnnotation()))
-                        .findFirst()
-                        .ifPresent(resolver -> resolver.handleAnnotation(requestMappingPath,
-                                method, restConrollerParamsMap));
-            }
-        }
-        return restConrollerParamsMap;
     }
 }
