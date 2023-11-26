@@ -8,7 +8,7 @@ import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.utils.BeanScopeUtils;
 import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.bpp.BeanPostProcessor;
-import com.bobocode.bring.core.postprocessor.BeanPostProcessorDefinitionFactory;
+import com.bobocode.bring.core.bfpp.BeanPostProcessorDefinitionFactory;
 import com.bobocode.bring.core.bpp.BeanPostProcessorFactory;
 import org.reflections.Reflections;
 

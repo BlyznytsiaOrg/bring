@@ -1,7 +1,9 @@
-package testdata.di.negative.configuration;
+package testdata.di.negative.configuration.nosuchbean;
 
 import com.bobocode.bring.core.anotation.Bean;
 import com.bobocode.bring.core.anotation.Configuration;
+import testdata.di.negative.configuration.A;
+import testdata.di.negative.configuration.B;
 
 @Configuration
 public class AppConfiguration {

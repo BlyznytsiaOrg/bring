@@ -1,6 +1,6 @@
-package com.bobocode.bring.core.postprocessor;
+package com.bobocode.bring.core.bfpp;
 
-import com.bobocode.bring.core.postprocessor.impl.ConfigurationClassPostProcessor;
+import com.bobocode.bring.core.bfpp.impl.ConfigurationClassPostProcessor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;

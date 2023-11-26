@@ -4,6 +4,7 @@ import com.bobocode.bring.core.BringApplication;
 import com.bobocode.bring.core.exception.CyclicBeanException;
 import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
+import testdata.di.negative.configuration.A;
 import testdata.di.negative.oneinterfacetwodependency.Barista;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,15 +38,47 @@ class BringApplicationContextNegativeCasesTest {
     @DisplayName("Should throw exception when injecting into configuration method when no bean with param name")
     @Test
     void shouldThrowExceptionWhenNoBeanForParameterName() {
-
         // when
         Executable executable = () -> {
             //given
-            BringApplication.run(DEMO_PACKAGE + ".configuration");
+            BringApplication.run(DEMO_PACKAGE + ".configuration.nosuchbean");
         };
 
         // then
         assertThrows(NoSuchBeanException.class, executable);
+    }
+
+    @DisplayName("Should throw exception when trying to register two beans with same name")
+    @Test
+    void shouldThrowExceptionWhenNoUniqueBean() {
+        // when
+        Executable executable = () -> {
+            //given
+            BringApplication.run(DEMO_PACKAGE + ".configuration.nouniquebean");
+        };
+
+        // then
+        assertThrows(NoUniqueBeanException.class, executable);
+    }
+
+    @DisplayName("Should throw exception when bean not from configuration class")
+    @Test
+    void shouldThrowExceptionWhenNotFromConfigClass() {
+        // when
+        BringApplicationContext context = BringApplication.run(DEMO_PACKAGE + ".configuration.noconfigbean");
+
+        // then
+        assertThrows(NoSuchBeanException.class,  () -> context.getBean(A.class));
+    }
+
+    @DisplayName("Should throw exception when bean not annotated with @Bean in configuration class")
+    @Test
+    void shouldThrowExceptionWhenMethodNotAnnotated() {
+        // when
+        BringApplicationContext context = BringApplication.run(DEMO_PACKAGE + ".configuration.notabean");
+
+        // then
+        assertThrows(NoSuchBeanException.class,  () -> context.getBean(A.class));
     }
 
     @DisplayName("Should throw exception when we have two dependencies for one interface")
