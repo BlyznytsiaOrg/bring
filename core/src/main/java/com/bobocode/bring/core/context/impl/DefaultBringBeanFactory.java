@@ -3,14 +3,13 @@ package com.bobocode.bring.core.context.impl;
 import com.bobocode.bring.core.context.BringBeanFactory;
 import com.bobocode.bring.core.context.type.TypeResolverFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
-import com.bobocode.bring.core.exception.BeansException;
 import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
-import java.util.Map.Entry;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -37,7 +36,7 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
     private TypeResolverFactory typeResolverFactory;
 
     @Override
-    public <T> T getBean(Class<T> type) throws BeansException {
+    public <T> T getBean(Class<T> type) {
         Map<String, T> beans = getBeans(type);
 
         if (beans.size() > 1) {
@@ -46,19 +45,29 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
 
         return beans.values().stream()
                 .findFirst()
-                .orElseThrow(() -> new NoSuchBeanException(type));
+                .orElseThrow(() -> {
+                    if (type.isInterface()) {
+                        return new NoSuchBeanException(String.format("No such bean that implements this %s ", type));
+                    }
+                    return new NoSuchBeanException(type);
+                });
     }
 
     @Override
-    public <T> T getBean(Class<T> type, String name) throws BeansException {
+    public <T> T getBean(Class<T> type, String name) {
         Object bean = Optional.ofNullable(getBeanByName(name))
-                .orElseThrow(() -> new NoSuchBeanException(type));
+                .orElseThrow(() -> {
+                    if (type.isInterface()) {
+                        return new NoSuchBeanException(String.format("No such bean that implements this %s ", type));
+                    }
+                    return new NoSuchBeanException(type);
+                });
 
         return type.cast(bean);
     }
 
     @Override
-    public <T> Map<String, T> getBeans(Class<T> type) throws BeansException {
+    public <T> Map<String, T> getBeans(Class<T> type) {
         List<String> beanNames = typeToBeanNames.entrySet().stream()
                 .filter(entry -> type.isAssignableFrom(entry.getKey()))
                 .map(Entry::getValue)

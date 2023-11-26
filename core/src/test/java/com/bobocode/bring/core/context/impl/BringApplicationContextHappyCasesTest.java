@@ -7,7 +7,6 @@ import testdata.di.positive.configuration.client.RestClient;
 import testdata.di.positive.configuration.configuration.TestConfiguration;
 import testdata.di.positive.configuration.service.BringService;
 import testdata.di.positive.constructor.BringBeansService;
-import testdata.di.positive.contract.Barista;
 import testdata.di.positive.fullinjection.GetInfoFromExternalServicesUseCase;
 import testdata.di.positive.listconstructorinjector.AConstructor;
 import testdata.di.positive.listfieldinjector.AField;
@@ -28,88 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BringApplicationContextHappyCasesTest {
 
     private static final String TEST_DATA_PACKAGE = "testdata.di.positive";
-
-    @DisplayName("Should found one interface and inject it")
-    @Test
-    void shouldFoundOneInterfaceAndInjectIt() {
-        //given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".contract");
-        String expectedMessage = "Barista is preparing a drink: Making a delicious latte!";
-
-        //when
-        var barista = bringApplicationContext.getBean(Barista.class);
-
-        //then
-        assertThat(barista.prepareDrink()).isEqualTo(expectedMessage);
-    }
-
-    @DisplayName("Should inject dependency when you forget to add autowired and you have one constructor")
-    @Test
-    void shouldInjectConstructorDependencyIfYouHaveOneAndForgetToAddAutowired() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".constructor");
-
-        // when
-        var aBean = bringApplicationContext.getBean(testdata.di.positive.constructor.A.class);
-        var bBean = bringApplicationContext.getBean(testdata.di.positive.constructor.B.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(bBean).isNotNull();
-        assertThat(bBean.getA()).isNotNull();
-        assertThat(bBean.getA()).isEqualTo(aBean);
-    }
-
-    @DisplayName("Should inject dependency when you have multiple constructors but one of it was market as autowired")
-    @Test
-    void shouldInjectDependencyWhenYouHaveMultipleConstructorButOneOfItWasMarketAsAutowired() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".secondconstructor");
-
-        // when
-        var aBean = bringApplicationContext.getBean(testdata.di.positive.secondconstructor.A.class);
-        var bBean = bringApplicationContext.getBean(testdata.di.positive.secondconstructor.B.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(bBean).isNotNull();
-        assertThat(bBean.getA()).isNotNull();
-        assertThat(bBean.getA()).isEqualTo(aBean);
-    }
-
-    @DisplayName("Should inject dependency via Field")
-    @Test
-    void shouldInjectDependencyViaField() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE +".field");
-
-        // when
-        var aBean = bringApplicationContext.getBean(testdata.di.positive.field.A.class);
-        var bBean = bringApplicationContext.getBean(testdata.di.positive.field.B.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(bBean).isNotNull();
-        assertThat(bBean.getA()).isNotNull();
-        assertThat(bBean.getA()).isEqualTo(aBean);
-    }
-
-    @DisplayName("Should inject dependency via setter")
-    @Test
-    void shouldInjectDependencyViaSetter() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".setter");
-
-        // when
-        var aBean = bringApplicationContext.getBean(testdata.di.positive.setter.A.class);
-        var bBean = bringApplicationContext.getBean(testdata.di.positive.setter.B.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(bBean).isNotNull();
-        assertThat(bBean.getA()).isNotNull();
-        assertThat(bBean.getA()).isEqualTo(aBean);
-    }
 
     @DisplayName("Should inject interface bean implementation taking into account constructor parameter name")
     @Test

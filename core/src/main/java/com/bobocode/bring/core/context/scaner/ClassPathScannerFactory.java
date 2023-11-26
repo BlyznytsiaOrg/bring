@@ -2,9 +2,6 @@ package com.bobocode.bring.core.context.scaner;
 
 import com.bobocode.bring.core.anotation.BeanProcessor;
 import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
-import com.bobocode.bring.core.context.scaner.impl.ComponentClassPathScanner;
-import com.bobocode.bring.core.context.scaner.impl.ConfigurationClassPathScanner;
-import com.bobocode.bring.core.context.scaner.impl.ServiceClassPathScanner;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
@@ -18,57 +15,29 @@ import java.util.stream.Collectors;
 import static com.bobocode.bring.core.utils.ReflectionUtils.*;
 
 /**
- * The {@code ClassPathScannerFactory} class is responsible for creating a set of class path scanners,
- * each designed to scan the classpath for specific types of annotated classes relevant to the Bring application.
- * It initializes scanners for components, services, and configuration classes.
+ * Factory responsible for managing and handling classpath scanning operations for bean processing.
+ * It collaborates with ClassPathScanner and AnnotationResolver implementations for scanning and resolving annotations.
  *
- * <p>The class is designed to work with the {@link Reflections} library to perform efficient classpath scanning.
- * It encapsulates the creation of specific scanners for different types of annotated classes.
- *
- * <p>The scanners created by this factory include:
- * <ul>
- *     <li>{@link ComponentClassPathScanner}: Scans for classes annotated with {@code @Component}.</li>
- *     <li>{@link ServiceClassPathScanner}: Scans for classes annotated with {@code @Service}.</li>
- *     <li>{@link ConfigurationClassPathScanner}: Scans for classes annotated with {@code @Configuration}.</li>
- * </ul>
- *
- * <p>Usage example:
- * <pre>{@code
- * Reflections reflections = new Reflections("com.example.myapp");
- * ClassPathScannerFactory scannerFactory = new ClassPathScannerFactory(reflections);
- * List<ClassPathScanner> scanners = scannerFactory.getClassPathScanners();
- * }</pre>
- *
- * @author Blyzhnytsia Team
- * @since 1.0
- * @see ComponentClassPathScanner
- * @see ServiceClassPathScanner
- * @see ConfigurationClassPathScanner
- * @see Reflections
+ *  @author Blyzhnytsia Team
+ *  @since 1.0
  */
 @Slf4j
 public class ClassPathScannerFactory {
 
-    /**
-     * The list of class path scanners created by this factory.
-     */
     private final List<ClassPathScanner> classPathScanners;
-
     private final List<AnnotationResolver> annotationResolvers;
 
+    // List of annotations indicating beans created by the scanning process.
     @Getter
     private final List<Class<? extends Annotation>> createdBeanAnnotations;
 
     /**
-     * Constructs a new ClassPathScannerFactory with the specified Reflections instance.
+     * Constructs the ClassPathScannerFactory with reflections for initializing scanners and resolvers.
      *
-     * @param reflections the Reflections instance used for classpath scanning
-     * @see Reflections
-     * @see ComponentClassPathScanner
-     * @see ServiceClassPathScanner
-     * @see ConfigurationClassPathScanner
+     * @param reflections The Reflections instance used for scanning and resolving annotations.
      */
     public ClassPathScannerFactory(Reflections reflections) {
+        // Retrieve and initialize ClassPathScanner implementations.
         this.classPathScanners = reflections.getSubTypesOf(ClassPathScanner.class)
                 .stream()
                 .filter(clazz -> clazz.isAnnotationPresent(BeanProcessor.class))
@@ -76,12 +45,14 @@ public class ClassPathScannerFactory {
                 .map(clazz -> clazz.cast(getConstructorWithParameters(clazz, Reflections.class, reflections)))
                 .collect(Collectors.toList());
 
+        // Retrieve and initialize AnnotationResolver implementations.
         this.annotationResolvers = reflections.getSubTypesOf(AnnotationResolver.class)
                 .stream()
                 .filter(clazz -> clazz.isAnnotationPresent(BeanProcessor.class))
                 .map(clazz -> clazz.cast(getConstructorWithOutParameters(clazz)))
                 .collect(Collectors.toList());
 
+        // Collect annotations used to identify created beans during scanning.
         this.createdBeanAnnotations = classPathScanners.stream()
                         .map(ClassPathScanner::getAnnotation)
                         .collect(Collectors.toList());
@@ -90,10 +61,9 @@ public class ClassPathScannerFactory {
     }
 
     /**
-     * Retrieves a set of classes representing beans to be created by aggregating scanned classes
-     * from multiple ClassPathScanner instances.
+     * Retrieves a set of classes identified as beans to be created by the registered scanners.
      *
-     * @return a set of classes to be instantiated as beans
+     * @return A set of classes to be created based on scanning.
      */
     public Set<Class<?>> getBeansToCreate() {
         return classPathScanners.stream()
@@ -101,13 +71,19 @@ public class ClassPathScannerFactory {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Resolves the bean name for a given class using registered AnnotationResolvers.
+     *
+     * @param clazz The class for which the bean name is to be resolved.
+     * @return The resolved name of the bean.
+     * @throws IllegalStateException If no suitable resolver is found for the given class.
+     */
     public String resolveBeanName(Class<?> clazz) {
         return annotationResolvers.stream()
                 .filter(resolver -> resolver.isSupported(clazz))
                 .findFirst()
                 .map(annotationResolver -> annotationResolver.resolve(clazz))
-                .orElseThrow(
-                        () -> new IllegalStateException("No suitable resolver found for " + clazz.getName()));
+                .orElse(null);
     }
 
 }

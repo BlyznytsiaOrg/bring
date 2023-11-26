@@ -16,6 +16,15 @@ import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.function.Supplier;
 
+/**
+ * Responsible for creating beans using constructor-based dependency injection.
+ * This class assists in instantiating beans based on constructors annotated with @Autowired
+ * or if this is one constructor no need to add Autowired.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
+ */
+
 @AllArgsConstructor
 @Slf4j
 public class ConstructorBeanInjection {
@@ -24,11 +33,28 @@ public class ConstructorBeanInjection {
 
     private final ClassPathScannerFactory classPathScannerFactory;
 
+    /**
+     * Creates a bean using constructor-based dependency injection for the provided class and bean definition.
+     *
+     * @param clazz          The class for which the bean is to be created.
+     * @param beanName       The name of the bean.
+     * @param beanDefinition The definition of the bean.
+     * @throws NoConstructorWithAutowiredAnnotationBeanException If no constructor is annotated with @Autowired.
+     * @throws NoSuchBeanException                               If a required dependency bean is not found.
+     */
     public void create(Class<?> clazz, String beanName, BeanDefinition beanDefinition) {
         var constructor = findAutowiredConstructor(clazz);
         createBeanUsingConstructor(constructor, beanName, beanDefinition);
     }
 
+    /**
+     * Finds a constructor annotated with @Autowired within the provided class.
+     * If multiple constructors exist, the one with the @Autowired annotation is selected or one without.
+     *
+     * @param clazz The class to search for an @Autowired annotated constructor.
+     * @return The @Autowired annotated constructor.
+     * @throws NoConstructorWithAutowiredAnnotationBeanException If no constructor is annotated with @Autowired.
+     */
     private Constructor<?> findAutowiredConstructor(Class<?> clazz) {
         Constructor<?>[] constructors = clazz.getConstructors();
 
@@ -43,6 +69,15 @@ public class ConstructorBeanInjection {
                         clazz, Arrays.toString(constructors)));
     }
 
+    /**
+     * Creates a bean using the specified constructor and resolves its dependencies.
+     * Instantiates the bean within the context based on resolved dependencies and the constructor.
+     *
+     * @param constructor    The constructor to use for bean instantiation.
+     * @param beanName       The name of the bean to be created.
+     * @param beanDefinition The definition of the bean being created.
+     * @throws NoSuchBeanException If a required dependency bean is not found.
+     */
     private void createBeanUsingConstructor(Constructor<?> constructor, String beanName,
                                             BeanDefinition beanDefinition) {
         var createdBeanAnnotations = classPathScannerFactory.getCreatedBeanAnnotations();
@@ -79,6 +114,16 @@ public class ConstructorBeanInjection {
         }
     }
 
+    /**
+     * Finds the appropriate bean name for an argument in a constructor based on its parameter type.
+     * Handles scenarios with multiple candidate beans, qualifiers, and primary beans.
+     *
+     * @param parameter            The parameter for which the bean name is to be resolved.
+     * @param constructorParamNames The names of parameters in the constructor.
+     * @return The resolved bean name for the parameter.
+     * @throws NoSuchBeanException      If a required bean is not found.
+     * @throws NoUniqueBeanException   If multiple primary beans or qualifiers match the parameter type.
+     */
     private String findBeanNameForArgumentInConstructor(Parameter parameter, List<String> constructorParamNames) {
         Class<?> clazz = parameter.getType();
 
@@ -91,6 +136,10 @@ public class ConstructorBeanInjection {
                 : Optional.ofNullable(beanRegistry.getTypeToBeanNames().get(clazz)).orElse(Collections.emptyList());
 
         if (beanNames.isEmpty()) {
+            if (clazz.isInterface()) {
+                throw new NoSuchBeanException(String.format("No such bean that implements this %s ", clazz));
+            }
+
             throw new NoSuchBeanException(clazz);
         } else if (beanNames.size() == 1) {
             return beanNames.get(0);
@@ -101,6 +150,16 @@ public class ConstructorBeanInjection {
         }
     }
 
+    /**
+     * Resolves the primary bean name or selects a bean by qualifier or parameter name.
+     *
+     * @param beanNames  The candidate bean names for the parameter type.
+     * @param paramName  The parameter name in the constructor.
+     * @param parameter  The parameter for which the bean name is to be resolved.
+     * @return The resolved bean name based on primary, qualifier, or parameter name.
+     * @throws NoSuchBeanException      If a required bean is not found.
+     * @throws NoUniqueBeanException   If multiple primary beans or qualifiers match the parameter type.
+     */
     private String findPrimaryBeanNameOrByQualifierOrbBParameter(List<String> beanNames, String paramName,
                                                                  Parameter  parameter) {
         Class<?>  parameterType = parameter.getType();
@@ -114,7 +173,12 @@ public class ConstructorBeanInjection {
             throw new NoUniqueBeanException(parameterType);
         } else if (qualifier != null) {
             return beanNames.stream().filter(name -> name.equals(qualifier))
-                    .findFirst().orElseThrow(() -> new NoSuchBeanException(parameterType));
+                    .findFirst().orElseThrow(() -> {
+                        if (parameterType.isInterface()) {
+                            return new NoSuchBeanException(String.format("No such bean that implements this %s ", parameterType));
+                        }
+                        return new NoSuchBeanException(parameterType);
+                    });
         }
         else {
             return beanNames.stream()
@@ -124,6 +188,12 @@ public class ConstructorBeanInjection {
         }
     }
 
+    /**
+     * Retrieves the qualifier value from the parameter's annotation, if present.
+     *
+     * @param parameter The parameter for which the qualifier value is to be retrieved.
+     * @return The qualifier value if present, otherwise null.
+     */
     private String getQualifier(Parameter parameter) {
         return parameter.isAnnotationPresent(Qualifier.class) ? parameter.getAnnotation(Qualifier.class).value() : null;
     }

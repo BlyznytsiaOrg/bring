@@ -69,10 +69,22 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
         register(classPathScannerFactory.getBeansToCreate());
     }
 
+    /**
+     * Constructs a BringApplicationContext for the specified component class package.
+     *
+     * @param componentClass The class used to determine the package for component scanning.
+     * @param <T>            The type of the component class.
+     */
     public <T> BringApplicationContext(Class<T> componentClass) {
        this(componentClass.getPackageName());
     }
 
+    /**
+     * Registers the provided classes as bean definitions within the context.
+     * Creates a BeanDefinition for each class and registers it in the context.
+     *
+     * @param classes The set of classes to be registered as bean definitions.
+     */
     private void register(Set<Class<?>> classes) {
         classes.forEach(clazz -> {
             BeanDefinition beanDefinition = BeanDefinition.builder()
@@ -87,7 +99,11 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
             registerBeanDefinition(beanDefinition);
         });
     }
-    
+
+    /**
+     * Refreshes the application context, creating additional Bean definitions, instantiating Singleton Beans,
+     * and invoking BeanPostProcessors to process beans during initialization.
+     */
     public void refresh() {
         // Create additional Bean definitions i.e. for Beans in Configuration classes
         invokeBeanFactoryPostProcessors();
@@ -98,6 +114,10 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
         invokeBeanPostProcessors();
     }
 
+    /**
+     * Invokes the registered BeanFactoryPostProcessors to perform any necessary operations on the BeanFactory.
+     * Additionally, sets up the TypeResolverFactory for resolving types within the context.
+     */
     private void invokeBeanFactoryPostProcessors() {
         beanPostProcessorDefinitionFactory.getBeanFactoryPostProcessors()
                 .forEach(processor -> processor.postProcessBeanFactory(this));
@@ -105,6 +125,10 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
         setTypeResolverFactory(new TypeResolverFactory(getProperties(), getReflections(), this));
     }
 
+    /**
+     * Invokes registered BeanPostProcessors to process bean initialization within the context.
+     * Each bean is processed by the available BeanPostProcessors.
+     */
     private void invokeBeanPostProcessors() {
         List<BeanPostProcessor> beanPostProcessors = new BeanPostProcessorFactory(this, getReflections()).getBeanPostProcessors();
         getAllBeans().forEach((beanName, bean) -> {
@@ -115,6 +139,10 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
         });
     }
 
+    /**
+     * Instantiates beans based on their definitions within the context.
+     * Beans are registered and created according to their definitions.
+     */
     private void instantiateBeans() {
         getBeanDefinitionMap().entrySet()
                 .stream()
