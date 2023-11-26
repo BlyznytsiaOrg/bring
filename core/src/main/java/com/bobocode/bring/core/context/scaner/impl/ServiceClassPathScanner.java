@@ -40,6 +40,11 @@ public class ServiceClassPathScanner implements ClassPathScanner {
         return reflections.getTypesAnnotatedWith(getAnnotation());
     }
 
+    /**
+     * Retrieves the annotation type scanned by this class path scanner.
+     *
+     * @return The Class object representing the annotation scanned by this class path scanner.
+     */
     @Override
     public Class<? extends Annotation> getAnnotation() {
         return Service.class;
