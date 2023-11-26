@@ -10,6 +10,6 @@ import lombok.Setter;
 @Component
 public class NotFoundValueFromField {
 
-    @Value("bring.banner-mode.field:")
+    @Value("bring.banner-mode.field")
     private String banner;
 }

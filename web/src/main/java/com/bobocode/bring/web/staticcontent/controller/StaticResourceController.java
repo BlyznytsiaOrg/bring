@@ -1,9 +1,9 @@
-package com.bobocode.bring.web.servlet;
+package com.bobocode.bring.web.staticcontent.controller;
 
-import com.bobocode.bring.web.servlet.annotation.RestController;
-import com.bobocode.bring.web.service.StaticResourceService;
+import com.bobocode.bring.web.servlet.BringServlet;
+import com.bobocode.bring.web.servlet.annotation.Controller;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
-import com.bobocode.bring.web.servlet.annotation.RequestMapping;
+import com.bobocode.bring.web.staticcontent.service.StaticResourceService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.nio.file.Path;
  * @author Blyzhnytsia Team
  * @since 1.0
  */
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class StaticResourceController implements BringServlet {
 

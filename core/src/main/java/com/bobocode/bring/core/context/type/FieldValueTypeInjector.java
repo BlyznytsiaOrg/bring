@@ -17,7 +17,7 @@ import java.util.List;
  * ({@link PropertyValueNotFoundException}) should be thrown.
  *
  * @author Blyzhnytsia Team
- * @version 1.0
+ * @since 1.0
  */
 public interface FieldValueTypeInjector {
 

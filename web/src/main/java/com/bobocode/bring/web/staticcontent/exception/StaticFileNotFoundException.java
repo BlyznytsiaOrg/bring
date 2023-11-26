@@ -1,4 +1,4 @@
-package com.bobocode.bring.web.servlet.exception;
+package com.bobocode.bring.web.staticcontent.exception;
 
 import com.bobocode.bring.web.servlet.annotation.ResponseStatus;
 import com.bobocode.bring.web.servlet.http.HttpStatus;

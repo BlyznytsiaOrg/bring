@@ -1,9 +1,9 @@
 package com.bobocode.bring.core.injection.value;
 
 import com.bobocode.bring.core.BringApplication;
+import com.bobocode.bring.core.bfpp.impl.ValuePropertiesPostProcessor;
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
 import com.bobocode.bring.core.exception.PropertyValueNotFoundException;
-import com.bobocode.bring.core.postprocessor.impl.ValuePropertiesPostProcessor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

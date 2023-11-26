@@ -20,7 +20,7 @@ import java.util.Objects;
  * It leverages the {@link Value} annotation to identify fields that require property value injection.
  *
  * @author Blyzhnytsia Team
- * @version 1.0
+ * @since 1.0
  */
 @Slf4j
 public class PropertyFieldValueTypeInjector extends AbstractPropertyValueTypeInjector implements FieldValueTypeInjector {

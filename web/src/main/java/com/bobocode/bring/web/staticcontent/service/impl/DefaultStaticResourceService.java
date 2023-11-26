@@ -1,12 +1,12 @@
-package com.bobocode.bring.web.service.impl;
+package com.bobocode.bring.web.staticcontent.service.impl;
 
 import com.bobocode.bring.core.anotation.Service;
-import com.bobocode.bring.web.server.properties.ServerProperties;
-import com.bobocode.bring.web.service.StaticResourceService;
-import com.bobocode.bring.web.servlet.exception.StaticFileNotFoundException;
+import com.bobocode.bring.web.staticcontent.exception.StaticFileNotFoundException;
+import com.bobocode.bring.web.staticcontent.service.StaticResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,12 +18,12 @@ import java.util.Objects;
  * Manages the retrieval of absolute paths for requested static files, ensuring file existence and proper conditions.
  *
  * @author Blyzhnytsia Team
- * @version 1.0
+ * @since 1.0
  */
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class StaticResourceServiceImpl implements StaticResourceService {
+public class DefaultStaticResourceService implements StaticResourceService {
 
     // Constants for error messages
     private static final String STATIC_FILE_NOT_FOUND_MESSAGE = "Can't find the File: %s.";
@@ -40,7 +40,7 @@ public class StaticResourceServiceImpl implements StaticResourceService {
     @Override
     @SneakyThrows
     public Path getStaticFile(String pathToFile) {
-        URL folderUrl = StaticResourceServiceImpl.class.getClassLoader().getResource(STATIC_FOLDER);
+        URL folderUrl = DefaultStaticResourceService.class.getClassLoader().getResource(STATIC_FOLDER);
         Objects.requireNonNull(folderUrl, STATIC_FOLDER_NOT_FOUND_MESSAGE);
 
         Path folderPath = Paths.get(folderUrl.toURI()).resolve("..").normalize();
