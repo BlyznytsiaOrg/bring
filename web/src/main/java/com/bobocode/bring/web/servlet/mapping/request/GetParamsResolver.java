@@ -58,6 +58,6 @@ public class GetParamsResolver
                 .orElse(new ArrayList<>());
         addSorted(params, getMethodParamsList);
         restControllerParamsMap.put(RequestMethod.GET.name(), getMethodParamsList);
-        log.info("");
+        log.debug("Registered GET method by path: {}", path);
     }
 }

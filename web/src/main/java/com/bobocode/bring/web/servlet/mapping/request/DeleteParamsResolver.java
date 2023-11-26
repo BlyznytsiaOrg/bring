@@ -4,6 +4,8 @@ import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.web.servlet.annotation.DeleteMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestMethod;
 import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.Optional;
  * @author Blyzhnytsia Team
  * @since 1.0
  */
+@Slf4j
 @Component
 public class DeleteParamsResolver
         implements RequestParamsResolver {
@@ -54,5 +57,6 @@ public class DeleteParamsResolver
                 .orElse(new ArrayList<>());
         addSorted(params, getMethodParamsList);
         restControllerParamsMap.put(RequestMethod.DELETE.name(), getMethodParamsList);
+        log.debug("Registered DELETE method by path: {}", path);
     }
 }
