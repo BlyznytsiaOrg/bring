@@ -1,4 +1,4 @@
-package testdata.controller;
+package testdata.generalintegrationtest;
 
 import com.bobocode.bring.web.servlet.annotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;
