@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.SecureRandom;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
@@ -15,8 +15,8 @@ import static java.util.stream.Collectors.toMap;
 /**
  * Implementation of BringSourceLoader for loading properties from files.
  *
- *  @author Blyzhnytsia Team
- *  @since 1.0
+ * @author Blyzhnytsia Team
+ * @since 1.0
  */
 @Slf4j
 public class BringPropertySourceLoader implements BringSourceLoader {
@@ -59,7 +59,7 @@ public class BringPropertySourceLoader implements BringSourceLoader {
      * @return A map containing the properties loaded from the specified file.
      */
     private Map<String, String> loadProperties(String fileName) {
-        String defaultFileName  = (fileName == null) ? APPLICATION_PROPERTIES : fileName;
+        String defaultFileName = (fileName == null) ? APPLICATION_PROPERTIES : fileName;
         log.debug("Load Property file {}", defaultFileName);
         Map<String, String> propertiesMap = new HashMap<>();
 
@@ -87,7 +87,7 @@ public class BringPropertySourceLoader implements BringSourceLoader {
     private Function<String, String> getValue(Properties properties) {
         return key -> Optional.ofNullable(properties.getProperty(key))
                 .filter(RANDOM_PORT_KEY::equals)
-                .map(value -> String.valueOf(ThreadLocalRandom.current().nextInt(START_PORT_RANGE, END_PORT_RANGE)))
+                .map(value -> String.valueOf(new SecureRandom().nextInt(START_PORT_RANGE, END_PORT_RANGE)))
                 .orElse(properties.getProperty(key));
     }
 }

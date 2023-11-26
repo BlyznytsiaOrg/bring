@@ -1,4 +1,4 @@
-package testdata.di.positive.fieldproperties;
+package testdata.di.negative.properties.field;
 
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.anotation.Value;
@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Component
-public class ProfileBean {
+public class NotFoundValueFromField {
 
-    @Value("bring.main.banner-mode")
-    private String bannerMode;
+    @Value("bring.banner-mode.field")
+    private String banner;
 }

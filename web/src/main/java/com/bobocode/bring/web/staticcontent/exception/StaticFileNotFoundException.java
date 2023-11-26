@@ -1,4 +1,4 @@
-package com.bobocode.bring.web.servlet.exception;
+package com.bobocode.bring.web.staticcontent.exception;
 
 import com.bobocode.bring.web.servlet.annotation.ResponseStatus;
 import com.bobocode.bring.web.servlet.http.HttpStatus;
@@ -14,6 +14,11 @@ import com.bobocode.bring.web.servlet.http.HttpStatus;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class StaticFileNotFoundException extends RuntimeException {
 
+    /**
+     * Constructs a new {@code StaticFileNotFoundException} with the specified detail message.
+     *
+     * @param message the detail message (which is saved for later retrieval by the {@link #getMessage()} method).
+     */
     public StaticFileNotFoundException(String message) {
         super(message);
     }
