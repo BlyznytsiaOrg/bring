@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
 public class ProxyUtils {
 
     @SneakyThrows
-    public static Object createProxy(Class<?> clazz, Constructor<?> constructor, Object[] args) {
+    public Object createProxy(Class<?> clazz, Constructor<?> constructor, Object[] args) {
         ProxyFactory proxyFactory = new ProxyFactory();
         proxyFactory.setSuperclass(clazz);
         
@@ -23,7 +23,7 @@ public class ProxyUtils {
     }
 
     @RequiredArgsConstructor
-    public static class Handler implements MethodHandler {
+    public class Handler implements MethodHandler {
         
         private final Constructor<?> constructor;
         

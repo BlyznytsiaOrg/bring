@@ -9,7 +9,10 @@ public class NoUniqueBeanException extends RuntimeException {
         super(String.format("No unique bean exception %s", clazz));
     }
 
-
+    public NoUniqueBeanException(String beanName) {
+        super(String.format("Bean with name %s already exists", beanName));
+    }
+    
     public <T> NoUniqueBeanException(Class<T> clazz, List<String> implementations) {
         super(String.format("No qualifying bean of type '%s' available: expected single matching bean but found %s: [%s]",
                 clazz, implementations.size(), implementations.stream().sorted().collect(Collectors.joining(","))));

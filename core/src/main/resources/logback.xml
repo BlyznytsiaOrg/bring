@@ -43,7 +43,7 @@
         <appender-ref ref="FILE" />
     </logger>
 
-    <logger name="com.bobocode.bring.core.postprocessor" level="${com.bobocode.bring.core.postprocessor.log.level:-INFO}">
+    <logger name="com.bobocode.bring.core.bfpp" level="${com.bobocode.bring.core.bfpp.log.level:-INFO}">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
     </logger>

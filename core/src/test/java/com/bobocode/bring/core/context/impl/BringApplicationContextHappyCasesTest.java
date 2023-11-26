@@ -21,6 +21,7 @@ import testdata.di.positive.qualifier.field.PrintService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,8 +36,7 @@ class BringApplicationContextHappyCasesTest {
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".contract2");
         
         // when
-        var bean = bringApplicationContext
-                .getBean(testdata.di.positive.contract2.Barista.class);
+        var bean = bringApplicationContext.getBean(testdata.di.positive.contract2.Barista.class);
         
         // then
         assertThat(bean).isNotNull();
@@ -51,14 +51,33 @@ class BringApplicationContextHappyCasesTest {
 
         // when
         RestClient restClient = bringApplicationContext.getBean(RestClient.class);
+        Map<String, RestClient> restClients = bringApplicationContext.getBeans(RestClient.class);
+        Map<String, RestClient> restClients2 = bringApplicationContext.getBeans(RestClient.class);
         Map<String, BringService> bringServices = bringApplicationContext.getBeans(BringService.class);
 
         // then
         assertThat(restClient).isNotNull();
-        assertThat(bringServices).hasSize(2);
+        assertThat(restClient.getUrl()).isEqualTo("https://");
+        assertThat(restClient.getKey()).isEqualTo("KEY");
+        assertThat(restClients).hasSize(2);
+        assertThat(restClients2).hasSize(2);
+        assertThat(restClients).containsValue(restClient);
+        assertThat(restClients2).containsValue(restClient);
+        assertThat(restClients.get("bringRestClient22").getUuid())
+                .isNotEqualTo(restClients2.get("bringRestClient22").getUuid());
+        
+        assertThat(bringServices).hasSize(3);
 
-        List<RestClient> restClients = bringServices.values().stream().map(BringService::getBringRestClient).toList();
-        assertThat(restClients.stream().allMatch(rc -> rc.equals(restClient))).isTrue();
+        List<RestClient> clients = bringServices.values().stream()
+                .map(BringService::getBringRestClient)
+                .filter(client -> Objects.equals(client, restClient))
+                .toList();
+        assertThat(clients).hasSize(2);
+        
+        assertThat(bringServices.get("bringService3")).isNotNull();
+        assertThat(bringServices.get("bringService3").getBringRestClient()).isNotNull();
+        assertThat(bringServices.get("bringService3").getBringRestClient().getUrl()).isEqualTo("https://ssssss");
+        assertThat(bringServices.get("bringService3").getBringRestClient().getKey()).isEqualTo("KEY");
     }
 
     @DisplayName("Should register @Component and @Service beans in Bring Context")
@@ -85,9 +104,6 @@ class BringApplicationContextHappyCasesTest {
 
         // when
         var useCase = bringApplicationContext.getBean(GetInfoFromExternalServicesUseCase.class);
-
-        //var bean = bringApplicationContext.getBean(
-        //   com.bobocode.bring.testdata.di.positive.fullinjection.RestClient.class);
 
         // then
         assertThat(useCase).isNotNull();

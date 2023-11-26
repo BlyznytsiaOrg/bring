@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class BringPropertiesSourceScannerTest {
 
-    @DisplayName("Should find two properties files")
+    @DisplayName("Should find three properties files")
     @Test
     void shouldFoundTwoPropertiesFiles() {
         //given
@@ -36,6 +36,6 @@ class BringPropertiesSourceScannerTest {
 
         //then
         assertThat(files).isNotNull()
-                .hasSize(0);
+                .isEmpty();
     }
 }
