@@ -11,6 +11,9 @@ package com.bobocode.bring.web.servlet;
  * It serves as a marker to identify classes that should be included in the REST controller
  * context setup.
  * </p>
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
  */
 public interface BringServlet {
 }

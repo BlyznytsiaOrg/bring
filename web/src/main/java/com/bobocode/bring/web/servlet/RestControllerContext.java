@@ -21,24 +21,72 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * The {@code RestControllerContext} class represents the context for managing
+ * REST controllers and their associated parameters in a web application.
+ *<p>
+ * This class is responsible for collecting and organizing information about controllers,
+ * resolving parameters and performing checks
+ *</p>
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
+ */
 @Component
 public class RestControllerContext {
 
+    /**
+     * Error message prefix for duplicate paths.
+     */
     public static final String ERROR_ON_DUPLICATE_PATH = "Error on duplicate path: ";
+
+    /**
+     * Package name for java.lang.
+     */
     public static final String JAVA_LANG_PACKAGE = "java.lang";
+
+    /**
+     * Exception message for missing @RequestHeader annotation value.
+     */
     public static final String REQUEST_HEADER_EXCEPTION_MESSAGE = "Required value for @RequestHeader "
             + "annotation for parameter '%s' of method '%s' is not present";
+
+    /**
+     * Exception message for unsupported type in @RequestBody annotation.
+     */
     public static final String REQUEST_BODY_EXCEPTION_MESSAGE = "Invalid type '%s' for parameter '%s' annotated "
             + "with @RequestBody of method '%s'";
+
+    /**
+     * List of registered BringServlet instances.
+     */
     private final List<BringServlet> bringServlets;
+
+    /**
+     * List of registered RequestParamsResolver instances.
+     */
     private final List<RequestParamsResolver> requestParamsResolvers;
 
+    /**
+     * Constructs a new RestControllerContext with the specified BringServlets and RequestParamsResolvers.
+     *
+     * @param bringServlets           The list of BringServlet instances.
+     * @param requestParamsResolvers  The list of RequestParamsResolver instances.
+     */
     public RestControllerContext(List<BringServlet> bringServlets,
                                  List<RequestParamsResolver> requestParamsResolvers) {
         this.bringServlets = bringServlets;
         this.requestParamsResolvers = requestParamsResolvers;
     }
 
+    /**
+     * Retrieves a map containing controller paths and associated parameters.
+     *
+     * @return A map containing controller paths and associated parameters.
+     * @throws RequestPathDuplicateException If duplicate paths are detected.
+     * @throws RequestBodyTypeUnsupportedException If an unsupported type is found in @RequestBody annotation.
+     * @throws MissingRequestHeaderAnnotationValueException If a missing @RequestHeader annotation value is detected.
+     */
     public Map<String, List<RestControllerParams>> getParamsMap() {
         Map<String, List<RestControllerParams>> restControllerParams = new HashMap<>();
         Map<String, List<String>> methodToPathsMap = new HashMap<>();
@@ -58,6 +106,12 @@ public class RestControllerContext {
         return restControllerParams;
     }
 
+    /**
+     * Checks for duplicate paths and throws an exception if found.
+     *
+     * @param methodToPathsMap A map containing method names and associated paths.
+     * @throws RequestPathDuplicateException If duplicate paths are detected.
+     */
     private void checkOnDuplicatePath(Map<String, List<String>> methodToPathsMap) {
         Map<String, Set<String>> duplicatePaths = new HashMap<>();
         for (var entry : methodToPathsMap.entrySet()) {
@@ -78,6 +132,13 @@ public class RestControllerContext {
         }
     }
 
+    /**
+     * Checks parameters for @RequestBody and @RequestHeader annotations.
+     *
+     * @param params A map containing controller paths and associated parameters.
+     * @throws RequestBodyTypeUnsupportedException If an unsupported type is found in @RequestBody annotation.
+     * @throws MissingRequestHeaderAnnotationValueException If a missing @RequestHeader annotation value is detected.
+     */
     private void checkParameters(Map<String, List<RestControllerParams>> params) {
         params.forEach((key, value) -> {
             for (var param : value) {
@@ -95,6 +156,15 @@ public class RestControllerContext {
         });
     }
 
+    /**
+     * Checks the presence of a value in the @RequestHeader annotation for a method parameter.
+     *
+     * @param method         The method containing the parameter.
+     * @param parameters     The array of parameters for the method.
+     * @param parameterNames The list of parameter names for the method.
+     * @param i              The index of the parameter being checked.
+     * @throws MissingRequestHeaderAnnotationValueException If the @RequestHeader annotation value is blank.
+     */
     private void checkRequestHeaderAnnotation(Method method, Parameter[] parameters,
                                   List<String> parameterNames, int i) {
         RequestHeader annotation = parameters[i].getAnnotation(RequestHeader.class);
@@ -107,6 +177,15 @@ public class RestControllerContext {
         }
     }
 
+    /**
+     * Checks the type of parameter annotated with @RequestBody and throws an exception if unsupported.
+     *
+     * @param method         The method containing the parameter.
+     * @param parameters     The array of parameters for the method.
+     * @param parameterNames The list of parameter names for the method.
+     * @param i              The index of the parameter being checked.
+     * @throws RequestBodyTypeUnsupportedException If the type annotated with @RequestBody is unsupported.
+     */
     private void checkRequestBodyAnnotation(Method method, Parameter[] parameters,
                                                    List<String> parameterNames, int i) {
         Class<?> type = parameters[i].getType();

@@ -3,6 +3,17 @@ package com.bobocode.bring.web;
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
 import com.bobocode.bring.web.servlet.WebStarter;
 
+/**
+ * The {@code BringWebApplication} class provides static methods for running the Bring application context.
+ * It offers several ways to initialize and configure the application context based on different parameters.
+ * <p>
+ * The Bring application context includes packages for core components, web components, and additional
+ * packages specified during the initialization.
+ * </p>
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
+ */
 public class BringWebApplication {
     private static final String BRING_CORE_PACKAGE = "com.bobocode.bring";
     private static final String BRING_WEB_PACKAGE = BRING_CORE_PACKAGE + ".web";

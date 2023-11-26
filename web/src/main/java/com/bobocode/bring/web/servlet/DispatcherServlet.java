@@ -11,7 +11,7 @@ import com.bobocode.bring.web.servlet.annotation.RequestBody;
 import com.bobocode.bring.web.servlet.annotation.RequestHeader;
 import com.bobocode.bring.web.servlet.annotation.RequestParam;
 import com.bobocode.bring.web.servlet.exception.MissingApplicationMappingException;
-import com.bobocode.bring.web.servlet.exception.MissingServletRequestParameterException;
+import com.bobocode.bring.web.servlet.exception.MissingRequestParamException;
 import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
 import com.bobocode.bring.web.servlet.mapping.RestControllerProcessResult;
 import com.bobocode.bring.web.servlet.mapping.response.ResponseAnnotationResolver;
@@ -189,7 +189,7 @@ public class DispatcherServlet extends FrameworkServlet {
         if (parameterValue != null) {
             args[i] = parseToParameterType(parameterValue, type);
         } else {
-            throw new MissingServletRequestParameterException(
+            throw new MissingRequestParamException(
                     String.format("Required request parameter '%s' "
                                     + "for method parameter type '%s' is not present",
                             parameterName, type.getSimpleName()));
