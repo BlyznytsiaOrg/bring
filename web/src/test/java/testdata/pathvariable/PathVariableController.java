@@ -1,4 +1,4 @@
-package testdata.pathVariable;
+package testdata.pathvariable;
 
 import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;

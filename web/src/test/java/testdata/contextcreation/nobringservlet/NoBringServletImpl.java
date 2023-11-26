@@ -1,4 +1,4 @@
-package testdata.contextCreation.noBringServlet;
+package testdata.contextcreation.nobringservlet;
 
 import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.annotation.RequestMapping;

@@ -20,7 +20,7 @@ import java.net.http.HttpResponse;
 public class PathVariableTest {
 
     public static final String URL = "http://localhost:%s%s";
-    public static final String PACKAGE = "testdata.pathVariable";
+    public static final String PACKAGE = "testdata.pathvariable";
     private static ObjectMapper objectMapper;
     private static ServerProperties serverProperties;
     private HttpClient httpClient;

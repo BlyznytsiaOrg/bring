@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class BringContextCreationTest {
-    public static final String PACKAGE = "testdata.contextCreation.noBringServlet";
+    public static final String PACKAGE = "testdata.contextcreation.nobringservlet";
 
     @Test
     @DisplayName("should throw MissingBringServletImplException when RestController does not "

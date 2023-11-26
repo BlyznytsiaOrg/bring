@@ -1,4 +1,4 @@
-package testdata.contextCreation.requestBodyType;
+package testdata.contextcreation.requestbodytype;
 
 import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;

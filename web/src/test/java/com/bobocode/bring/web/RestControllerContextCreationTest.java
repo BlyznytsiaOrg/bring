@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 
 public class RestControllerContextCreationTest {
 
-    public static final String PACKAGE_DUPLICATE = "testdata.contextCreation.duplicate";
-    public static final String PACKAGE_REQUEST_BODY = "testdata.contextCreation.requestBodyType";
-    public static final String PACKAGE_REQUEST_HEADERS = "testdata.contextCreation.requestHeaders";
+    public static final String PACKAGE_DUPLICATE = "testdata.contextcreation.duplicate";
+    public static final String PACKAGE_REQUEST_BODY = "testdata.contextcreation.requestbodytype";
+    public static final String PACKAGE_REQUEST_HEADERS = "testdata.contextcreation.requestheaders";
 
     @Test
     @DisplayName("should throw RequestPathDuplicateException with message")

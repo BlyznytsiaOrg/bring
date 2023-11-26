@@ -1,4 +1,4 @@
-package testdata.requestHeader;
+package testdata.requestheader;
 
 import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;

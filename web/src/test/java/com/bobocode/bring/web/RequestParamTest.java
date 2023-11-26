@@ -20,7 +20,7 @@ import java.net.http.HttpResponse;
 public class RequestParamTest {
 
     public static final String URL = "http://localhost:%s%s";
-    public static final String PACKAGE = "testdata.reqParam";
+    public static final String PACKAGE = "testdata.requestparam";
     public static final String NAME_PARAM = "name";
     public static final String NAME_VALUE = "Bob";
     public static final String EQUALS = "=";

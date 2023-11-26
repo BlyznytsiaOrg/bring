@@ -17,7 +17,7 @@ import java.net.http.HttpResponse;
 
 public class RequestHeaderTest {
     public static final String URL = "http://localhost:%s%s";
-    public static final String PACKAGE = "testdata.requestHeader";
+    public static final String PACKAGE = "testdata.requestheader";
     public static final String HEADER = "/header";
     public static final String HEADER_NON_VALID = "/headerNonValid";
     public static final String CUSTOM = "/custom";

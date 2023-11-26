@@ -1,4 +1,4 @@
-package testdata.reqParam;
+package testdata.requestparam;
 
 import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;

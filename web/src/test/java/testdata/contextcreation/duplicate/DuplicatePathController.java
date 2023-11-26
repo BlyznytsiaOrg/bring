@@ -1,4 +1,4 @@
-package testdata.contextCreation.duplicate;
+package testdata.contextcreation.duplicate;
 
 import com.bobocode.bring.core.anotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;
