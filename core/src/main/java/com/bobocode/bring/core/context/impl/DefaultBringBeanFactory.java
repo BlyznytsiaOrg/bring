@@ -103,6 +103,10 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
     public List<String> getAllBeanDefinitionNames() {
         return this.beanDefinitionMap.keySet().stream().toList();
     }
+    
+    public boolean isBeanCreated(String beanName) {
+        return singletonObjects.containsKey(beanName) || prototypeSuppliers.containsKey(beanName);
+    }
 
     private <T> T getPrimary (Map<String, T> beans, Class<T> type) {
         List <T> foundBeans = beans.entrySet()

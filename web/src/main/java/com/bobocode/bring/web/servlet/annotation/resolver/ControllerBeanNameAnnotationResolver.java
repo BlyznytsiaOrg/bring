@@ -1,8 +1,8 @@
-package com.bobocode.bring.core.anotation.resolver.impl;
+package com.bobocode.bring.web.servlet.annotation.resolver;
 
 import com.bobocode.bring.core.anotation.BeanProcessor;
-import com.bobocode.bring.core.anotation.Controller;
 import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
+import com.bobocode.bring.web.servlet.annotation.Controller;
 
 
 /**
