@@ -8,6 +8,7 @@ import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
+@Slf4j
 public class DefaultBringBeanFactory implements BringBeanFactory {
 
     private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
@@ -126,6 +128,7 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
     }
 
     public void addBeanDefinition(String beanName, BeanDefinition beanDefinition) {
+        log.debug("Registering BeanDefinition of [{}]", beanName);
         this.beanDefinitionMap.put(beanName, beanDefinition);
 
         List<String> beanNames = typeToBeanNames.getOrDefault(beanDefinition.getBeanClass(), new ArrayList<>());

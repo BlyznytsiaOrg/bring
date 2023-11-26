@@ -1,6 +1,7 @@
 package com.bobocode.bring.core;
 
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The {@code BringApplication} class provides a simple entry point to initialize and run a BringApplicationContext.
@@ -31,6 +32,7 @@ import com.bobocode.bring.core.context.impl.BringApplicationContext;
  *  @author Blyzhnytsia Team
  *  @since 1.0
  */
+@Slf4j
 public class BringApplication {
 
     //TODO uncomment later when all code will be merged need to change all test data packages
@@ -54,7 +56,7 @@ public class BringApplication {
         // Create context: register Bean definitions
         String[] bringPackages = new String[]{/*BRING_PACKAGE,*/ clazz.getPackageName()};
         BringApplicationContext context = new BringApplicationContext(bringPackages);
-        
+        log.info("Starting application");
         // Invoke Bean Post Processors, create Bean objects
         context.refresh();
         

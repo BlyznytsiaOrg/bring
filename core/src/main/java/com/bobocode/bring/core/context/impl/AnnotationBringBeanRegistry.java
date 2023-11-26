@@ -57,6 +57,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         Class<?> clazz = beanDefinition.getBeanClass();
 
         if (currentlyCreatingBeans.contains(beanName)) {
+            log.error("Cyclic dependency detected!");
             throw new CyclicBeanException(currentlyCreatingBeans);
         }
 
@@ -84,7 +85,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     private Object registerConfigurationBean(String beanName, BeanDefinition beanDefinition) {
         Object configObj = Optional.ofNullable(getSingletonObjects().get(beanDefinition.getFactoryBeanName()))
                 .orElseThrow(() -> {
-                    log.info("Unable to register Bean from Configuration class [{}]: " +
+                    log.warn("Unable to register Bean from Configuration class [{}]: " +
                             "Configuration class not annotated or is not of Singleton scope.", beanName);
                     return new NoSuchBeanException(beanDefinition.getBeanClass());
                 });
@@ -369,15 +370,18 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     }
 
     private String resolveBeanName(Class<?> clazz) {
+        log.debug("Resolving Bean name for {}", clazz.getName());
         return annotationResolvers.stream()
                 .filter(resolver -> resolver.isSupported(clazz))
                 .findFirst()
                 .map(annotationResolver -> annotationResolver.resolve(clazz))
-                .orElseThrow(() -> new IllegalStateException("No suitable resolver found for " + clazz.getName()));
+                .orElseThrow(() -> {
+                    log.error("Cannot resolve bean name for {}", clazz.getName());
+                    return new IllegalStateException("No suitable resolver found for " + clazz.getName());
+                });
     }
 
     protected Reflections getReflections() {
         return reflections;
     }
-
 }
