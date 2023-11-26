@@ -10,8 +10,7 @@ import lombok.experimental.UtilityClass;
  * indicating that it contains only static methods or fields and should not be instantiated.
  *
  * @author Blyzhnytsia Team
- * @version 1.0
- * @since 2023-11-17
+ * @since 1.0
  */
 @UtilityClass
 public class MediaType {

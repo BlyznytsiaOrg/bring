@@ -6,10 +6,12 @@ import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterTy
 
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.web.server.properties.ServerProperties;
-import com.bobocode.bring.web.servlet.annotation.*;
+import com.bobocode.bring.web.servlet.annotation.PathVariable;
+import com.bobocode.bring.web.servlet.annotation.RequestBody;
+import com.bobocode.bring.web.servlet.annotation.RequestHeader;
+import com.bobocode.bring.web.servlet.annotation.RequestParam;
 import com.bobocode.bring.web.servlet.exception.MissingApplicationMappingException;
-import com.bobocode.bring.web.servlet.exception.MissingRequestHeaderAnnotationValueException;
-import com.bobocode.bring.web.servlet.exception.MissingServletRequestParameterException;
+import com.bobocode.bring.web.servlet.exception.MissingRequestParamException;
 import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
 import com.bobocode.bring.web.servlet.mapping.RestControllerProcessResult;
 import com.bobocode.bring.web.servlet.mapping.response.ResponseAnnotationResolver;
@@ -19,13 +21,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -71,12 +76,11 @@ public class DispatcherServlet extends FrameworkServlet {
     private boolean checkParams(String requestPath, RestControllerParams params) {
         Method method = params.method();
         Parameter[] parameters = method.getParameters();
-        String requestPathShortened = "";
         if (checkIfPathVariableAnnotationIsPresent(parameters)) {
-            requestPathShortened = getShortenedPath(requestPath);
+            String requestPathShortened = getShortenedPath(requestPath);
+            return requestPathShortened.equals(params.path());
         }
-        return requestPath.equals(params.path()) || requestPathShortened.equals(params.path())
-                || checkIfUrlIsStatic(requestPath, params.path());
+        return requestPath.equals(params.path()) || checkIfUrlIsStatic(requestPath, params.path());
     }
 
     @SneakyThrows
@@ -87,19 +91,11 @@ public class DispatcherServlet extends FrameworkServlet {
         Object instance = params.instance();
         Method method = params.method();
         Parameter[] parameters = method.getParameters();
-        if (parameters.length == 0 && requestPath.equals(params.path())) {
+        if (parameters.length == 0) {
             getRestControllerProcessResult(instance, method, resp);
         } else {
-            String requestPathShortened = "";
-            if (checkIfPathVariableAnnotationIsPresent(parameters)) {
-                requestPathShortened = getShortenedPath(requestPath);
-            }
-            if (requestPathShortened.equals(params.path())
-                    || requestPath.equals(params.path())
-                    || checkIfUrlIsStatic(requestPath, params.path())) {
-                Object[] args = prepareArgs(req, resp, requestPath, method);
-                getRestControllerProcessResult(instance, method, resp, args);
-            }
+            Object[] args = prepareArgs(req, resp, requestPath, method);
+            getRestControllerProcessResult(instance, method, resp, args);
         }
     }
 
@@ -164,11 +160,6 @@ public class DispatcherServlet extends FrameworkServlet {
                                            Parameter[] parameters, int i) {
         RequestHeader annotation = parameters[i].getAnnotation(RequestHeader.class);
         String value = annotation.value();
-        if (value == null) {
-            throw new MissingRequestHeaderAnnotationValueException(
-                    String.format("Required value for @RequestHeader annotation "
-                            + "for parameter '%s' is not present", parameters[i].getName()));
-        }
         String header = req.getHeader(value);
         args[i] = header;
     }
@@ -179,6 +170,10 @@ public class DispatcherServlet extends FrameworkServlet {
         Class<?> type = parameters[i].getType();
         if (type.equals(String.class)) {
             args[i] = req.getReader().lines().collect(Collectors.joining());
+        } else if (type.equals(Map.class)) {
+            args[i] = objectMapper.readValue(req.getReader(), Map.class);
+        } else if (type.equals(byte[].class)) {
+            args[i] = objectMapper.readValue(req.getInputStream(), byte[].class);
         } else {
             args[i] = objectMapper.readValue(req.getReader(), type);
         }
@@ -194,7 +189,7 @@ public class DispatcherServlet extends FrameworkServlet {
         if (parameterValue != null) {
             args[i] = parseToParameterType(parameterValue, type);
         } else {
-            throw new MissingServletRequestParameterException(
+            throw new MissingRequestParamException(
                     String.format("Required request parameter '%s' "
                                     + "for method parameter type '%s' is not present",
                             parameterName, type.getSimpleName()));

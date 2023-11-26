@@ -33,7 +33,7 @@ public class StaticResourceControllerIntegrationTest {
 
     // Message template for static file not found error
     private static final String STATIC_FILE_NOT_FOUND_MESSAGE = "Can't find the File: %s.";
-    public static final String PACKAGE = "testdata.generalIntegrationTest";
+    public static final String PACKAGE = "testdata.generalintegrationtest";
 
     // ObjectMapper for JSON processing
     private static ObjectMapper objectMapper;

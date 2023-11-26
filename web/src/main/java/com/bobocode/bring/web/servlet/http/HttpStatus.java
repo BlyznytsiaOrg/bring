@@ -10,8 +10,7 @@ import lombok.Getter;
  * <a href="https://tools.ietf.org/html/rfc7231">RFC 7231 - Hypertext Transfer Protocol (HTTP/1.1)</a>
  *
  * @author Blyzhnytsia Team
- * @version 1.0
- * @since 2023-11-17
+ * @since 1.0
  */
 @Getter
 public enum HttpStatus {
