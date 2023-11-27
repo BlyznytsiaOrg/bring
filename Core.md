@@ -46,7 +46,6 @@ If we need diagram classes we should use Wiki and add link to it.
 
 - addition items:
   - [Scheduling](/features/core/Scheduling.md)
-  - Profile
   - Properties file support
   - Logging
   - PostConstruct (the last week)  //TODO

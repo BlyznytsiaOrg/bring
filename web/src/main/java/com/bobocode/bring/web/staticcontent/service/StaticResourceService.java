@@ -1,4 +1,4 @@
-package com.bobocode.bring.web.service;
+package com.bobocode.bring.web.staticcontent.service;
 
 import java.nio.file.Path;
 
@@ -7,8 +7,7 @@ import java.nio.file.Path;
  * Implementations of this interface are responsible for retrieving the absolute path of requested static files.
  *
  * @author Blyzhnytsia Team
- * @version 1.0
- * @since 2023-11-22
+ * @since 1.0
  */
 public interface StaticResourceService {
 
