@@ -1,8 +1,8 @@
 package testdata.di.positive.primary.bean;
 
-import com.bobocode.bring.core.anotation.Bean;
-import com.bobocode.bring.core.anotation.Configuration;
-import com.bobocode.bring.core.anotation.Primary;
+import com.bobocode.bring.core.annotation.Bean;
+import com.bobocode.bring.core.annotation.Configuration;
+import com.bobocode.bring.core.annotation.Primary;
 
 @Configuration
 public class Config {

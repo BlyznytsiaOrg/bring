@@ -1,4 +1,4 @@
-package com.bobocode.bring.core.anotation;
+package com.bobocode.bring.core.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -42,7 +42,7 @@ public @interface Service {
     /**
      * The name of the Bring bean. If not specified, the bean name will be generated based on the class name.
      *
-     * @return the name of the Spring bean
+     * @return the name of the Bring bean
      */
     String value() default "";
 }

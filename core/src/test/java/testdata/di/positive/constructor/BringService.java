@@ -1,6 +1,6 @@
 package testdata.di.positive.constructor;
 
-import com.bobocode.bring.core.anotation.Service;
+import com.bobocode.bring.core.annotation.Service;
 
 @Service
 public class BringService {

@@ -2,7 +2,7 @@ package com.bobocode.bring.core.bpp;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.getConstructorWithOutParameters;
 
-import com.bobocode.bring.core.anotation.BeanProcessor;
+import com.bobocode.bring.core.annotation.BeanProcessor;
 import com.bobocode.bring.core.bpp.impl.ScheduleBeanPostProcessor;
 import com.bobocode.bring.core.bpp.impl.schedule.CustomScheduler;
 import com.bobocode.bring.core.context.BringBeanFactory;

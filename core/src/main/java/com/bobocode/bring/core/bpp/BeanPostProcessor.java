@@ -4,7 +4,7 @@ package com.bobocode.bring.core.bpp;
 /**
  * Interface for post-processing beans during their initialization phase.
  * Implementations of this interface can intercept bean creation and manipulate
- * the bean instance before and after its initialization.
+ * the bean instance initialization.
  *
  *  @author Blyzhnytsia Team
  *  @since 1.0

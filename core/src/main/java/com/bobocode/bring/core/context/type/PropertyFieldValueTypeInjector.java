@@ -1,6 +1,6 @@
 package com.bobocode.bring.core.context.type;
 
-import com.bobocode.bring.core.anotation.Value;
+import com.bobocode.bring.core.annotation.Value;
 import com.bobocode.bring.core.exception.PropertyValueNotFoundException;
 import com.bobocode.bring.core.utils.TypeCast;
 import lombok.AllArgsConstructor;

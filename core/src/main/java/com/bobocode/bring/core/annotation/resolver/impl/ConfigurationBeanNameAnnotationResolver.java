@@ -1,8 +1,8 @@
-package com.bobocode.bring.core.anotation.resolver.impl;
+package com.bobocode.bring.core.annotation.resolver.impl;
 
-import com.bobocode.bring.core.anotation.BeanProcessor;
-import com.bobocode.bring.core.anotation.Configuration;
-import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
+import com.bobocode.bring.core.annotation.BeanProcessor;
+import com.bobocode.bring.core.annotation.Configuration;
+import com.bobocode.bring.core.annotation.resolver.AnnotationResolver;
 
 @BeanProcessor
 public class ConfigurationBeanNameAnnotationResolver implements AnnotationResolver {

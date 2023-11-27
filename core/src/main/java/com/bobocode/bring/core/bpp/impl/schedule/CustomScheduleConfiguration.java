@@ -1,7 +1,7 @@
 package com.bobocode.bring.core.bpp.impl.schedule;
 
-import com.bobocode.bring.core.anotation.Bean;
-import com.bobocode.bring.core.anotation.Configuration;
+import com.bobocode.bring.core.annotation.Bean;
+import com.bobocode.bring.core.annotation.Configuration;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

@@ -1,6 +1,6 @@
 package com.bobocode.bring.core.utils;
 
-import com.bobocode.bring.core.anotation.Autowired;
+import com.bobocode.bring.core.annotation.Autowired;
 import com.bobocode.bring.core.context.type.OrderComparator;
 import com.bobocode.bring.core.exception.BeanPostProcessorConstructionLimitationException;
 import com.bobocode.bring.core.exception.BringGeneralException;

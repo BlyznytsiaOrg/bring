@@ -1,4 +1,4 @@
-package com.bobocode.bring.core.anotation.resolver;
+package com.bobocode.bring.core.annotation.resolver;
 
 /**
  * Represents an interface for resolving annotations on classes.
