@@ -1,4 +1,4 @@
-package com.bobocode.bring.core.anotation;
+package com.bobocode.bring.core.annotation;
 
 import com.bobocode.bring.core.domain.BeanScope;
 import com.bobocode.bring.core.domain.ProxyMode;

@@ -1,6 +1,6 @@
 package testdata.di.positive.fullinjection;
 
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.annotation.Component;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

@@ -1,8 +1,8 @@
 package com.bobocode.bring.core.bfpp.impl;
 
-import com.bobocode.bring.core.anotation.Bean;
-import com.bobocode.bring.core.anotation.BeanProcessor;
-import com.bobocode.bring.core.anotation.Primary;
+import com.bobocode.bring.core.annotation.Bean;
+import com.bobocode.bring.core.annotation.BeanProcessor;
+import com.bobocode.bring.core.annotation.Primary;
 import com.bobocode.bring.core.context.impl.DefaultBringBeanFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.domain.BeanTypeEnum;

@@ -1,6 +1,6 @@
 package com.bobocode.bring.core.utils;
 
-import com.bobocode.bring.core.anotation.Scope;
+import com.bobocode.bring.core.annotation.Scope;
 import com.bobocode.bring.core.domain.BeanScope;
 import com.bobocode.bring.core.domain.ProxyMode;
 import lombok.experimental.UtilityClass;

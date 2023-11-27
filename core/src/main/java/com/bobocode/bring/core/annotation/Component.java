@@ -1,10 +1,9 @@
-package com.bobocode.bring.core.anotation;
+package com.bobocode.bring.core.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 
 /**
  * Indicates that an annotated class is a Bring component. This annotation serves as a marker for Bring to
@@ -20,13 +19,13 @@ import java.lang.annotation.Target;
  * <p><strong>Usage Example:</strong>
  * <pre>
  * {@code
- *  @Service
+ *  \@Component
  *  public class MyComponent {
  *      // Class definition
  *  }
  *
  *  // Custom bean name
- *  @Service("customBeanName")
+ *  \@Component("customBeanName")
  *  public class AnotherComponent {
  *      // Class definition
  *  }
@@ -38,7 +37,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Service {
+public @interface Component {
     /**
      * The name of the Bring bean. If not specified, the bean name will be generated based on the class name.
      *

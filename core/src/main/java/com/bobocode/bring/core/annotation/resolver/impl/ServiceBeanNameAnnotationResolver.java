@@ -1,8 +1,8 @@
-package com.bobocode.bring.core.anotation.resolver.impl;
+package com.bobocode.bring.core.annotation.resolver.impl;
 
-import com.bobocode.bring.core.anotation.BeanProcessor;
-import com.bobocode.bring.core.anotation.Service;
-import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
+import com.bobocode.bring.core.annotation.BeanProcessor;
+import com.bobocode.bring.core.annotation.Service;
+import com.bobocode.bring.core.annotation.resolver.AnnotationResolver;
 
 /**
  * An implementation of AnnotationResolver specifically designed for resolving

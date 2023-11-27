@@ -1,8 +1,8 @@
 package com.bobocode.bring.web.server;
 
-import com.bobocode.bring.core.anotation.Autowired;
-import com.bobocode.bring.core.anotation.Bean;
-import com.bobocode.bring.core.anotation.Configuration;
+import com.bobocode.bring.core.annotation.Autowired;
+import com.bobocode.bring.core.annotation.Bean;
+import com.bobocode.bring.core.annotation.Configuration;
 import com.bobocode.bring.web.server.properties.ServerProperties;
 import com.bobocode.bring.web.servlet.error.ErrorResponseCreator;
 import com.bobocode.bring.web.servlet.JsonExceptionHandler;

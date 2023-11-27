@@ -1,6 +1,6 @@
 package com.bobocode.bring.core.context.impl;
 
-import com.bobocode.bring.core.anotation.Primary;
+import com.bobocode.bring.core.annotation.Primary;
 import com.bobocode.bring.core.context.BringBeanFactory;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.context.type.TypeResolverFactory;

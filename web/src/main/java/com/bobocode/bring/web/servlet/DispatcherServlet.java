@@ -4,7 +4,7 @@ import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getRequestPat
 import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getShortenedPath;
 import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterType;
 
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.annotation.Component;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.RequestBody;
 import com.bobocode.bring.web.servlet.annotation.RequestHeader;

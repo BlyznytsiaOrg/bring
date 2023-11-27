@@ -1,8 +1,8 @@
 package testdata.di.positive.qualifier.field;
 
-import com.bobocode.bring.core.anotation.Autowired;
-import com.bobocode.bring.core.anotation.Qualifier;
-import com.bobocode.bring.core.anotation.Service;
+import com.bobocode.bring.core.annotation.Autowired;
+import com.bobocode.bring.core.annotation.Qualifier;
+import com.bobocode.bring.core.annotation.Service;
 import lombok.Getter;
 
 @Service

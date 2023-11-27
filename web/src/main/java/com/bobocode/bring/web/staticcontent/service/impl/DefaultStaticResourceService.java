@@ -1,6 +1,6 @@
 package com.bobocode.bring.web.staticcontent.service.impl;
 
-import com.bobocode.bring.core.anotation.Service;
+import com.bobocode.bring.core.annotation.Service;
 import com.bobocode.bring.web.staticcontent.exception.StaticFileNotFoundException;
 import com.bobocode.bring.web.staticcontent.service.StaticResourceService;
 import lombok.RequiredArgsConstructor;

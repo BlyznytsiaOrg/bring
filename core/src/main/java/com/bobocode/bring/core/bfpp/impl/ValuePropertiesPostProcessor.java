@@ -1,7 +1,7 @@
 package com.bobocode.bring.core.bfpp.impl;
 
-import com.bobocode.bring.core.anotation.BeanProcessor;
-import com.bobocode.bring.core.anotation.Order;
+import com.bobocode.bring.core.annotation.BeanProcessor;
+import com.bobocode.bring.core.annotation.Order;
 import com.bobocode.bring.core.context.impl.DefaultBringBeanFactory;
 import com.bobocode.bring.core.env.impl.ProfileSourceResolve;
 import com.bobocode.bring.core.bfpp.BeanFactoryPostProcessor;
