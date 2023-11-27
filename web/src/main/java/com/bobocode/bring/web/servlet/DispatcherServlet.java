@@ -4,11 +4,6 @@ import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getRequestPat
 import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getShortenedPath;
 import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterType;
 
-import com.bobocode.bring.core.anotation.Component;
-import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getRequestPath;
-import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getShortenedPath;
-import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterType;
-
 import com.bobocode.bring.core.annotation.Component;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.RequestBody;
@@ -298,7 +293,8 @@ public class DispatcherServlet extends FrameworkServlet {
         RequestHeader annotation = parameters[index].getAnnotation(RequestHeader.class);
         String value = annotation.value();
         String header = req.getHeader(value);
-        args[index] = header;
+        Class<?> type = parameters[index].getType();
+        args[index] = parseToParameterType(header, type);
     }
 
     /**

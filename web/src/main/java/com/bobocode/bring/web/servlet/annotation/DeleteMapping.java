@@ -9,6 +9,20 @@ import java.lang.annotation.Target;
  * Annotation for mapping HTTP {@code DELETE} requests onto specific handler
  * methods.
  *
+ * <p><strong>Usage Example:</strong>
+ * <pre>
+ * {@code
+ * @RestController
+ * public class MyController implements BringServlet {
+ *
+ *      @DeleteMapping(path = "/resource/{id}")
+ *      public void deleteResource(@PathVariable Long id) {
+ *          // Your implementation logic here
+ *      }
+ *    }
+ *  }
+ * </pre>
+ *
  * @see GetMapping
  * @see PostMapping
  * @see PutMapping

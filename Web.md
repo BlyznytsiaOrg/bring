@@ -2,24 +2,26 @@
 
 ## General Web flow diagram
 
-![Bring DI diagram](https://github.com/YevgenDemoTestOrganization/bring/assets/73576438/f00bb773-268d-440c-9603-9a8894210896)
+![Bring DI diagram](https://github.com/YevgenDemoTestOrganization/bring/assets/114337016/06604708-d660-4e2c-ba08-ef8b215bbcb3)
 
-1. The BringWebApplication offers a straightforward way to initialize and operate a BringWebApplication. Users can establish and customize a BringWebApplication using a core BringApplicationContext delegate, allowing for the return of a context reference.
-2. The BringApplicationContext packs essential data for BringWebApplication, enabling its storage within a web context for later use.
-3. Once all beans are configured, the transition to the Web Server builder becomes possible.
-4. Bringing BringApplicationContext into play involves registering it as an attribute within the servletContext for the Web Server.
-5. The Web Server is equipped with a registered API general error handler.
-6. The registration process involves preparing the Dispatcher servlet for the Web Server.
-7. Gathering all ParamResolver components.
-8. Gathering all BringServlets.
-9. With the Dispatcher servlet aggregating necessary information, it's primed for registration.
-10. Initiating the server boot process.
+1. The **BringWebApplication** offers a straightforward way to initialize and operate. Users can establish and customize it using a core **BringApplicationContext** delegate, allowing the return of a context reference.
+2. The **BringApplicationContext** packs essential data for **BringWebApplication**, enabling its storage within a web context for later use.
+3. Once all beans are configured, the **RestControllerContext** is created, representing the context for managing REST controllers and their associated parameters in a web application.
+4. Gathering all **BringServlets**.
+5. Gathering all **ParamResolver** components.
+6. The **WebStarter** initializes and runs a web application.
+7. Starting **Apache Tomcat** as the embedded servlet container.
+8. Bringing **BringApplicationContext** into play involves registering it as an attribute within the **ServletContext**.
+9. Registering **RestControllerContext** as an attribute within the **ServletContext**.
+10. The Web Server is equipped with a registered **API General Error Handler**. 
+11. The registration process involves preparing and registering the **Dispatcher Servlet** for the Web Server.
 
 ## More general simplified flow:
 
 - Bring Web app is executed
 - Bring context is initialized
 - Servlet container configuration.
+- RestController context is created.
 - Servlet web server is started.
 - DispatcherServlet is created and registered.
 
@@ -44,9 +46,14 @@
 
 Exception scenarios:
 
-- ConnectorStartFailedException
-- WebServerException
+- [ConnectorStartFailedException](features/web/server/exception/ConnectorStartFailedException.md)
+- [WebServerException](features/web/server/exception/WebServerException.md)
 - General error handling for API
-- MethodArgumentTypeMismatchException
-- MissingServletRequestParameterException
-- TypeArgumentUnsupportedException
+- [MethodArgumentTypeMismatchException](features/web/servlet/exception/MethodArgumentTypeMismatchException.md)
+- [MissingApplicationMappingException](features/web/servlet/exception/MissingApplicationMappingException.md)
+- [MissingBringServletImplException](features/web/servlet/exception/MissingBringServletImplException.md)
+- [MissingRequestHeaderAnnotationValueException](features/web/servlet/exception/MissingRequestHeaderAnnotationValueException.md)
+- [MissingRequestParamException](features/web/servlet/exception/MissingRequestParamException.md)
+- [RequestBodyTypeUnsupportedException](features/web/servlet/exception/RequestBodyTypeUnsupportedException.md)
+- [RequestPathDuplicateException](features/web/servlet/exception/RequestPathDuplicateException.md)
+- [TypeArgumentUnsupportedException](features/web/servlet/exception/TypeArgumentUnsupportedException.md)

@@ -9,6 +9,20 @@ import java.lang.annotation.Target;
  * Annotation for mapping HTTP {@code PATCH} requests onto specific handler
  * methods.
  *
+ * <p><strong>Usage Example:</strong>
+ * <pre>
+ * {@code
+ * @RestController
+ * public class MyController implements BringServlet {
+ *
+ *      @PatchMapping(path = "/resource")
+ *      public void patchResource(@RequestBody UserDto dto) {
+ *          // Your implementation logic here
+ *      }
+ *    }
+ *  }
+ * </pre>
+ *
  * @see GetMapping
  * @see PostMapping
  * @see PutMapping

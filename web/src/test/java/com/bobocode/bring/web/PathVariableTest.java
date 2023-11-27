@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import testdata.pathvariable.PathVariableController;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -212,6 +213,25 @@ public class PathVariableTest {
         String expectedMessage = String.format("Failed to convert value of type 'java.lang.String' "
                 + "to required type 'boolean'; Invalid value [%s]", pathVariable);
         String url = getHost() + "/boolean/" + pathVariable;
+        HttpRequest request = getHttpGetRequest(url);
+
+        // when
+        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
+
+        // then
+        assertThat(errorResponse.getMessage()).isEqualTo(expectedMessage);
+    }
+
+    @Test
+    @DisplayName("should throw exception with message for invalid boolean value")
+    void shouldThrowExceptionOnUnsupportedArgType() throws URISyntaxException, IOException, InterruptedException {
+        //given
+        PathVariableController.User user = new PathVariableController.User("Bob", 22);
+        String pathVariable = "invalid";
+        String expectedMessage = String.format("The type parameter: '%s' is not supported",
+                user.getClass().getName());
+        String url = getHost() + "/invalidType/" + pathVariable;
         HttpRequest request = getHttpGetRequest(url);
 
         // when
