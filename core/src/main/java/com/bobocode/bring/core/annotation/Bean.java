@@ -1,4 +1,4 @@
-package com.bobocode.bring.core.anotation;
+package com.bobocode.bring.core.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

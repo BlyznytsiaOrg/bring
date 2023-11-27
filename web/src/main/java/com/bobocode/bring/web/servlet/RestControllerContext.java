@@ -2,7 +2,7 @@ package com.bobocode.bring.web.servlet;
 
 import static com.bobocode.bring.web.utils.RestControllerParamsUtil.getRestControllerParams;
 
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.annotation.Component;
 import com.bobocode.bring.web.servlet.annotation.RequestBody;
 import com.bobocode.bring.web.servlet.annotation.RequestHeader;
 import com.bobocode.bring.web.servlet.exception.MissingRequestHeaderAnnotationValueException;

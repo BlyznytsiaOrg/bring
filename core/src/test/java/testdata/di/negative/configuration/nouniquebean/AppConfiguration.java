@@ -1,7 +1,7 @@
 package testdata.di.negative.configuration.nouniquebean;
 
-import com.bobocode.bring.core.anotation.Bean;
-import com.bobocode.bring.core.anotation.Configuration;
+import com.bobocode.bring.core.annotation.Bean;
+import com.bobocode.bring.core.annotation.Configuration;
 import testdata.di.negative.configuration.A;
 import testdata.di.negative.configuration.B;
 

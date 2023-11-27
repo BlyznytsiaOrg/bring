@@ -1,6 +1,6 @@
 package com.bobocode.bring.web.service.impl;
 
-import com.bobocode.bring.core.anotation.Service;
+import com.bobocode.bring.core.annotation.Service;
 import com.bobocode.bring.web.server.properties.ServerProperties;
 import com.bobocode.bring.web.service.StaticResourceService;
 import com.bobocode.bring.web.servlet.exception.StaticFileNotFoundException;

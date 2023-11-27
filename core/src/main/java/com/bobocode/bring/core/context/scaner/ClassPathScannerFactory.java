@@ -1,7 +1,7 @@
 package com.bobocode.bring.core.context.scaner;
 
-import com.bobocode.bring.core.anotation.BeanProcessor;
-import com.bobocode.bring.core.anotation.resolver.AnnotationResolver;
+import com.bobocode.bring.core.annotation.BeanProcessor;
+import com.bobocode.bring.core.annotation.resolver.AnnotationResolver;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;

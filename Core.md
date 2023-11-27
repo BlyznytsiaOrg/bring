@@ -20,9 +20,9 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
 If we need diagram classes we should use Wiki and add link to it.
 
  - Dependency Injection
-   - Constructor 
-   - Setter
-   - Field
+   - [Constructor] (/features/core/Constructor.md)
+   - [Setter] (/features/core/Setter.md)
+   - [Field] (/features/core/Field.md)
    - Collections (only list or other too //TODO)
    - @Primary //TODO
    - @Qualifier //TODO

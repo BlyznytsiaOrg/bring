@@ -1,7 +1,7 @@
 package com.bobocode.bring.web.server.properties;
 
-import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.core.anotation.Value;
+import com.bobocode.bring.core.annotation.Component;
+import com.bobocode.bring.core.annotation.Value;
 import lombok.Data;
 
 /**

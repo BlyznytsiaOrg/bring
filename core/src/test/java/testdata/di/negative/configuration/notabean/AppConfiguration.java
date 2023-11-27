@@ -1,6 +1,6 @@
 package testdata.di.negative.configuration.notabean;
 
-import com.bobocode.bring.core.anotation.Configuration;
+import com.bobocode.bring.core.annotation.Configuration;
 import testdata.di.negative.configuration.A;
 
 @Configuration

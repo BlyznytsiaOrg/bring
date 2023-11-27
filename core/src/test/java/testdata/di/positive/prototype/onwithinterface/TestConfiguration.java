@@ -1,8 +1,8 @@
 package testdata.di.positive.prototype.onwithinterface;
 
-import com.bobocode.bring.core.anotation.Bean;
-import com.bobocode.bring.core.anotation.Configuration;
-import com.bobocode.bring.core.anotation.Scope;
+import com.bobocode.bring.core.annotation.Bean;
+import com.bobocode.bring.core.annotation.Configuration;
+import com.bobocode.bring.core.annotation.Scope;
 import com.bobocode.bring.core.domain.BeanScope;
 import com.bobocode.bring.core.domain.ProxyMode;
 

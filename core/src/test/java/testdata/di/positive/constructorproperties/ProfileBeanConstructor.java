@@ -1,9 +1,9 @@
 package testdata.di.positive.constructorproperties;
 
-import com.bobocode.bring.core.anotation.Autowired;
-import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.core.anotation.Profile;
-import com.bobocode.bring.core.anotation.Value;
+import com.bobocode.bring.core.annotation.Autowired;
+import com.bobocode.bring.core.annotation.Component;
+import com.bobocode.bring.core.annotation.Profile;
+import com.bobocode.bring.core.annotation.Value;
 import lombok.Getter;
 import lombok.Setter;
 

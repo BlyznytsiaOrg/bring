@@ -1,6 +1,6 @@
 package testdata.di.positive.listconstructorinjector;
 
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.annotation.Component;
 
 @Component
 public class C implements IA {

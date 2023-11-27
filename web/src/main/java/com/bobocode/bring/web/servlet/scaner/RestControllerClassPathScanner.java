@@ -1,6 +1,6 @@
 package com.bobocode.bring.web.servlet.scaner;
 
-import com.bobocode.bring.core.anotation.BeanProcessor;
+import com.bobocode.bring.core.annotation.BeanProcessor;
 import com.bobocode.bring.web.servlet.annotation.RestController;
 import com.bobocode.bring.core.context.scaner.ClassPathScanner;
 import lombok.AllArgsConstructor;

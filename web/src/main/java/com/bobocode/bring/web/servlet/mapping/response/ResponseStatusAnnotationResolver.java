@@ -1,6 +1,6 @@
 package com.bobocode.bring.web.servlet.mapping.response;
 
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.annotation.Component;
 import com.bobocode.bring.web.servlet.annotation.ResponseStatus;
 import jakarta.servlet.http.HttpServletResponse;
 import java.lang.annotation.Annotation;
