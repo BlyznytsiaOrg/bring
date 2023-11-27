@@ -3,11 +3,11 @@ package testdata.di.negative.cyclic;
 import com.bobocode.bring.core.annotation.Component;
 
 @Component
-public class A {
+public class C {
 
-    private final C c;
+    private final B b;
 
-    public A(C c) {
-        this.c = c;
+    public C(B b) {
+        this.b = b;
     }
 }

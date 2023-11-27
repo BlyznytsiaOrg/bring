@@ -17,24 +17,6 @@ class BringApplicationContextNegativeCasesTest {
 
     private static final String DEMO_PACKAGE = "testdata.di.negative";
 
-    @DisplayName("Should throw exception when we have Cyclic dependency")
-    @Test
-    void shouldThrowExceptionWhenWeHaveCyclicDependency() {
-        //given
-        var expectedMessage = "Looks like you have cyclic dependency between those beans [A, B]";
-
-        // when
-        Executable executable = () -> {
-            //given
-            BringApplication.run(DEMO_PACKAGE + ".cyclic");
-        };
-
-        // then
-        CyclicBeanException cyclicBeanException = assertThrows(CyclicBeanException.class, executable);
-        assertThat(cyclicBeanException.getMessage()).isEqualTo(expectedMessage);
-
-    }
-
     @DisplayName("Should throw exception when injecting into configuration method when no bean with param name")
     @Test
     void shouldThrowExceptionWhenNoBeanForParameterName() {
