@@ -1,7 +1,7 @@
 package testdata.di.positive.fullinjection;
 
-import com.bobocode.bring.core.anotation.Bean;
-import com.bobocode.bring.core.anotation.Configuration;
+import com.bobocode.bring.core.annotation.Bean;
+import com.bobocode.bring.core.annotation.Configuration;
 
 @Configuration
 public class AppConfiguration {

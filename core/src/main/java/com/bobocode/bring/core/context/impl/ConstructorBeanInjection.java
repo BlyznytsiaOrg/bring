@@ -1,7 +1,7 @@
 package com.bobocode.bring.core.context.impl;
 
-import com.bobocode.bring.core.anotation.Autowired;
-import com.bobocode.bring.core.anotation.Qualifier;
+import com.bobocode.bring.core.annotation.Autowired;
+import com.bobocode.bring.core.annotation.Qualifier;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.NoConstructorWithAutowiredAnnotationBeanException;
@@ -17,9 +17,10 @@ import java.util.*;
 import java.util.function.Supplier;
 
 /**
- * Responsible for creating beans using constructor-based dependency injection.
- * This class assists in instantiating beans based on constructors annotated with @Autowired
- * or if this is one constructor no need to add Autowired.
+ * Responsible for facilitating constructor-based dependency injection, the ConstructorBeanInjection class assists in
+ * creating beans by instantiating classes through constructors annotated with @Autowired or utilizing
+ * a single constructor without explicit @Autowired.
+ *
  *
  * @author Blyzhnytsia Team
  * @since 1.0

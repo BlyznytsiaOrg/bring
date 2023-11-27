@@ -1,7 +1,7 @@
 package testdata.di.positive.contract2;
 
-import com.bobocode.bring.core.anotation.Autowired;
-import com.bobocode.bring.core.anotation.Service;
+import com.bobocode.bring.core.annotation.Autowired;
+import com.bobocode.bring.core.annotation.Service;
 import lombok.Getter;
 
 @Getter

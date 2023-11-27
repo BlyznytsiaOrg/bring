@@ -19,8 +19,8 @@ private String propertyName;
 - Example Usage:
 
 ```
-import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.core.anotation.Value;
+import com.bobocode.bring.core.annotation.Component;
+import com.bobocode.bring.core.annotation.Value;
 
 @Component
 public class MyComponent {
@@ -38,7 +38,7 @@ public class MyComponent {
 
 - Explanation:
   - Import Statements: 
-    - com.bobocode.bring.core.anotation.Value: Import the @Value annotation.
+    - com.bobocode.bring.core.annotation.Value: Import the @Value annotation.
   - Annotation Usage: 
     - Annotate the fields in your class that you want to populate with values from the properties file using @Value("${property.key}").
   - Property Injection:

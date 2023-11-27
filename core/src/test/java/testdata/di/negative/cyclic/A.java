@@ -1,15 +1,13 @@
 package testdata.di.negative.cyclic;
 
-import com.bobocode.bring.core.anotation.Autowired;
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.annotation.Component;
 
 @Component
 public class A {
 
-    private final B b;
+    private final C c;
 
-    @Autowired
-    public A(B b) {
-        this.b = b;
+    public A(C c) {
+        this.c = c;
     }
 }

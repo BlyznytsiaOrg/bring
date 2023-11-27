@@ -1,14 +1,12 @@
 package testdata.di.positive.fieldproperties;
 
-import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.core.anotation.Profile;
-import com.bobocode.bring.core.anotation.Value;
+import com.bobocode.bring.core.annotation.Component;
+import com.bobocode.bring.core.annotation.Value;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Profile("dev")
 @Component
 public class ProfileBean {
 

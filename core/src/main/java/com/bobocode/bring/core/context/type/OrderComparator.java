@@ -1,6 +1,6 @@
 package com.bobocode.bring.core.context.type;
 
-import com.bobocode.bring.core.anotation.Order;
+import com.bobocode.bring.core.annotation.Order;
 
 import java.util.Comparator;
 import java.util.Objects;

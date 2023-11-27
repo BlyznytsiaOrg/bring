@@ -1,9 +1,7 @@
 package testdata.scheduler;
 
-import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.core.anotation.ScheduledTask;
-
-import java.util.concurrent.TimeUnit;
+import com.bobocode.bring.core.annotation.Component;
+import com.bobocode.bring.core.annotation.ScheduledTask;
 
 @Component
 public class MyCustomScheduler {

@@ -1,6 +1,6 @@
 package com.bobocode.bring.web.servlet.mapping.request;
 
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.annotation.Component;
 import com.bobocode.bring.web.servlet.annotation.PostMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestMethod;
 import com.bobocode.bring.web.servlet.mapping.RestControllerParams;

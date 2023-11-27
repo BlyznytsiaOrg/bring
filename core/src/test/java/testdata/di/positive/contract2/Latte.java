@@ -1,6 +1,6 @@
 package testdata.di.positive.contract2;
 
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.annotation.Component;
 
 @Component
 public class Latte implements Drink {

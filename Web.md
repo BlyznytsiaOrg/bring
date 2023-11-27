@@ -23,20 +23,20 @@
 - Servlet web server is started.
 - DispatcherServlet is created and registered.
 
-
-//TODO create fow each feature new md file.
-
 ## Features:
 
 - Embedded Servers: These are servers integrated or bundled within an application or system. They allow the application to run without needing an external server. These servers are often lightweight and designed for specific purposes or frameworks.
 - Dispatcher Servlet: In the context of Java-based web applications, a Dispatcher Servlet is the front controller in the Bring framework's MVC architecture. It receives incoming requests and directs them to the appropriate resources (controllers, views, etc.) for processing.
 - REST API: Representational State Transfer (REST) API is a set of rules and conventions for building web services that enable communication between different systems on the internet. It uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations on resources and typically returns responses in JSON or XML (//TODO ) format.
-- Static Content Serving: This refers to the process of serving static files (HTML, CSS, JavaScript, images, etc.) directly to clients without any processing or modification by the server. This content is typically served as-is from the server's file system or a specified directory.
+- [Static Content Serving](features/web/servlet/StaticResourceController.md): This refers to the process of serving static files (HTML, CSS, JavaScript, images, etc.) directly to clients without any processing or modification by the server. This content is typically served as-is from the server's file system or a specified directory.
+- [Exception handler](/features/web/servlet/JsonExceptionHandler.md): This component specializes in managing exceptions by intercepting and customizing error responses in JSON format. It extends ErrorReportValve to provide tailored error handling within a Servlet container.
 
 
 - addition items:
-  - random port generation.
+  - The code supports the generation of a random port based on the key ${random.port}. When this key is encountered as the value for a property, it is replaced with a randomly generated port number within the specified range. The range for the random port generation is defined by the constants START_PORT_RANGE and END_PORT_RANGE, which are set to 8000 and 9000, respectively. This feature allows dynamic allocation of ports, which can be useful in scenarios where a unique port is needed, and the actual port number is not predetermined but instead generated at runtime.
 
+- annotation: 
+  - [@ResponseStatus](features/web/servlet/annotation/ResponseStatus.md)
 
 Exception scenarios:
 

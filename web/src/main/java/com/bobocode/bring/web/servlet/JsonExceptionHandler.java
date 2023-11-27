@@ -1,6 +1,6 @@
 package com.bobocode.bring.web.servlet;
 
-import com.bobocode.bring.core.anotation.Component;
+import com.bobocode.bring.core.annotation.Component;
 import com.bobocode.bring.web.server.properties.ServerProperties;
 import com.bobocode.bring.web.servlet.annotation.ResponseStatus;
 import com.bobocode.bring.web.servlet.error.ErrorResponse;

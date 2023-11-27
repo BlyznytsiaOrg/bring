@@ -1,7 +1,7 @@
 package testdata.di.positive.listfieldinjector;
 
-import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.core.anotation.Order;
+import com.bobocode.bring.core.annotation.Component;
+import com.bobocode.bring.core.annotation.Order;
 
 @Component
 @Order(5)
