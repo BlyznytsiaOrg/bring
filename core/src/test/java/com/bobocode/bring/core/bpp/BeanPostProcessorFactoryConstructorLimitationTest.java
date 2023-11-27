@@ -21,7 +21,7 @@ class BeanPostProcessorFactoryConstructorLimitationTest {
 
         Executable executable = () -> {
             //when
-            BringApplication.run("testdata.bpp");
+            BringApplication.run("testdata.bpp", "testdata.bpp");
         };
 
         // then
