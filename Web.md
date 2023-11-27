@@ -23,9 +23,6 @@
 - Servlet web server is started.
 - DispatcherServlet is created and registered.
 
-
-//TODO create fow each feature new md file.
-
 ## Features:
 
 - Embedded Servers: These are servers integrated or bundled within an application or system. They allow the application to run without needing an external server. These servers are often lightweight and designed for specific purposes or frameworks.
@@ -37,7 +34,6 @@
 
 - addition items:
   - The code supports the generation of a random port based on the key ${random.port}. When this key is encountered as the value for a property, it is replaced with a randomly generated port number within the specified range. The range for the random port generation is defined by the constants START_PORT_RANGE and END_PORT_RANGE, which are set to 8000 and 9000, respectively. This feature allows dynamic allocation of ports, which can be useful in scenarios where a unique port is needed, and the actual port number is not predetermined but instead generated at runtime.
-  - The `ValuePropertiesPostProcessor` class supports dynamic profile configuration using VM parameters. Set the active profile with the `-Dbring.profiles.active=dev` parameter during application launch. This enables the class to resolve profile-specific properties and apply them to the `DefaultBringBeanFactory`, allowing for adaptable configuration based on the specified profile. Additionally, the active profiles influence the loading of different `application.properties` files. For example, with an active profile of "dev," the class will load properties from `application-dev.properties`. This mechanism allows for customized property sets tailored to specific application environments.
 
 - annotation: 
   - [@ResponseStatus](features/web/servlet/annotation/ResponseStatus.md)
