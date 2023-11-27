@@ -1,6 +1,6 @@
 package com.bobocode.bring.core.context.type;
 
-import com.bobocode.bring.core.anotation.Value;
+import com.bobocode.bring.core.annotation.Value;
 import com.bobocode.bring.core.exception.PropertyValueNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
