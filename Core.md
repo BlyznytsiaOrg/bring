@@ -15,14 +15,12 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
 
 ## Features:
 
-//TODO create fow each feature new md file.
-
 If we need diagram classes we should use Wiki and add link to it.
 
  - Dependency Injection
-   - [Constructor] (/features/core/Constructor.md)
-   - [Setter] (/features/core/Setter.md)
-   - [Field] (/features/core/Field.md)
+   - [Constructor](/features/core/Constructor.md)
+   - [Setter](/features/core/Setter.md)
+   - [Field](/features/core/Field.md)
    - Collections (only list or other too //TODO)
    - @Primary //TODO
    - @Qualifier //TODO
@@ -33,11 +31,12 @@ If we need diagram classes we should use Wiki and add link to it.
 
  - Configuration support
    - Annotation configuration @Component @Server
+   - Annotation @Autowired (use for constructor (if you have one constructor no need to add it), field and setter)
    - Java Configuration @Bean @Configuration
 
 
 - Dependency Injection exceptions
-  - Circular Dependencies
+  - [Circular Dependencies](/features/core/CircularDependencies.md)
   - No such bean exception
   - No unique bean exception
   - No constructor with Autowired annotation
@@ -46,7 +45,16 @@ If we need diagram classes we should use Wiki and add link to it.
 
 - addition items:
   - [Scheduling](/features/core/Scheduling.md)
-  - Properties file support
+  - Properties file support 
+
+    
+    The `ValuePropertiesPostProcessor` class supports dynamic profile configuration using VM parameters. 
+    Set the active profile with the `-Dbring.profiles.active=dev` parameter during application launch. 
+    This enables the class to resolve profile-specific properties and apply them to the `DefaultBringBeanFactory`, allowing for adaptable configuration based on the specified profile. 
+    Additionally, the active profiles influence the loading of different `application.properties` files. 
+    For example, with an active profile of "dev," the class will load properties from `application-dev.properties`. This mechanism allows for customized property sets tailored to specific application environments.
+
+
   - Logging
   - PostConstruct (the last week)  //TODO
   - PreDestroy (the last week)  //TODO
