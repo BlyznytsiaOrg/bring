@@ -100,7 +100,7 @@ public class ConstructorBeanInjection {
 
             if (injectViaProperties.isEmpty()) {
                 String dependencyBeanName = findBeanNameForArgumentInConstructor(parameter, parameterNames);
-                Object dependencyObject = beanRegistry.getOrCreateBean(dependencyBeanName, parameter.getType(), null);
+                Object dependencyObject = beanRegistry.getOrCreateBean(dependencyBeanName);
                 dependencies[i] = dependencyObject;
             }
         }
@@ -150,7 +150,7 @@ public class ConstructorBeanInjection {
         } else {
             String paramName = constructorParamNames.get(ReflectionUtils.extractParameterPosition(parameter));
 
-            return findPrimaryBeanNameOrByQualifierOrbBParameter(beanNames, paramName, parameter);
+            return findPrimaryBeanNameOrByQualifierOrByParameter(beanNames, paramName, parameter);
         }
     }
 
@@ -164,7 +164,7 @@ public class ConstructorBeanInjection {
      * @throws NoSuchBeanException      If a required bean is not found.
      * @throws NoUniqueBeanException   If multiple primary beans or qualifiers match the parameter type.
      */
-    private String findPrimaryBeanNameOrByQualifierOrbBParameter(List<String> beanNames, String paramName,
+    private String findPrimaryBeanNameOrByQualifierOrByParameter(List<String> beanNames, String paramName,
                                                                  Parameter  parameter) {
         Class<?>  parameterType = parameter.getType();
         var primaryNames = beanNames.stream()

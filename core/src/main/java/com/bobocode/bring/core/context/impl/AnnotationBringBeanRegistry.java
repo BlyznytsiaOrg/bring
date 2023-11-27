@@ -63,21 +63,17 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         addBeanDefinition(beanName, beanDefinition);
     }
 
-    public Object getOrCreateBean(String beanName, Class<?> beanType, String qualifier) {
+    public Object getOrCreateBean(String beanName) {
         Object existingBean = getBeanByName(beanName);
 
         if (Objects.nonNull(existingBean)) {
             return existingBean;
         }
 
+        //TODO: Think about what to do if we can't find bean definition
         BeanDefinition beanDefinition = getBeanDefinitionMap().get(beanName);
 
-        if (Objects.isNull(beanDefinition)) {
-            //TODO this is like workaround need to think how to populate bean definition for interface & dependencies
-            if (beanType.isInterface()) {
-                registerImplementations(beanName, beanType, qualifier);
-            }
-        } else {
+        if (beanDefinition != null) {
             registerBean(beanName, beanDefinition);
         }
 

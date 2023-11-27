@@ -112,6 +112,14 @@ public final class ReflectionUtils {
         return Collections.emptyList();
     }
 
+    public static  List<Class<?>> extractImplClasses(Class<?> type, Reflections reflections,
+        List<Class<? extends Annotation>> createdBeanAnnotations) {
+        return (List<Class<?>>)reflections.getSubTypesOf(type)
+            .stream()
+            .filter(implementation -> isImplementationAnnotated(implementation, createdBeanAnnotations))
+            .toList();
+    }
+
     private static boolean isImplementationAnnotated(Class<?> implementation, List<Class<? extends Annotation>> createdBeanAnnotations) {
         return Arrays.stream(implementation.getAnnotations())
                 .map(Annotation::annotationType)

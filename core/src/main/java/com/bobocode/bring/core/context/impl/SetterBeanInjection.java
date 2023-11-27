@@ -67,7 +67,7 @@ public class SetterBeanInjection {
                     }
                     throw new NoSuchBeanException(dependencyType);
                 }
-                Object dependencyObject = beanRegistry.getOrCreateBean(dependencyBeanName, dependencyType, null);
+                Object dependencyObject = beanRegistry.getOrCreateBean(dependencyBeanName);
                 method.invoke(bean, dependencyObject);
             }
         }
