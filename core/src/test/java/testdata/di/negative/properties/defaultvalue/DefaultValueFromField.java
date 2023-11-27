@@ -1,4 +1,4 @@
-package testdata.di.negative.fieldproperties;
+package testdata.di.negative.properties.defaultvalue;
 
 import com.bobocode.bring.core.anotation.Component;
 import com.bobocode.bring.core.anotation.Value;
@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Component
-public class NotFoundValue {
+public class DefaultValueFromField {
 
-    @Value("bring.banner-mode")
+    @Value("bring.banner-mode.field:defaultValue")
     private String banner;
 }

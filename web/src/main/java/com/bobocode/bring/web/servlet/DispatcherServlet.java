@@ -1,11 +1,6 @@
 package com.bobocode.bring.web.servlet;
 
-import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getRequestPath;
-import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getShortenedPath;
-import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterType;
-
 import com.bobocode.bring.core.anotation.Component;
-import com.bobocode.bring.web.server.properties.ServerProperties;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.RequestBody;
 import com.bobocode.bring.web.servlet.annotation.RequestHeader;
@@ -21,33 +16,32 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getRequestPath;
+import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getShortenedPath;
+import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterType;
 
 @Component
 @Slf4j
 public class DispatcherServlet extends FrameworkServlet {
     public static final String REST_CONTROLLER_PARAMS = "REST_CONTROLLER_PARAMS";
+    public static final String REGEX_STATIC_URL = "^/static/.*$";
     private final List<ResponseAnnotationResolver> responseAnnotationResolver;
     private final ObjectMapper objectMapper;
-    private final ServerProperties serverProperties;
 
     public DispatcherServlet(List<ResponseAnnotationResolver> responseAnnotationResolver,
-                             ObjectMapper objectMapper,
-                             ServerProperties serverProperties) {
+                             ObjectMapper objectMapper) {
         this.responseAnnotationResolver = responseAnnotationResolver;
         this.objectMapper = objectMapper;
-        this.serverProperties = serverProperties;
     }
 
     @Override
@@ -124,7 +118,7 @@ public class DispatcherServlet extends FrameworkServlet {
     }
 
     private boolean checkIfUrlIsStatic(String requestPath, String paramPath) {
-        Pattern patternStaticUrl = Pattern.compile(serverProperties.getRegexStaticUrl());
+        Pattern patternStaticUrl = Pattern.compile(REGEX_STATIC_URL);
         return patternStaticUrl.matcher(requestPath).matches() && patternStaticUrl.matcher(paramPath).matches();
     }
 
@@ -191,7 +185,7 @@ public class DispatcherServlet extends FrameworkServlet {
         } else {
             throw new MissingRequestParamException(
                     String.format("Required request parameter '%s' "
-                                    + "for method parameter type '%s' is not present",
+                                  + "for method parameter type '%s' is not present",
                             parameterName, type.getSimpleName()));
         }
     }

@@ -11,7 +11,6 @@ import com.bobocode.bring.web.servlet.error.ErrorResponse;
 import com.bobocode.bring.web.servlet.http.HttpStatus;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,8 +29,6 @@ public class RestControllerTest {
     public static final String RESPONSE_PATH = "/example/response";
     public static final String NOT_EXIST_PATH = "/not-exist";
     public static final String STATUS = "/example/status";
-    public static final String CUSTOM_EXCEPTION_PATH = "/example/custom-exception";
-    public static final String DEFAULT_EXCEPTION_PATH = "/example/default-exception";
     public static final String URL = "http://localhost:%s%s";
     public static final String APPLICATION_JSON = "application/json";
     public static final String PACKAGE = "testdata.generalintegrationtest";
@@ -96,42 +93,6 @@ public class RestControllerTest {
 
         //then
         assertThat(errorResponse.getMessage()).isEqualTo(expectedValue);
-    }
-
-    @Test
-    @DisplayName("should return custom message error")
-    @SneakyThrows
-    void shouldThrowCustomException() {
-        //given
-        String url = getHost() + CUSTOM_EXCEPTION_PATH;
-        String defaultMessage = "Bad Request";
-        HttpRequest request = getHttpGetRequest(url);
-
-        //then
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-        ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
-
-        //when
-        assertThat(errorResponse.getMessage()).isEqualTo(defaultMessage);
-        assertThat(errorResponse.getCode()).isEqualTo(HttpStatus.BAD_REQUEST.getValue());
-    }
-
-    @Test
-    @DisplayName("should return default message error")
-    @SneakyThrows
-    void shouldThrowDefaultException() {
-        //given
-        String url = getHost() + DEFAULT_EXCEPTION_PATH;
-        String defaultMessage = "TestDefaultException";
-        HttpRequest request = getHttpGetRequest(url);
-
-        //when
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
-        ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
-
-        // then
-        assertThat(errorResponse.getMessage()).isEqualTo(defaultMessage);
-        assertThat(errorResponse.getCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.getValue());
     }
 
     @Test

@@ -24,8 +24,6 @@ public enum BeanTypeEnum {
 
     COMPONENT(3, Component.class),
 
-    PROFILE(3, Profile.class),
-
     UNDEFINED(1);
 
     private final int order;
