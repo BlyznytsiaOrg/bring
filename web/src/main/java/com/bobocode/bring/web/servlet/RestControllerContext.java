@@ -95,10 +95,13 @@ public class RestControllerContext {
                     = getRestControllerParams(bringServlet, requestParamsResolvers);
 
             servletParams.forEach((key, value) -> {
-                restControllerParams.computeIfAbsent(key, v -> new ArrayList<>()).addAll(value);
-                methodToPathsMap.computeIfAbsent(key, k -> new ArrayList<>()).addAll(value.stream()
-                        .map(RestControllerParams::path)
-                        .toList());
+                restControllerParams
+                        .computeIfAbsent(key, v -> new ArrayList<>())
+                        .addAll(value);
+
+                methodToPathsMap
+                        .computeIfAbsent(key, k -> new ArrayList<>())
+                        .addAll(value.stream().map(RestControllerParams::path).toList());
             });
         }
         checkOnDuplicatePath(methodToPathsMap);
@@ -124,7 +127,7 @@ public class RestControllerContext {
             }
         }
         String exceptionMessage = duplicatePaths.entrySet().stream()
-                .map(entry -> "{ " + entry.getKey() + " " + entry.getValue().toString() + " }")
+                .map(entry -> "{ " + entry.getKey() + " " + entry.getValue() + " }")
                 .collect(Collectors.joining(", "));
 
         if (!exceptionMessage.isBlank()) {
@@ -162,15 +165,15 @@ public class RestControllerContext {
      * @param method         The method containing the parameter.
      * @param parameters     The array of parameters for the method.
      * @param parameterNames The list of parameter names for the method.
-     * @param i              The index of the parameter being checked.
+     * @param index          The index of the parameter being checked.
      * @throws MissingRequestHeaderAnnotationValueException If the @RequestHeader annotation value is blank.
      */
     private void checkRequestHeaderAnnotation(Method method, Parameter[] parameters,
-                                  List<String> parameterNames, int i) {
-        RequestHeader annotation = parameters[i].getAnnotation(RequestHeader.class);
+                                  List<String> parameterNames, int index) {
+        RequestHeader annotation = parameters[index].getAnnotation(RequestHeader.class);
         String requestHeaderValue = annotation.value();
         if (requestHeaderValue.isBlank()) {
-            String parameterName = parameterNames.get(i);
+            String parameterName = parameterNames.get(index);
             throw new MissingRequestHeaderAnnotationValueException(
                     String.format(REQUEST_HEADER_EXCEPTION_MESSAGE,
                             parameterName, method.getName()));
@@ -183,16 +186,16 @@ public class RestControllerContext {
      * @param method         The method containing the parameter.
      * @param parameters     The array of parameters for the method.
      * @param parameterNames The list of parameter names for the method.
-     * @param i              The index of the parameter being checked.
+     * @param index          The index of the parameter being checked.
      * @throws RequestBodyTypeUnsupportedException If the type annotated with @RequestBody is unsupported.
      */
     private void checkRequestBodyAnnotation(Method method, Parameter[] parameters,
-                                                   List<String> parameterNames, int i) {
-        Class<?> type = parameters[i].getType();
+                                                   List<String> parameterNames, int index) {
+        Class<?> type = parameters[index].getType();
         String packageName = type.getPackageName();
         if (!type.equals(String.class) && !type.equals(byte[].class)
                 && packageName.contains(JAVA_LANG_PACKAGE)) {
-            String parameterName = parameterNames.get(i);
+            String parameterName = parameterNames.get(index);
             throw new RequestBodyTypeUnsupportedException(
                     String.format(REQUEST_BODY_EXCEPTION_MESSAGE,
                             type.getSimpleName(), parameterName, method.getName()));
