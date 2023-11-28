@@ -122,6 +122,7 @@ class BringApplicationContextHappyCasesTest {
 
         // when
         var useCase = bringApplicationContext.getBean(GetInfoFromExternalServicesUseCase.class);
+        var restClient3 = bringApplicationContext.getBean(testdata.di.positive.fullinjection.RestClient.class, "restClient3");
 
         // then
         assertThat(useCase).isNotNull();
@@ -136,6 +137,8 @@ class BringApplicationContextHappyCasesTest {
                 "restClient=RestClient{url='https://exterl.service', username='user100'}}, " +
                 "externalService2=ExternalService2{" +
                 "restClient2=RestClient{url='https://exterl.service2', username='user200'}}}");
+        assertThat(restClient3.getUrl()).isEqualTo("url");
+        assertThat(restClient3.getUsername()).isEqualTo("username");
     }
 
     @DisplayName("Should inject implementations of Interface to Field")

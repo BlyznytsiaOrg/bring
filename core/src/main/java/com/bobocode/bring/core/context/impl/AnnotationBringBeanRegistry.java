@@ -19,7 +19,6 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
     @Getter
     protected ClassPathScannerFactory classPathScannerFactory;
-    private final ConfigurationBeanRegistry configurationBeanRegistry;
     private final BeanCreator beanCreator;
     private final Set<String> currentlyCreatingBeans = new HashSet<>();
     @Getter
@@ -28,7 +27,6 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
     public AnnotationBringBeanRegistry(Reflections reflections) {
         this.reflections = reflections;
         this.classPathScannerFactory = new ClassPathScannerFactory(reflections);
-        this.configurationBeanRegistry = new ConfigurationBeanRegistry(this);
         this.beanCreator = new BeanCreator(this, classPathScannerFactory);
     }
 
@@ -50,7 +48,7 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         currentlyCreatingBeans.add(beanName);
 
         if (beanDefinition.isConfigurationBean()) {
-            configurationBeanRegistry.registerConfigurationBean(beanName, beanDefinition);
+            beanCreator.registerConfigurationBean(beanName, beanDefinition);
         } else {
             beanCreator.create(clazz, beanName, beanDefinition);
         }
