@@ -1,6 +1,5 @@
 package testdata.generalintegrationtest;
 
-import com.bobocode.bring.web.servlet.annotation.RestController;
 import com.bobocode.bring.web.servlet.BringServlet;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
@@ -11,7 +10,9 @@ import com.bobocode.bring.web.servlet.annotation.RequestHeader;
 import com.bobocode.bring.web.servlet.annotation.RequestMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestParam;
 import com.bobocode.bring.web.servlet.annotation.ResponseStatus;
+import com.bobocode.bring.web.servlet.annotation.RestController;
 import com.bobocode.bring.web.servlet.http.HttpStatus;
+import com.bobocode.bring.web.servlet.http.ResponseEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,16 +39,6 @@ public class ExampleRestController implements BringServlet {
     @GetMapping(path = "/number")
     public int getNumber() {
         return 200;
-    }
-
-    @GetMapping(path = "/{id}")
-    public Long getPathVariableLong(@PathVariable Long id) {
-        return id;
-    }
-
-    @GetMapping(path = "/variable1/{value}")
-    public boolean getPathVariableBoolean(@PathVariable boolean value) {
-        return value;
     }
 
     @GetMapping(path = "/custom-exception")
@@ -77,8 +68,8 @@ public class ExampleRestController implements BringServlet {
     }
 
     @PostMapping(path = "/bodyAsString")
-    public String bodyString(@RequestBody String body) {
-        return body;
+    public ResponseEntity<String> bodyString(@RequestBody String body) {
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     @PostMapping(path = "/bodyAsEntity")
@@ -99,7 +90,7 @@ public class ExampleRestController implements BringServlet {
 
     @PostMapping(path = "/severalArg/{id}")
     @ResponseStatus(value = HttpStatus.OK)
-    public String several(@PathVariable Long id,
+    public ResponseEntity<Map<String, Object>> several(@PathVariable Long id,
                           @RequestHeader(value = "Accept") String header,
                           @RequestBody User user,
                           HttpServletRequest request,
@@ -112,7 +103,7 @@ public class ExampleRestController implements BringServlet {
         objectMap.put("user", user);
         objectMap.put("Content-Type", contentType);
         objectMap.put("status", status);
-        return objectMapper.writeValueAsString(objectMap);
+        return new ResponseEntity<>(objectMap, HttpStatus.OK);
     }
 
 

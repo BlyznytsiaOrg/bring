@@ -11,10 +11,10 @@ This annotation is used to declare a method as a handler for HTTP `POST` request
 **Usage Example:**
 ```java
  @RestController
- public class MyController implements BringServlet {
+ public class MyRestController implements BringServlet {
     
     @PostMapping(path = "/resource")
-    public void postResource(@RequestBody UserDto dto) {
+    public void saveResource(@RequestBody UserDto dto) {
          // Your implementation logic here
     }
  }

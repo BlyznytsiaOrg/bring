@@ -13,7 +13,7 @@ This annotation is used to declare the mapping of HTTP requests to a specific co
 ```java
 @RestController
 @RequestMapping(path = "/example")
-public class MyController implements BringServlet {
+public class MyRestController implements BringServlet {
     // Your implementation logic here
 }
 ```

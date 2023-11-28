@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * <pre>
  * {@code
  * @RestController
- * public class MyController implements BringServlet {
+ * public class MyRestController implements BringServlet {
  *
  *      @DeleteMapping(path = "/resource/{id}")
  *      public void deleteResource(@PathVariable Long id) {

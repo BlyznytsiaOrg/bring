@@ -11,7 +11,7 @@ This annotation is used to declare a method as a handler for HTTP `DELETE` reque
 **Usage Example:**
 ```java
 @RestController
-public class MyController implements BringServlet {
+public class MyRestController implements BringServlet {
 
     @DeleteMapping(path = "/resource/{id}")
     public void deleteResource(@PathVariable Long id) {

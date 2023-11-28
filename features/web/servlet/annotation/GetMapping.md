@@ -11,10 +11,10 @@ This annotation is used to declare a method as a handler for HTTP `GET` requests
 **Usage Example:**
 ```java
  @RestController
- public class MyController implements BringServlet {
+ public class MyRestController implements BringServlet {
     
     @GetMapping(path = "/resource/{id}")
-    public Resource getResource(@PathVariable Long id) {
+    public ResponseEntity<Resource> getResource(@PathVariable Long id) {
          // Your implementation logic here
     }
  }

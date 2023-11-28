@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * <pre>
  * {@code
  * @RestController
- * public class MyController implements BringServlet {
+ * public class MyRestController implements BringServlet {
  *
  *      @PatchMapping(path = "/resource")
  *      public void patchResource(@RequestBody UserDto dto) {

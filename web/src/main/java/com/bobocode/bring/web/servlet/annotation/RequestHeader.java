@@ -13,11 +13,10 @@ import java.lang.annotation.Target;
  * <pre>
  * {@code
  * @RestController
- * public class MyController implements BringServlet {
+ * public class MyRestController implements BringServlet {
  *
  *      @PostMapping(path = "/resource")
- *      public void postResource(@RequestHeader @RequestHeader(value = "Content-Length") Long header,
- *                               @RequestBody UserDto dto) {
+ *      public void resourceHeaders(@RequestHeader("Authorization") String authToken) {
  *          // Your implementation logic here
  *      }
  *    }

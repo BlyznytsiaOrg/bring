@@ -18,10 +18,10 @@ import java.lang.annotation.Target;
  * <pre>
  * {@code
  * @RestController
- * public class MyController implements BringServlet {
+ * public class MyRestController implements BringServlet {
  *
  *      @PostMapping(path = "/resource")
- *      public void postResource(@RequestBody UserDto dto) {
+ *      public void saveResource(@RequestBody UserDto dto) {
  *          // Your implementation logic here
  *      }
  *    }

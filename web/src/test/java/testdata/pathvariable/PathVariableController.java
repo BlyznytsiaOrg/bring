@@ -1,6 +1,7 @@
 package testdata.pathvariable;
 
 import com.bobocode.bring.web.servlet.BringServlet;
+import com.bobocode.bring.web.servlet.annotation.DeleteMapping;
 import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.RestController;
@@ -13,7 +14,7 @@ public class PathVariableController implements BringServlet {
         return value;
     }
 
-    @GetMapping(path = "/long/{value}")
+    @DeleteMapping(path = "/long/{value}")
     public String getPathVariableLong(@PathVariable Long value) {
         return value.getClass().getSimpleName();
     }

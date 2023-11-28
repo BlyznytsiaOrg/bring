@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 /**
  * Annotation for marking a class or method with the desired HTTP response status code and optional reason.
  * When applied to a method or exception, the specified HTTP status code and reason will be used for the response.
+ * When both {@code ResponseEntity} and {@code @ResponseStatus} are used in a controller method,
+ * the HTTP status from {@code ResponseEntity} takes precedence over the one specified by {@code @ResponseStatus}.
  * <p>
  * Example usage:
  * <p>
@@ -53,6 +55,8 @@ import java.lang.annotation.Target;
  *    additional information you need in your application-specific exceptions.
  * <p>
  * Note: If a reason is provided, it will be included in the response alongside the status code.
+ *
+ * @see com.bobocode.bring.web.servlet.http.ResponseEntity
  *
  * @author Blyzhnytsia Team
  * @since 1.0

@@ -11,10 +11,11 @@ This annotation is used to declare a method as a handler for HTTP `PUT` requests
 **Usage Example:**
 ```java
  @RestController
- public class MyController implements BringServlet {
+ public class MyRestController implements BringServlet {
     
-    @PutMapping(path = "/resource")
-    public void putResource(@RequestBody UserDto dto) {
+    @PutMapping(path = "/resource/{id}")
+    public void updateResource(@PathVariable Long id, 
+                               @RequestBody UserDto dto) {
          // Your implementation logic here
     }
  }
