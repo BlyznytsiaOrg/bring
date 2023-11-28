@@ -10,6 +10,9 @@ import java.lang.annotation.Target;
  * These extensions can be used to perform specific tasks related to bean scanning, resolving, or processing.
  * In addition, we have some limitation on constructor some of the classes should have only default or one field.
  * for instance RestControllerBeanPostProcessor
+ *
+ *  @author Blyzhnytsia Team
+ *  @since 1.0
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
