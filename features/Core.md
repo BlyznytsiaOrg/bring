@@ -44,7 +44,7 @@ If we need diagram classes we should use Wiki and add link to it.
 
 
 - addition items:
-  - [Scheduling](\core\Scheduling.md)
+  - [Scheduling](core/Scheduling.md)
   - Properties file support 
 
     
