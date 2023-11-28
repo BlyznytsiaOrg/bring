@@ -13,6 +13,7 @@ import java.lang.annotation.Target;
  * @see DeleteMapping
  * @see PutMapping
  * @see PatchMapping
+ * @see com.bobocode.bring.web.servlet.http.ResponseEntity
  *
  * <p><strong>Usage Example:</strong>
  * <pre>

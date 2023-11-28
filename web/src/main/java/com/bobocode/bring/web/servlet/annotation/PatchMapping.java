@@ -27,6 +27,7 @@ import java.lang.annotation.Target;
  * @see PostMapping
  * @see PutMapping
  * @see DeleteMapping
+ * @see com.bobocode.bring.web.servlet.http.ResponseEntity
  *
  * @author Blyzhnytsia Team
  * @since 1.0

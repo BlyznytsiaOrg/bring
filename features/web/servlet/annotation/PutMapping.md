@@ -20,3 +20,6 @@ This annotation is used to declare a method as a handler for HTTP `PUT` requests
     }
  }
 ```
+
+### See Also
+[ResponseEntity](features/web/servlet/ResponseEntity.md)
