@@ -29,7 +29,7 @@
 - Dispatcher Servlet: In the context of Java-based web applications, a Dispatcher Servlet is the front controller in the Bring framework's MVC architecture. It receives incoming requests and directs them to the appropriate resources (controllers, views, etc.) for processing.
 - REST API: Representational State Transfer (REST) API is a set of rules and conventions for building web services that enable communication between different systems on the internet. It uses HTTP requests to perform CRUD (Create, Read, Update, Delete) operations on resources and typically returns responses in JSON or XML (//TODO ) format.
 - [Static Content Serving](web/servlet/StaticResourceController.md): This refers to the process of serving static files (HTML, CSS, JavaScript, images, etc.) directly to clients without any processing or modification by the server. This content is typically served as-is from the server's file system or a specified directory.
-- [Exception handler](/features/web/servlet/JsonExceptionHandler.md): This component specializes in managing exceptions by intercepting and customizing error responses in JSON format. It extends ErrorReportValve to provide tailored error handling within a Servlet container.
+- [Exception handler](web/servlet/JsonExceptionHandler.md): This component specializes in managing exceptions by intercepting and customizing error responses in JSON format. It extends ErrorReportValve to provide tailored error handling within a Servlet container.
 
 
 - addition items:

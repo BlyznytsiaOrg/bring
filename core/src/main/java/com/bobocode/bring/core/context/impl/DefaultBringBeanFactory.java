@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 /**
  * Default implementation of the BringBeanFactory interface providing basic bean management functionalities.
  * Manages bean definitions, singleton, and prototype beans.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
  */
 @Getter
 public class DefaultBringBeanFactory implements BringBeanFactory {

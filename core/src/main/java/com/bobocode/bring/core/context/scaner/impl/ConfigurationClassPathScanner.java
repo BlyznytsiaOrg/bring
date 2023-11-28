@@ -13,6 +13,9 @@ import java.util.Set;
 /**
  * This class implements the ClassPathScanner interface to scan for classes annotated with Configuration.
  * It uses Reflections to perform classpath scanning.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
  */
 @BeanProcessor
 @AllArgsConstructor

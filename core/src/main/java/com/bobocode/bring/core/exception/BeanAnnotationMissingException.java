@@ -3,6 +3,9 @@ package com.bobocode.bring.core.exception;
 /**
  * Exception thrown when a required annotation is missing on a bean.
  * Extends RuntimeException.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
  */
 public class BeanAnnotationMissingException extends RuntimeException {
 

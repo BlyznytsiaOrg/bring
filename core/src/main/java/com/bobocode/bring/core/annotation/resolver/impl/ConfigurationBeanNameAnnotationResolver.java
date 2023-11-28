@@ -7,6 +7,9 @@ import com.bobocode.bring.core.annotation.resolver.AnnotationResolver;
 /**
  * This class implements the AnnotationResolver interface to resolve
  * the name of a configuration bean based on the presence of the Configuration annotation.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
  */
 @BeanProcessor
 public class ConfigurationBeanNameAnnotationResolver implements AnnotationResolver {
