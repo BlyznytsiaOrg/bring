@@ -22,7 +22,7 @@ class BringApplicationContextCyclicDependencyTest {
     @Test
     void shouldThrowExceptionWhenWeHaveCyclicDependencyViaConstructor() {
         //given
-        var expectedMessage = "Looks like you have cyclic dependency between those beans [A -> B -> C -> A]";
+        var expectedMessage = "Looks like you have cyclic dependency between those beans [a -> b -> c -> a]";
 
 
         // when

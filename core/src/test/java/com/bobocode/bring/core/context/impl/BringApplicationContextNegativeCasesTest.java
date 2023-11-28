@@ -68,7 +68,7 @@ class BringApplicationContextNegativeCasesTest {
     void shouldThrowExceptionWhenWeHaveTwoDependenciesForOneInterface() {
         //given
         var expectedMessage = "No qualifying bean of type 'interface testdata.di.negative.oneinterfacetwodependency.Drink'" +
-                " available: expected single matching bean but found 2: [Espresso,Latte]";
+                " available: expected single matching bean but found 2: [espresso,latte]";
         //when
         Executable executable = () -> {
             var bringApplicationContext = BringApplication.run(DEMO_PACKAGE + ".oneinterfacetwodependency");

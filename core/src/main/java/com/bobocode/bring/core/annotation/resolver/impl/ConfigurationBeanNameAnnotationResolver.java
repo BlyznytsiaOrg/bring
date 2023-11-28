@@ -14,7 +14,7 @@ public class ConfigurationBeanNameAnnotationResolver implements AnnotationResolv
 
     @Override
     public String resolve(Class<?> clazz) {
-        return clazz.getSimpleName();
+        return getSimpleName(clazz);
     }
     
 }
