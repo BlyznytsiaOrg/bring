@@ -42,7 +42,6 @@ public abstract class FrameworkServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log.info("Got a GET request by path:{}", req.getRequestURI());
         processRequest(req, resp);
     }
 
@@ -52,7 +51,6 @@ public abstract class FrameworkServlet extends HttpServlet {
     @Override
     protected void doHead(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log.info("Got a HEAD request by path:{}", req.getRequestURI());
         processRequest(req, resp);
     }
 
@@ -62,7 +60,6 @@ public abstract class FrameworkServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log.info("Got a POST request by path:{}", req.getRequestURI());
         processRequest(req, resp);
     }
 
@@ -72,7 +69,6 @@ public abstract class FrameworkServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log.info("Got a PUT request by path:{}", req.getRequestURI());
         processRequest(req, resp);
     }
 
@@ -82,7 +78,6 @@ public abstract class FrameworkServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log.info("Got a DELETE request by path:{}", req.getRequestURI());
         processRequest(req, resp);
     }
 
@@ -92,7 +87,6 @@ public abstract class FrameworkServlet extends HttpServlet {
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log.info("Got a OPTIONS request by path:{}", req.getRequestURI());
         processRequest(req, resp);
     }
 
@@ -102,7 +96,6 @@ public abstract class FrameworkServlet extends HttpServlet {
     @Override
     protected void doTrace(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        log.info("Got a TRACE request by path:{}", req.getRequestURI());
         processRequest(req, resp);
     }
 

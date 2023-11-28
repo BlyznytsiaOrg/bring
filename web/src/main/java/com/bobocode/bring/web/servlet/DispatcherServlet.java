@@ -87,6 +87,7 @@ public class DispatcherServlet extends FrameworkServlet {
      */
     @Override
     public void processRequest(HttpServletRequest req, HttpServletResponse resp) {
+        log.info("Got a {} request by path: {}", req.getMethod(), req.getRequestURI());
         RestControllerParams restControllerParams = getRestControllerParams(req);
         processRestControllerRequest(restControllerParams, req, resp);
     }
@@ -112,8 +113,11 @@ public class DispatcherServlet extends FrameworkServlet {
                 .stream()
                 .filter(params -> checkParams(requestPath, params))
                 .findFirst()
-                .orElseThrow(() -> new MissingApplicationMappingException(
-                        String.format("This application has no explicit mapping for '%s'", getRequestPath(req))));
+                .orElseThrow(() -> {
+                    log.error("Application has no explicit mapping for {}", getRequestPath(req));
+                    return new MissingApplicationMappingException(
+                        String.format("This application has no explicit mapping for '%s'", getRequestPath(req)));
+                });
     }
 
     /**
@@ -172,6 +176,7 @@ public class DispatcherServlet extends FrameworkServlet {
     private void getRestControllerProcessResult(
             Object instance, Method method, HttpServletResponse resp, Object... args)
             throws IllegalAccessException, InvocationTargetException {
+        log.trace("Invoking {} method {}", instance.getClass().getSimpleName(), method.getName());
         Optional.ofNullable(method.invoke(instance, args))
                 .ifPresent(result -> performResponse(new RestControllerProcessResult(method, result), resp));
     }

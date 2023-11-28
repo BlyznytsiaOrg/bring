@@ -55,7 +55,7 @@ If we need diagram classes we should use Wiki and add link to it.
     For example, with an active profile of "dev," the class will load properties from `application-dev.properties`. This mechanism allows for customized property sets tailored to specific application environments.
 
 
-  - Logging
+  - [Logging](/features/core/Logging.md)
   - PostConstruct (the last week)  //TODO
   - PreDestroy (the last week)  //TODO
   - Logo  (the last week) //TODO

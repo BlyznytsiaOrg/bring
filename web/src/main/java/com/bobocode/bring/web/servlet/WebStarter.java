@@ -7,6 +7,7 @@ import com.bobocode.bring.web.server.TomcatServletWebServerFactory;
 import com.bobocode.bring.web.server.TomcatWebServer;
 import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
 import jakarta.servlet.ServletContext;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.Map;
  * @author Blyzhnytsia Team
  * @since 1.0
  */
+@Slf4j
 @Component
 public class WebStarter {
 
@@ -110,6 +112,7 @@ public class WebStarter {
         Context context = servletWebServerFactory.getContext();
 
         // Add JsonExceptionHandler as a valve to the Tomcat pipeline
+        log.debug("Adding JsonExceptionHandler {} as a valve to the Tomcat pipeline...", jsonExceptionHandler.getClass().getName());
         context.getPipeline().addValve(jsonExceptionHandler);
 
         // Get ServletContext and Tomcat instance
@@ -117,12 +120,15 @@ public class WebStarter {
         Tomcat tomcat = webServer.getTomcat();
 
         // Set BringApplicationContext and REST controller parameters map as attributes in ServletContext
+        log.debug("Setting BringApplicationContext as attribute in ServletContext...");
         servletContext.setAttribute(BRING_CONTEXT, bringApplicationContext);
+        log.debug("Setting REST controller parameters map as attributes in ServletContext...");
         servletContext.setAttribute(REST_CONTROLLER_PARAMS, restControllerParams);
 
         // Register DispatcherServlet to Tomcat servlets and map it to the specified URL pattern
         tomcat.addServlet(servletWebServerFactory.getContextPath(), DISPATCHER_SERVLET_NAME, dispatcherServlet);
         context.addServletMappingDecoded(URL_PATTERN, DISPATCHER_SERVLET_NAME);
+        log.debug("Registration of DispatcherServlet to Tomcat servlets and map it to the URL pattern was successfully completed");
     }
 
     /**
