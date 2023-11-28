@@ -21,4 +21,4 @@ public class MyRestController implements BringServlet {
 ```
 
 ### See Also
-[ResponseEntity](features/web/servlet/ResponseEntity.md)
+[ResponseEntity](https://github.com/YevgenDemoTestOrganization/bring/blob/09aafc6d471c5f793eea58cf8793c68443ec14e8/features/web/servlet/ResponseEntity.md)
