@@ -11,6 +11,8 @@ import testdata.di.positive.fullinjection.GetInfoFromExternalServicesUseCase;
 import testdata.di.positive.listconstructorinjector.AConstructor;
 import testdata.di.positive.listfieldinjector.AField;
 import testdata.di.positive.listsetterinjector.ASetter;
+import testdata.di.positive.mixconfigurationandservice.BeanA;
+import testdata.di.positive.mixconfigurationandservice.BeanB;
 import testdata.di.positive.primary.bean.Employee;
 import testdata.di.positive.primary.component.A;
 import testdata.di.positive.primary.component.C;
@@ -28,6 +30,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BringApplicationContextHappyCasesTest {
 
     private static final String TEST_DATA_PACKAGE = "testdata.di.positive";
+
+    @DisplayName("Should inject interface bean implementation taking into account constructor parameter name")
+    @Test
+    void shouldMixBeansConfigurationAndService() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".mixconfigurationandservice");
+
+        // when
+        var beanB = bringApplicationContext.getBean(BeanB.class);
+        var beanA = bringApplicationContext.getBean(BeanA.class);
+
+        // then
+        assertThat(beanB).isNotNull();
+        assertThat(beanB.getBeanA()).isNotNull();
+        assertThat(beanB.getBeanA()).isEqualTo(beanA);
+    }
 
     @DisplayName("Should inject interface bean implementation taking into account constructor parameter name")
     @Test
