@@ -2,16 +2,23 @@
 
 ## Introduction
 
-When building a RESTful API using the Bring framework, the annotations like `@RestController`, `@RequestMapping`, `@GetMapping`, `@PathVariable`, `@RequstBody` and others can be used. 
-These annotations simplify the development process and ensure a standardized approach to creating web services. `ResponseEntity` allows you to customize the HTTP response, including status codes, headers, and the response body.
+When building a RESTful API using the Bring framework, the annotations like [`@RestController`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RestController.md), 
+[`@RequestMapping`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/PostMapping.md), 
+[`@GetMapping`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/GetMapping.md), 
+[`@PathVariable`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/PathVariable.md),
+[`@RequstBody`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RequestBody.md) and others can be used. 
+These annotations simplify the development process and ensure a standardized approach to creating web services. 
+[`ResponseEntity`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/ResponseEntity.md) allows you to customize the HTTP response, including status codes, headers, and the response body.
 This guide will walk you through the essential steps to set up a REST controller.
 
 **1. Create a REST Controller**
 
-To get started, create a class and annotate it with `@RestController`. 
+To get started, create a class and annotate it with 
+[`@RestController`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RestController.md). 
 This annotation indicates that the class will handle HTTP requests and produce HTTP responses for a RESTful API. 
-The class should implement marker interface `BringServlet` to be recognized as controller by the framework and setup of the REST controller context.
-The `@RequestMapping` annotation can be utilized to define the base path for all endpoints in the controller (`/api`).
+The class should implement marker interface 
+[`BringServlet`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/BringServlet.md) to be recognized as controller by the framework and setup of the REST controller context.
+The [`@RequestMapping`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RequestMapping.md) annotation can be utilized to define the base path for all endpoints in the controller (`/api`).
 
 **Example:**
 ```java

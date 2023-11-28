@@ -16,3 +16,6 @@ public class MyRestController implements BringServlet {
     // REST controller logic and methods
 }
 ```
+
+### See Also
+[RestController](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RestController.md)
