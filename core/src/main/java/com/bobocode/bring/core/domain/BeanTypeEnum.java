@@ -23,7 +23,7 @@ public enum BeanTypeEnum {
 
     COMPONENT(3, Component.class),
 
-    UNDEFINED(1);
+    UNDEFINED(4);
 
     private final int order;
     
