@@ -1,13 +1,11 @@
 package com.bobocode.bring.core.utils;
 
 import com.bobocode.bring.core.annotation.Autowired;
+import com.bobocode.bring.core.annotation.Qualifier;
 import com.bobocode.bring.core.context.type.OrderComparator;
 import com.bobocode.bring.core.exception.BeanPostProcessorConstructionLimitationException;
 import com.bobocode.bring.core.exception.BringGeneralException;
-import com.thoughtworks.paranamer.AnnotationParanamer;
-import com.thoughtworks.paranamer.BytecodeReadingParanamer;
-import com.thoughtworks.paranamer.CachingParanamer;
-import com.thoughtworks.paranamer.Paranamer;
+import com.thoughtworks.paranamer.*;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.reflections.Reflections;
@@ -17,13 +15,14 @@ import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 @UtilityClass
 public final class ReflectionUtils {
 
     public static final OrderComparator ORDER_COMPARATOR = new OrderComparator();
-    private static final Paranamer info = new CachingParanamer(new AnnotationParanamer(new BytecodeReadingParanamer()));
+    private static final Paranamer info = new CachingParanamer(new QualifierAnnotationParanamer(new BytecodeReadingParanamer()));
     private static final String ARG = "arg";
 
     private static final String SET_METHOD_START_PREFIX = "set";
@@ -116,5 +115,27 @@ public final class ReflectionUtils {
                 throw new BringGeneralException(e);
             }
         };
+    }
+    
+    private static class QualifierAnnotationParanamer extends AnnotationParanamer {
+        
+        public QualifierAnnotationParanamer(Paranamer fallback) {
+            super(fallback);
+        }
+
+        @Override
+        protected String getNamedValue(Annotation ann) {
+            if (Objects.equals(Qualifier.class, ann.annotationType())) {
+                Qualifier qualifier = (Qualifier) ann;
+                return qualifier.value();
+            } else {
+                return null;
+            }
+        }
+        
+        @Override
+        protected boolean isNamed(Annotation ann) {
+            return Objects.equals(Qualifier.class, ann.annotationType());
+        }
     }
 }
