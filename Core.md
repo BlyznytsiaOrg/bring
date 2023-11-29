@@ -12,6 +12,10 @@
 5. The last one BeanPostProcessorFactory is responsible for creating and managing a list BeanPostProcessor instances. 
 It initializes the list with default post-processors such as the ScheduleBeanPostProcessor and add addition logic to them.
 
+## Documentations
+
+- We have two types of it via Markdown (see below) and [JavaDoc](https://yevgendemotestorganization.github.io/bring-core-javadoc/)
+
 
 ## Features:
 
@@ -56,7 +60,6 @@ If we need diagram classes we should use Wiki and add link to it.
 
 
   - [Logging](/features/core/Logging.md)
-  - PostConstruct (the last week)  //TODO
-  - PreDestroy (the last week)  //TODO
-  - Logo  (the last week) //TODO
-  - ComponentScan  //TODO
+  - PostConstruct
+  - PreDestroy
+  - Logo
