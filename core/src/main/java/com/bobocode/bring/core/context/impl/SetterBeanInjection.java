@@ -1,7 +1,7 @@
 package com.bobocode.bring.core.context.impl;
 
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
-import com.bobocode.bring.core.context.type.ParameterValueTypeInjector;
+import com.bobocode.bring.core.context.type.parameter.ParameterValueTypeInjector;
 import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.utils.ReflectionUtils;
 import lombok.AllArgsConstructor;

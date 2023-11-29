@@ -62,8 +62,9 @@ public class DefaultStaticResourceService implements StaticResourceService {
     private void checkPathFile(Path path, String requestUri) {
         if (!Files.exists(path) || Files.isDirectory(path) || !path.toString().contains(STATIC_FOLDER)) {
 
-            log.error(String.format(STATIC_FILE_NOT_FOUND_MESSAGE, requestUri));
-            throw new StaticFileNotFoundException(String.format(STATIC_FILE_NOT_FOUND_MESSAGE, requestUri));
+            log.warn(String.format(STATIC_FILE_NOT_FOUND_MESSAGE, requestUri));
+            throw new StaticFileNotFoundException(String.format(STATIC_FILE_NOT_FOUND_MESSAGE, requestUri),
+                    null, true, false);
         }
     }
 }

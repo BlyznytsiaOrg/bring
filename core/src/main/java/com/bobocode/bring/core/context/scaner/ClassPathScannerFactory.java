@@ -42,7 +42,7 @@ public class ClassPathScannerFactory {
                 .stream()
                 .filter(clazz -> clazz.isAnnotationPresent(BeanProcessor.class))
                 .sorted(ORDER_COMPARATOR)
-                .map(clazz -> clazz.cast(getConstructorWithParameters(clazz, Reflections.class, reflections)))
+                .map(clazz -> clazz.cast(getConstructorWithOneParameter(clazz, Reflections.class, reflections)))
                 .collect(Collectors.toList());
 
         // Retrieve and initialize AnnotationResolver implementations.
