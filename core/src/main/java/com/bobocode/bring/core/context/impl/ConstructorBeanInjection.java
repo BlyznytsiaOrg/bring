@@ -94,7 +94,7 @@ public class ConstructorBeanInjection {
             Optional<Object> injectViaProperties = beanRegistry.getTypeResolverFactory()
                     .getParameterValueTypeInjectors().stream()
                     .filter(valueType -> valueType.hasAnnotatedWithValue(parameter))
-                    .map(valueType -> valueType.setValueToSetter(parameter, createdBeanAnnotations))
+                    .map(valueType -> valueType.setValueToSetter(parameter,  createdBeanAnnotations))
                     .map(obj -> dependencies[index] = obj)
                     .findFirst();
 

@@ -2,7 +2,7 @@ package com.bobocode.bring.core.context.type;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.extractImplClasses;
 
-import com.bobocode.bring.core.anotation.Qualifier;
+import com.bobocode.bring.core.annotation.Qualifier;
 import com.bobocode.bring.core.context.impl.AnnotationBringBeanRegistry;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import java.lang.annotation.Annotation;
@@ -30,7 +30,7 @@ public class FieldInterfaceValueTypeInjector extends AbstractValueTypeInjector i
   public Object setValueToField(Field field, Object bean, List<Class<? extends Annotation>> createdBeanAnnotations) {
     var implementations = extractImplClasses(field.getType(), reflections, createdBeanAnnotations);
     String qualifier = field.isAnnotationPresent(Qualifier.class) ? field.getAnnotation(Qualifier.class).value() : null;
-    return findImplementationByPrimaryOrQualifier(implementations, field.getType(), qualifier);
+    return findImplementationByPrimaryOrQualifier(implementations, field.getType(), qualifier, field.getName());
   }
 
 

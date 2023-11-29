@@ -6,6 +6,12 @@ import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.*;
 import java.util.function.BiFunction;
 
@@ -79,7 +85,7 @@ public abstract class AbstractValueTypeInjector {
         return dependencyObjects;
     }
 
-    public Object findImplementationByPrimaryOrQualifier(List<Class<?>> implementationTypes, Class<?> fieldType, String qualifier) {
+    public Object findImplementationByPrimaryOrQualifier(List<Class<?>> implementationTypes, Class<?> fieldType, String qualifier, String fieldName) {
         List<BeanDefinition> beanDefinitions = implementationTypes.stream()
             .map(impl -> beanRegistry.getBeanDefinitionMap().get(getBeanName(impl)))
             .toList();
@@ -88,9 +94,36 @@ public abstract class AbstractValueTypeInjector {
         if(dependencyObject.isPresent()) {
             return dependencyObject.get();
         } else {
-            return findProperBean(beanDefinitions, fieldType, qualifier, QUALIFIER_FILTER_FUNCTION).orElseThrow(() -> new NoSuchBeanException(fieldType));
+            dependencyObject = findProperBean(beanDefinitions, fieldType, qualifier, QUALIFIER_FILTER_FUNCTION);
+            if(dependencyObject.isPresent()) {
+                return dependencyObject.get();
+            } else {
+                return findProperBeanByName(fieldType, fieldName);
+            }
         }
+    }
 
+    private Object findProperBeanByName(Class<?> type, String paramName) {
+        String beanName = checkByBeanName(getBeanNames(type),  paramName, type);
+        return beanRegistry.getOrCreateBean(beanName);
+    }
+
+    private String checkByBeanName(List<String> beanNames, String paramName, Class<?> type) {
+        return beanNames.stream()
+            .filter(name -> name.equalsIgnoreCase(paramName))
+            .findFirst()
+            .orElseThrow(() -> new NoUniqueBeanException(type, beanNames));
+    }
+
+    private List<String> getBeanNames (Class<?> clazz) {
+        return clazz.isInterface()
+            ? beanRegistry.getTypeToBeanNames().entrySet().stream()
+            .filter(entry -> clazz.isAssignableFrom(entry.getKey()))
+            .map(Map.Entry::getValue)
+            .flatMap(Collection::stream)
+            .toList()
+            : Optional.ofNullable(beanRegistry.getTypeToBeanNames().get(clazz)).orElse(
+                Collections.emptyList());
     }
 
     private <T> String getBeanName(Class<? extends T> type) {
@@ -113,7 +146,6 @@ public abstract class AbstractValueTypeInjector {
             if(filteredBeanDefinitions.size() > 1) {
                 throw new NoUniqueBeanException(interfaceType);
             } else if (filteredBeanDefinitions.size() == 1) {
-                var beanDefinition = filteredBeanDefinitions.get(0);
                 return Optional.ofNullable(beanRegistry.getOrCreateBean(filteredBeanDefinitions.get(0).getFactoryBeanName()));
             }
         }
