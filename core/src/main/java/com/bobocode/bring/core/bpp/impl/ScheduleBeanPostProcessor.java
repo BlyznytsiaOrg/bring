@@ -93,7 +93,7 @@ public class ScheduleBeanPostProcessor implements BeanPostProcessor {
         try {
             method.invoke(bean);
         } catch (Exception exe) {
-            log.error("Cannot invoke taskName [" + taskName + "] error " + exe.getMessage(), exe);
+            log.error("Cannot invoke taskName [{}] error {}", taskName, exe.getMessage(), exe);
         }
     }
 }

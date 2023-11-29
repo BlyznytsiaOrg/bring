@@ -7,6 +7,7 @@ import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  * @author Blyzhnytsia Team
  * @since 1.0
  */
+@Slf4j
 @Getter
 public class DefaultBringBeanFactory implements BringBeanFactory {
 
@@ -162,6 +164,7 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
      * @param beanDefinition The definition of the bean to be added.
      */
     public void addBeanDefinition(String beanName, BeanDefinition beanDefinition) {
+        log.debug("Registering BeanDefinition of [{}]", beanName);
         this.beanDefinitionMap.put(beanName, beanDefinition);
 
         List<String> beanNames = typeToBeanNames.getOrDefault(beanDefinition.getBeanClass(), new ArrayList<>());

@@ -32,16 +32,17 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
     @Override
     public void registerBean(String beanName, BeanDefinition beanDefinition) {
-        log.info("Registering Bean with name [{}] into Bring context...", beanName);
+        log.info("Registering Bean with name \"{}\" into Bring context...", beanName);
 
         Class<?> clazz = beanDefinition.getBeanClass();
 
         if (currentlyCreatingBeans.contains(beanName)) {
+            log.error("Cyclic dependency detected!");
             throw new CyclicBeanException(currentlyCreatingBeans);
         }
 
         if (isBeanCreated(beanName)) {
-            log.info("Bean with name [{}] already created, no need to register it again.", beanName);
+            log.info("Bean with name \"{}\" already created, no need to register it again.", beanName);
             return;
         }
 
@@ -136,5 +137,4 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
             registerBean(beanName, beanDefinitions.get(0));
         }
     }
-
 }

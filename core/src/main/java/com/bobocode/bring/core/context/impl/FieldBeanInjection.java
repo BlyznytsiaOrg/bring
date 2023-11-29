@@ -42,7 +42,10 @@ public class FieldBeanInjection {
     public void injectViaFields(Class<?> clazz, Object bean) {
         Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Autowired.class) || field.isAnnotationPresent(Value.class))
-                .forEach(field -> injectDependencyViaField(field, bean));
+                .forEach(field -> {
+                    log.trace("Injecting dependency into field {} of class [{}]", field.getName(), clazz.getName());
+                    injectDependencyViaField(field, bean);
+                });
     }
 
     /**
@@ -64,8 +67,10 @@ public class FieldBeanInjection {
             String dependencyBeanName = classPathScannerFactory.resolveBeanName(field.getType());
             if (Objects.isNull(dependencyBeanName)) {
                 if (field.getType().isInterface()) {
+                    log.trace("Field {} is Interface {}", field.getName(), field.getType());
                     throw new NoSuchBeanException(String.format("No such bean that implements this %s ", field.getType()));
                 }
+                log.trace("Cannot find any beans for field {}", field.getName());
                 throw new NoSuchBeanException(field.getType());
             }
             String qualifier = field.isAnnotationPresent(Qualifier.class) ? field.getAnnotation(Qualifier.class).value() : null;

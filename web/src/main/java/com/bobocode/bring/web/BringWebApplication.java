@@ -33,6 +33,7 @@ public class BringWebApplication {
     public static BringApplicationContext run(String basePackage) {
         // Create context: register Bean definitions
         String[] bringPackages = new String[]{BRING_CORE_PACKAGE, BRING_WEB_PACKAGE, basePackage};
+        log.info("Starting {} using Java {}", basePackage, System.getProperty("java.version"));
         BringApplicationContext context = new BringApplicationContext(bringPackages);
 
         // Invoke Bean Post Processors, create Bean objects
@@ -56,6 +57,7 @@ public class BringWebApplication {
     public static BringApplicationContext run(Class<?> clazz) {
         // Create context: register Bean definitions
         String[] bringPackages = new String[]{BRING_CORE_PACKAGE, BRING_WEB_PACKAGE, clazz.getPackageName()};
+        log.info("Starting {} using Java {}", clazz, System.getProperty("java.version"));
         BringApplicationContext context = new BringApplicationContext(bringPackages);
 
         // Invoke Bean Post Processors, create Bean objects

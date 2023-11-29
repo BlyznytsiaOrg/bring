@@ -43,13 +43,15 @@ public class BeanCreator {
      *
      * @param clazz          The class of the bean to be created.
      * @param beanName       The name of the bean being created.
-     * @param beanDefinition The definition of the bean being created.     
+     * @param beanDefinition The definition of the bean being created.
      * @return               The created bean object.
      */
     public Object create(Class<?> clazz, String beanName, BeanDefinition beanDefinition) {
+        log.debug("Creating Bean \"{}\" of [{}]", beanName, clazz.getName());
         Object bean = createBeanUsingConstructor.create(clazz, beanName, beanDefinition);
+        log.debug("Injecting dependencies to Bean \"{}\"", beanName);
         injectDependencies(clazz, bean);
-        
+
         return bean;
     }
 

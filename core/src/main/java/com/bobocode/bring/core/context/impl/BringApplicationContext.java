@@ -10,6 +10,7 @@ import com.bobocode.bring.core.domain.BeanTypeEnum;
 import com.bobocode.bring.core.bpp.BeanPostProcessor;
 import com.bobocode.bring.core.bfpp.BeanPostProcessorDefinitionFactory;
 import com.bobocode.bring.core.bpp.BeanPostProcessorFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
 import java.util.*;
@@ -49,6 +50,7 @@ import java.util.*;
  * @see BeanPostProcessorFactory
  * @see BeanPostProcessorDefinitionFactory
  */
+@Slf4j
 public class BringApplicationContext extends AnnotationBringBeanRegistry implements BringBeanFactory {
 
     private final BeanPostProcessorDefinitionFactory beanPostProcessorDefinitionFactory;
@@ -130,10 +132,13 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
      * Each bean is processed by the available BeanPostProcessors.
      */
     private void invokeBeanPostProcessors() {
+        log.info("Invoke BeanPostProcessors...");
         List<BeanPostProcessor> beanPostProcessors = new BeanPostProcessorFactory(this, getReflections()).getBeanPostProcessors();
         getAllBeans().forEach((beanName, bean) -> {
             for (var beanPostProcessor : beanPostProcessors) {
+                log.debug("Bean {} start bean post processing", beanName);
                 Object beanAfterPostProcess = beanPostProcessor.postProcessInitialization(bean, beanName);
+                log.debug("Bean {} successfully completed bean post processing", beanName);
                 getSingletonObjects().put(beanName, beanAfterPostProcess);
             }
         });
@@ -146,6 +151,7 @@ public class BringApplicationContext extends AnnotationBringBeanRegistry impleme
     private void instantiateBeans() {
         getBeanDefinitionMap().entrySet()
                 .stream()
+                .peek(entry -> log.trace("Instantiating Bean {} by bean definition {}", entry.getKey(), entry.getValue()))
                 .sorted(Comparator.comparing(entry -> entry.getValue().getBeanType().getOrder()))
                 .forEach(entry -> registerBean(entry.getKey(), entry.getValue()));
     }
