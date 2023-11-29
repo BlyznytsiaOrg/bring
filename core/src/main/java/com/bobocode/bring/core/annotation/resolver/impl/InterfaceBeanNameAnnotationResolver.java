@@ -38,6 +38,6 @@ public class InterfaceBeanNameAnnotationResolver implements AnnotationResolver {
      */
     @Override
     public String resolve(Class<?> clazz) {
-        return clazz.getSimpleName();
+        return getSimpleName(clazz);
     }
 }

@@ -3,6 +3,9 @@ package com.bobocode.bring.core.exception;
 /**
  * Exception thrown to indicate limitations or issues during the construction of a BeanPostProcessor
  * within a Bring Dependency Injection framework.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
  */
 public class BeanPostProcessorConstructionLimitationException extends RuntimeException {
     /**

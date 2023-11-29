@@ -29,6 +29,20 @@ import java.lang.annotation.Target;
  *  }
  * </pre>
  *
+ * <p><strong>Usage Example:</strong>
+ * <pre>
+ * {@code
+ * @RestController
+ * public class MyController implements BringServlet {
+ *
+ *      @PostMapping(path = "/resource")
+ *      public void postResource(@RequestBody UserDto dto) {
+ *          // Your implementation logic here
+ *      }
+ *    }
+ *  }
+ * </pre>
+ *
  * @author Blyzhnytsia Team
  * @since 1.0
  */

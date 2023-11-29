@@ -1,14 +1,15 @@
 <configuration>
 
+    <property name="serviceName" value="bring" />
     <!-- Console Appender -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>[%highlight(%-5level)] %d{yy-MM-dd HH:mm:ss.SSS} [%magenta(%t)] %cyan(%logger{36}) - ${serviceName} - %msg%n</pattern>
         </encoder>
     </appender>
 
     <!-- Log to the console for all levels -->
-    <root level="info">
+    <root level="trace">
         <appender-ref ref="STDOUT" />
     </root>
 

@@ -21,5 +21,13 @@ public class AppConfiguration {
                 .username("user200")
                 .build();
     }
+
+    @Bean
+    public RestClient restClient3(DefaultRestClient defaultRestClient) {
+        return RestClient.builder()
+                .url(defaultRestClient.getUrl())
+                .username(defaultRestClient.getUsername())
+                .build();
+    }
     
 }
