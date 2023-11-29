@@ -7,6 +7,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import testdata.di.positive.contract.Barista;
+import testdata.di.positive.setconstructorinjector.AConstructor;
+
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -112,5 +115,41 @@ class BringConstructorInjectionTest {
         assertThat(noSuchBeanException.getMessage()).isEqualTo(expectedMessage);
     }
 
+    @DisplayName("Should inject implementations of Interface to Set Constructor in appropriate Order")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToSetConstructorInOrder() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".positive.setconstructorinjector");
+
+        var children = Set.of(
+                bringApplicationContext.getBean(testdata.di.positive.setconstructorinjector.B.class),
+                bringApplicationContext.getBean(testdata.di.positive.setconstructorinjector.D.class),
+                bringApplicationContext.getBean(testdata.di.positive.setconstructorinjector.C.class)
+        );
+
+        // when
+        var aBean = bringApplicationContext.getBean(AConstructor.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getSet()).isNotNull();
+        assertThat(aBean.getSet()).hasSize(3)
+                .containsAll(children);
+    }
+
+    @DisplayName("Should inject implementations of Interface to Constructor")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToConstructor() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".positive.listconstructorinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(testdata.di.positive.listconstructorinjector.AConstructor.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(2);
+    }
 
 }

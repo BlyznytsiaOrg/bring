@@ -11,7 +11,7 @@ import com.bobocode.bring.web.servlet.http.HttpStatus;
  * @author Blyzhnytsia Team
  * @since 1.0
  */
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class StaticFileNotFoundException extends RuntimeException {
 
     /**
@@ -21,6 +21,13 @@ public class StaticFileNotFoundException extends RuntimeException {
      */
     public StaticFileNotFoundException(String message) {
         super(message);
+    }
+
+    public StaticFileNotFoundException(String message,
+                                       Throwable cause,
+                                       boolean enableSuppression,
+                                       boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 
 }

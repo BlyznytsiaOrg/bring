@@ -6,6 +6,9 @@ import com.bobocode.bring.core.exception.NoSuchBeanException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import testdata.di.positive.setfieldinjector.AField;
+
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -67,5 +70,58 @@ class BringFieldInjectionTest {
         assertThat(bBean.getA()).isNull();
         var noSuchBeanException = assertThrows(NoSuchBeanException.class, executable);
         assertThat(noSuchBeanException.getMessage()).isEqualTo(expectedMessage);
+    }
+
+    @DisplayName("Should inject implementations of Interface to Field")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToField() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".positive.listfieldinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(testdata.di.positive.listfieldinjector.AField.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList()).hasSize(3);
+    }
+
+    @DisplayName("Should inject implementations of Interface to List Field in appropriate Order")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToListFieldInOrder() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".positive.listfieldinjector");
+
+        // when
+        var aBean = bringApplicationContext.getBean(testdata.di.positive.listfieldinjector.AField.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getList()).isNotNull();
+        assertThat(aBean.getList().get(0)).isInstanceOf(testdata.di.positive.listfieldinjector.B.class);
+        assertThat(aBean.getList().get(1)).isInstanceOf(testdata.di.positive.listfieldinjector.D.class);
+        assertThat(aBean.getList().get(2)).isInstanceOf(testdata.di.positive.listfieldinjector.C.class);
+    }
+
+    @DisplayName("Should inject implementations of Interface to Set Field in appropriate Order")
+    @Test
+    void shouldInjectListOfInterfaceImplementationToSetFieldInOrder() {
+        // given
+        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".positive.setfieldinjector");
+        var children = Set.of(
+                bringApplicationContext.getBean(testdata.di.positive.setfieldinjector.B.class),
+                bringApplicationContext.getBean(testdata.di.positive.setfieldinjector.D.class),
+                bringApplicationContext.getBean(testdata.di.positive.setfieldinjector.C.class)
+        );
+
+        // when
+        var aBean = bringApplicationContext.getBean(AField.class);
+
+        // then
+        assertThat(aBean).isNotNull();
+        assertThat(aBean.getSet()).isNotNull();
+        assertThat(aBean.getSet()).hasSize(3)
+                .containsAll(children);
     }
 }

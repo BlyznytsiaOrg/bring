@@ -52,10 +52,10 @@ class BringApplicationContextHappyCasesTest {
     void shouldInjectInterfaceBeanImplementation() {
         // given
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".contract2");
-        
+
         // when
         var bean = bringApplicationContext.getBean(testdata.di.positive.contract2.Barista.class);
-        
+
         // then
         assertThat(bean).isNotNull();
         assertThat(bean.getDrink().make()).isEqualTo("Making a delicious latte!");
@@ -83,7 +83,7 @@ class BringApplicationContextHappyCasesTest {
         assertThat(restClients2).containsValue(restClient);
         assertThat(restClients.get("bringRestClient22").getUuid())
                 .isNotEqualTo(restClients2.get("bringRestClient22").getUuid());
-        
+
         assertThat(bringServices).hasSize(3);
 
         List<RestClient> clients = bringServices.values().stream()
@@ -91,7 +91,7 @@ class BringApplicationContextHappyCasesTest {
                 .filter(client -> Objects.equals(client, restClient))
                 .toList();
         assertThat(clients).hasSize(2);
-        
+
         assertThat(bringServices.get("bringService3")).isNotNull();
         assertThat(bringServices.get("bringService3").getBringRestClient()).isNotNull();
         assertThat(bringServices.get("bringService3").getBringRestClient().getUrl()).isEqualTo("https://ssssss");
@@ -103,15 +103,13 @@ class BringApplicationContextHappyCasesTest {
     void shouldCreateComponentBeans() {
         // given
         BringApplicationContext bringApplicationContext = BringApplication.run(BringBeansService.class);
-        
+
         // when
         BringBeansService bringBeansService = bringApplicationContext.getBean(BringBeansService.class);
 
         // then
         assertThat(bringBeansService).isNotNull();
     }
-
-
 
 
     @DisplayName("Should inject beans annotated with different annotations")
@@ -133,57 +131,12 @@ class BringApplicationContextHappyCasesTest {
                 .contains("Some info2")
                 .contains("Other info2");
         assertThat(useCase).hasToString("GetInfoFromExternalService2UseCase{" +
-                "externalService=ExternalService1{" +
-                "restClient=RestClient{url='https://exterl.service', username='user100'}}, " +
-                "externalService2=ExternalService2{" +
-                "restClient2=RestClient{url='https://exterl.service2', username='user200'}}}");
+                                        "externalService=ExternalService1{" +
+                                        "restClient=RestClient{url='https://exterl.service', username='user100'}}, " +
+                                        "externalService2=ExternalService2{" +
+                                        "restClient2=RestClient{url='https://exterl.service2', username='user200'}}}");
         assertThat(restClient3.getUrl()).isEqualTo("url");
         assertThat(restClient3.getUsername()).isEqualTo("username");
-    }
-
-    @DisplayName("Should inject implementations of Interface to Field")
-    @Test
-    void shouldInjectListOfInterfaceImplementationToField() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listfieldinjector");
-
-        // when
-        var aBean = bringApplicationContext.getBean(AField.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(aBean.getList()).isNotNull();
-        assertThat(aBean.getList()).hasSize(3);
-    }
-
-    @DisplayName("Should inject implementations of Interface to Constructor")
-    @Test
-    void shouldInjectListOfInterfaceImplementationToConstructor() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listconstructorinjector");
-
-        // when
-        var aBean = bringApplicationContext.getBean(AConstructor.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(aBean.getList()).isNotNull();
-        assertThat(aBean.getList()).hasSize(2);
-    }
-
-    @DisplayName("Should inject implementations of Interface to Setter")
-    @Test
-    void shouldInjectListOfInterfaceImplementationToSetter() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listsetterinjector");
-
-        // when
-        var aBean = bringApplicationContext.getBean(ASetter.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(aBean.getList()).isNotNull();
-        assertThat(aBean.getList()).hasSize(2);
     }
 
     @DisplayName("Should return new object when getting prototype bean")
@@ -306,23 +259,6 @@ class BringApplicationContextHappyCasesTest {
         assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop2.getBarista().getUuid());
         assertThat(coffeeShop.getBarista()).isNotEqualTo(coffeeShop2.getBarista());
         assertThat(coffeeShop.getBarista().getUuid()).isNotEqualTo(coffeeShop2.getBarista().getUuid());
-    }
-
-    @DisplayName("Should inject implementations of Interface to Field in appropriate Order")
-    @Test
-    void shouldInjectListOfInterfaceImplementationToFieldInOrder() {
-        // given
-        var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".listfieldinjector");
-
-        // when
-        var aBean = bringApplicationContext.getBean(testdata.di.positive.listfieldinjector.AField.class);
-
-        // then
-        assertThat(aBean).isNotNull();
-        assertThat(aBean.getList()).isNotNull();
-        assertThat(aBean.getList().get(0)).isInstanceOf(testdata.di.positive.listfieldinjector.B.class);
-        assertThat(aBean.getList().get(1)).isInstanceOf(testdata.di.positive.listfieldinjector.D.class);
-        assertThat(aBean.getList().get(2)).isInstanceOf(testdata.di.positive.listfieldinjector.C.class);
     }
 
     @DisplayName("Should autowire appropriate bean when we have 2 implementations and one of them is marked by @Primary annotation")
