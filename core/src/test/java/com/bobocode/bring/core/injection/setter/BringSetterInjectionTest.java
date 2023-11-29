@@ -76,14 +76,15 @@ class BringSetterInjectionTest {
         assertThat(noSuchBeanException.getMessage()).isEqualTo(expectedMessage);
     }
 
-    @DisplayName("Should inject implementations of Interface to Set Constructor in appropriate Order")
+    @DisplayName("Should inject implementations of Interface to Set Setter in appropriate Order")
     @Test
-    void shouldInjectListOfInterfaceImplementationToSetFieldInOrder() {
+    void shouldInjectListOfInterfaceImplementationToSetSetterInOrder() {
         // given
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".positive.setsetterinjector");
         var children = Set.of(
-                testdata.di.positive.setsetterinjector.B.class,
-                testdata.di.positive.setsetterinjector.C.class);
+                bringApplicationContext.getBean(testdata.di.positive.setsetterinjector.B.class),
+                bringApplicationContext.getBean(testdata.di.positive.setsetterinjector.C.class)
+        );
 
         // when
         var aBean = bringApplicationContext.getBean(ASetter.class);
@@ -91,7 +92,8 @@ class BringSetterInjectionTest {
         // then
         assertThat(aBean).isNotNull();
         assertThat(aBean.getSet()).isNotNull();
-        assertThat(aBean.getSet()).allSatisfy(child -> assertThat(children).contains(child.getClass()));
+        assertThat(aBean.getSet()).hasSize(2)
+                .containsAll(children);
     }
 
 

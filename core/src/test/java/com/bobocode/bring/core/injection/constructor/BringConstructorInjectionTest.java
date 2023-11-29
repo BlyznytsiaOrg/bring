@@ -117,13 +117,15 @@ class BringConstructorInjectionTest {
 
     @DisplayName("Should inject implementations of Interface to Set Constructor in appropriate Order")
     @Test
-    void shouldInjectListOfInterfaceImplementationToSetFieldInOrder() {
+    void shouldInjectListOfInterfaceImplementationToSetConstructorInOrder() {
         // given
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".positive.setconstructorinjector");
+
         var children = Set.of(
-                testdata.di.positive.setconstructorinjector.B.class,
-                testdata.di.positive.setconstructorinjector.D.class,
-                testdata.di.positive.setconstructorinjector.C.class);
+                bringApplicationContext.getBean(testdata.di.positive.setconstructorinjector.B.class),
+                bringApplicationContext.getBean(testdata.di.positive.setconstructorinjector.D.class),
+                bringApplicationContext.getBean(testdata.di.positive.setconstructorinjector.C.class)
+        );
 
         // when
         var aBean = bringApplicationContext.getBean(AConstructor.class);
@@ -131,7 +133,8 @@ class BringConstructorInjectionTest {
         // then
         assertThat(aBean).isNotNull();
         assertThat(aBean.getSet()).isNotNull();
-        assertThat(aBean.getSet()).allSatisfy(child -> assertThat(children).contains(child.getClass()));
+        assertThat(aBean.getSet()).hasSize(3)
+                .containsAll(children);
     }
 
     @DisplayName("Should inject implementations of Interface to Constructor")
