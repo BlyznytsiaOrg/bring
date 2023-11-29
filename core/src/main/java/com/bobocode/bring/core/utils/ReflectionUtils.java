@@ -143,6 +143,16 @@ public final class ReflectionUtils {
         };
     }
 
+    public static void processBeanPostProcessorAnnotation(Object bean,
+                                                          Method[] declaredMethods,
+                                                          Class<? extends Annotation> annotation) throws ReflectiveOperationException {
+        for (Method declaredMethod : declaredMethods) {
+            if (declaredMethod.isAnnotationPresent(annotation)) {
+                declaredMethod.invoke(bean);
+            }
+        }
+    }
+
     private static class QualifierAnnotationParanamer extends AnnotationParanamer {
 
         public QualifierAnnotationParanamer(Paranamer fallback) {

@@ -22,14 +22,14 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
 If we need diagram classes we should use Wiki and add link to it.
 
  - Dependency Injection
-   - [Constructor](core/Constructor.md)
-   - [Setter](core/Setter.md)
-   - [Field](core/Field.md)
+   - [Constructor](/features/core/Constructor.md)
+   - [Setter](/features/core/Setter.md)
+   - [Field](/features/core/Field.md)
    - Collections
    - @Primary
    - @Qualifier
    - @Order
-   - [@Value](core/Value.md)
+   - [@Value](/features/core/Value.md)
    - Prototype Beans into a Singleton
 
 
@@ -40,7 +40,7 @@ If we need diagram classes we should use Wiki and add link to it.
 
 
 - Dependency Injection exceptions
-  - [Circular Dependencies](core/CircularDependencies.md)
+  - [Circular Dependencies](/features/core/CircularDependencies.md)
   - No such bean exception
   - No unique bean exception
   - No constructor with Autowired annotation
@@ -48,7 +48,7 @@ If we need diagram classes we should use Wiki and add link to it.
 
 
 - addition items:
-  - [Scheduling](core/Scheduling.md)
+  - [Scheduling](/features/core/Scheduling.md)
   - Properties file support 
 
     
@@ -60,6 +60,6 @@ If we need diagram classes we should use Wiki and add link to it.
 
 
   - [Logging](/features/core/Logging.md)
-  - PostConstruct
+  - [@PostConstruct](/features/core/PostConstruct.md)
   - PreDestroy
   - Logo
