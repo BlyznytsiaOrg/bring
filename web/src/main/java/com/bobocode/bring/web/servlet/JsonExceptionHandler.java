@@ -43,7 +43,7 @@ public class JsonExceptionHandler extends ErrorReportValve {
      */
     @Override
     protected void report(Request request, Response response, Throwable throwable) {
-        Optional.ofNullable(throwable).ifPresent((thr) -> setErrorResponse(response, thr));
+        Optional.ofNullable(throwable).ifPresent(thr -> setErrorResponse(response, thr));
 
         super.report(request, response, throwable);
     }
