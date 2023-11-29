@@ -2,6 +2,9 @@ package com.bobocode.bring.core.exception;
 
 /**
  * Exception thrown to indicate that a requested bean does not exist within a Bring Dependency Injection framework.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
  */
 public class NoSuchBeanException extends RuntimeException{
 

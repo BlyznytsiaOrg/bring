@@ -42,7 +42,7 @@ public class ServiceBeanNameAnnotationResolver implements AnnotationResolver {
     @Override
     public String resolve(Class<?> clazz) {
         String value = clazz.getAnnotation(Service.class).value();
-        return value.isEmpty() ? clazz.getSimpleName() : value;
+        return value.isEmpty() ? getSimpleName(clazz) : value;
     }
     
 }

@@ -6,6 +6,9 @@ import java.util.*;
  * Exception thrown to indicate the presence of cyclic dependencies between beans
  * within a Bring Dependency Injection framework. This exception provides information
  * about the classes involved in the cyclic dependency.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
  */
 public class CyclicBeanException extends RuntimeException {
 

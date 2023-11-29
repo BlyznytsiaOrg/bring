@@ -1,9 +1,6 @@
 package testdata.di.positive.configuration.configuration;
 
-import com.bobocode.bring.core.annotation.Bean;
-import com.bobocode.bring.core.annotation.Configuration;
-import com.bobocode.bring.core.annotation.Primary;
-import com.bobocode.bring.core.annotation.Scope;
+import com.bobocode.bring.core.annotation.*;
 import com.bobocode.bring.core.domain.BeanScope;
 import com.bobocode.bring.core.domain.ProxyMode;
 import testdata.di.positive.configuration.client.RestClient;
@@ -31,12 +28,12 @@ public class TestConfiguration {
     }
 
     @Bean
-    public BringService bringService(final RestClient bringRestClient) {
+    public BringService bringService(RestClient bringRestClient) {
         return new BringService(bringRestClient);
     }
 
     @Bean
-    public BringService bringService2(final RestClient bringRestClient) {
+    public BringService bringService2(RestClient bringRestClient) {
         return new BringService(bringRestClient);
     }
 
@@ -46,13 +43,13 @@ public class TestConfiguration {
     }
     
     @Bean
-    public String url(final String urlValue) {
+    public String url(String urlValue) {
         return urlValue;
     }
 
     @Bean
-    public BringService bringService3(final RestClient bringRestClient, final String url) {
-        RestClient restClient = bringRestClient.toBuilder().url(url).build();
+    public BringService bringService3(@Qualifier("bringRestClient") RestClient client, String url) {
+        RestClient restClient = client.toBuilder().url(url).build();
         
         return new BringService(restClient);
     }

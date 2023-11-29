@@ -20,6 +20,7 @@
     <jakarta.servlet.jsp.api.version>3.1.1</jakarta.servlet.jsp.api.version>
     <tomcat.embed.version>10.1.13</tomcat.embed.version>
     <jakarta.annotation.api.version>2.1.1</jakarta.annotation.api.version>
+    <jackson.datatype.version>2.15.3</jackson.datatype.version>
   </properties>
 
   <dependencies>
@@ -27,7 +28,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.15.3</version>
+      <version>${jackson.datatype.version}</version>
     </dependency>
 
     <dependency>

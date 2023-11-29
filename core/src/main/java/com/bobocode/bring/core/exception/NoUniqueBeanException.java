@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 /**
  * Exception thrown to indicate that no unique bean is available or multiple beans match the expected type
  * within a Bring Dependency Injection framework.
+ *
+ * @author Blyzhnytsia Team
+ * @since 1.0
  */
 public class NoUniqueBeanException extends RuntimeException {
 

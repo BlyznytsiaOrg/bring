@@ -1,8 +1,8 @@
 # Bring Framework Documentation
 
-- [Overview](Overview.md)  History, Design Philosophy, Feedback, Getting Started.
-- [Core](Core.md)  IoC Container, Resources, Type Conversion, Scheduling.
-- [Web](Web.md)  Bring Web.
+- [Overview](features/Overview.md)  History, Design Philosophy, Feedback, Getting Started.
+- [Core](features/Core.md)  IoC Container, Resources, Type Conversion, Scheduling.
+- [Web](features/Web.md)  Bring Web.
 
 
 ## Getting Started
@@ -93,15 +93,3 @@ Check the build logs for any errors or warnings related to dependency resolution
 
 If you suspect an issue within the Bring Framework or wish to propose a new feature, kindly utilize [GitHub Issues](https://github.com/YevgenDemoTestOrganization/bring/issues/new) for reporting problems or submitting feature suggestions
 If you have a solution in mind or a suggested fix, you can submit a pull request on [Github](https://github.com/YevgenDemoTestOrganization/bring). In addition, please read and configure you idea to follow our [Setup Code Style Guidelines](https://github.com/YevgenDemoTestOrganization/bring/wiki/Setup-Code-Style-Guidelines)
-
-
-## License
-
-This Calculator library is provided under the [MIT License](LICENSE). Feel free to use, modify, and distribute it as needed. If you find any issues or have suggestions for improvements, please [open an issue](https://github.com/YevgenDemoTestOrganization/bring/issues) on this repository.
-
-## Contact
-
-If you have any questions or need assistance, please feel free to contact the author:
-
-Author: Blyzhnytsia Team
-GitHub: [Your GitHub Profile](https://github.com/YevgenDemoTestOrganization)
