@@ -9,7 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class RestControllerContextCreationTest {
+class RestControllerContextCreationTest {
 
     public static final String PACKAGE_DUPLICATE = "testdata.contextcreation.duplicate";
     public static final String PACKAGE_REQUEST_BODY = "testdata.contextcreation.requestbodytype";

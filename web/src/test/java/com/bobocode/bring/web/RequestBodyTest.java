@@ -19,7 +19,7 @@ import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RequestBodyTest {
+class RequestBodyTest {
     public static final String URL = "http://localhost:%s%s";
     public static final String BODY_AS_STRING = "/bodyAsString";
     public static final String BODY_AS_ENTITY = "/bodyAsEntity";

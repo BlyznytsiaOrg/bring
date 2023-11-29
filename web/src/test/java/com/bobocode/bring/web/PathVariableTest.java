@@ -17,7 +17,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class PathVariableTest {
+class PathVariableTest {
 
     public static final String URL = "http://localhost:%s%s";
     public static final String PACKAGE = "testdata.pathvariable";

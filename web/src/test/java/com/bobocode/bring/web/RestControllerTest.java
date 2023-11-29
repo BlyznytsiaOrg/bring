@@ -22,7 +22,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class RestControllerTest {
+class RestControllerTest {
     public static final String HELLO_PATH = "/example/hello";
     public static final String NUMBER_PATH = "/example/number";
     public static final String REQUEST_PATH = "/example/request";

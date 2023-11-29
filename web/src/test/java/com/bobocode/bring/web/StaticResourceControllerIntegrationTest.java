@@ -5,7 +5,6 @@ import com.bobocode.bring.web.server.properties.ServerProperties;
 import com.bobocode.bring.web.servlet.error.ErrorResponse;
 import com.bobocode.bring.web.servlet.http.HttpHeaders.Name;
 import com.bobocode.bring.web.servlet.http.HttpStatus;
-import com.bobocode.bring.web.staticcontent.controller.StaticResourceController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,7 +22,7 @@ import static com.bobocode.bring.web.servlet.http.MediaType.TEXT_HTML_VALUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class StaticResourceControllerIntegrationTest {
+class StaticResourceControllerIntegrationTest {
 
     private static final String STATIC_FILE_NOT_FOUND_MESSAGE = "Can't find the File: %s.";
     public static final String PACKAGE = "testdata.generalintegrationtest";
