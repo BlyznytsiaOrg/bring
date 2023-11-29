@@ -29,4 +29,10 @@ public interface AnnotationResolver {
      * @return a string representing resolved information from the annotations
      */
     String resolve(Class<?> clazz);
+    
+    default String getSimpleName(Class<?> clazz) {
+        String simpleName = clazz.getSimpleName();
+        
+        return simpleName.substring(0, 1).toLowerCase() + simpleName.substring(1);
+    }
 }

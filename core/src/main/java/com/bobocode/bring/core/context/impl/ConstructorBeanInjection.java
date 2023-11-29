@@ -40,12 +40,13 @@ public class ConstructorBeanInjection {
      * @param clazz          The class for which the bean is to be created.
      * @param beanName       The name of the bean.
      * @param beanDefinition The definition of the bean.
+     * @return               The created bean object.
      * @throws NoConstructorWithAutowiredAnnotationBeanException If no constructor is annotated with @Autowired.
      * @throws NoSuchBeanException                               If a required dependency bean is not found.
      */
-    public void create(Class<?> clazz, String beanName, BeanDefinition beanDefinition) {
+    public Object create(Class<?> clazz, String beanName, BeanDefinition beanDefinition) {
         var constructor = findAutowiredConstructor(clazz);
-        createBeanUsingConstructor(constructor, beanName, beanDefinition);
+        return createBeanUsingConstructor(constructor, beanName, beanDefinition);
     }
 
     /**
@@ -77,9 +78,10 @@ public class ConstructorBeanInjection {
      * @param constructor    The constructor to use for bean instantiation.
      * @param beanName       The name of the bean to be created.
      * @param beanDefinition The definition of the bean being created.
+     * @return               The created bean object using constructor.
      * @throws NoSuchBeanException If a required dependency bean is not found.
      */
-    private void createBeanUsingConstructor(Constructor<?> constructor, String beanName,
+    private Object createBeanUsingConstructor(Constructor<?> constructor, String beanName,
                                             BeanDefinition beanDefinition) {
         var createdBeanAnnotations = classPathScannerFactory.getCreatedBeanAnnotations();
         Parameter[] parameters = constructor.getParameters();
@@ -113,6 +115,8 @@ public class ConstructorBeanInjection {
         } else {
             beanRegistry.addSingletonBean(beanName, bean);
         }
+        
+        return bean;
     }
 
     /**
@@ -164,7 +168,6 @@ public class ConstructorBeanInjection {
     private String findPrimaryBeanNameOrByQualifierOrbBParameter(List<String> beanNames, String paramName,
                                                                  Parameter  parameter) {
         Class<?>  parameterType = parameter.getType();
-        String qualifier = getQualifier(parameter);
         var primaryNames = beanNames.stream()
                 .filter(beanName -> beanRegistry.getBeanDefinitionByName(beanName).isPrimary())
                 .toList();
@@ -172,30 +175,11 @@ public class ConstructorBeanInjection {
             return primaryNames.get(0);
         } else if (primaryNames.size() > 1) {
             throw new NoUniqueBeanException(parameterType);
-        } else if (qualifier != null) {
-            return beanNames.stream().filter(name -> name.equals(qualifier))
-                    .findFirst().orElseThrow(() -> {
-                        if (parameterType.isInterface()) {
-                            return new NoSuchBeanException(String.format("No such bean that implements this %s ", parameterType));
-                        }
-                        return new NoSuchBeanException(parameterType);
-                    });
-        }
-        else {
+        } else {
             return beanNames.stream()
                     .filter(name -> name.equalsIgnoreCase(paramName))
                     .findFirst()
                     .orElseThrow(() -> new NoUniqueBeanException(parameterType, beanNames));
         }
-    }
-
-    /**
-     * Retrieves the qualifier value from the parameter's annotation, if present.
-     *
-     * @param parameter The parameter for which the qualifier value is to be retrieved.
-     * @return The qualifier value if present, otherwise null.
-     */
-    private String getQualifier(Parameter parameter) {
-        return parameter.isAnnotationPresent(Qualifier.class) ? parameter.getAnnotation(Qualifier.class).value() : null;
     }
 }
