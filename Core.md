@@ -56,7 +56,7 @@ If we need diagram classes we should use Wiki and add link to it.
 
 
   - Logging
-  - PostConstruct (the last week)  //TODO
+  - PostConstruct (/features/core/Constructor.md)
   - PreDestroy (the last week)  //TODO
   - Logo  (the last week) //TODO
   - ComponentScan  //TODO

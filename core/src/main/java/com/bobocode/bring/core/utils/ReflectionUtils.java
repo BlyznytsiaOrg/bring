@@ -5,6 +5,7 @@ import com.bobocode.bring.core.annotation.Qualifier;
 import com.bobocode.bring.core.context.type.OrderComparator;
 import com.bobocode.bring.core.exception.BeanPostProcessorConstructionLimitationException;
 import com.bobocode.bring.core.exception.BringGeneralException;
+import com.bobocode.bring.core.exception.PostConstructException;
 import com.thoughtworks.paranamer.*;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -59,11 +60,11 @@ public final class ReflectionUtils {
         field.setAccessible(true);
         field.set(obj, value);
     }
-    
+
     public static List<String> getParameterNames(AccessibleObject methodOrConstructor) {
         return Arrays.stream(info.lookupParameterNames(methodOrConstructor)).toList();
     }
-    
+
     public static int extractParameterPosition(Parameter parameter) {
         String name = parameter.getName();
         return Integer.parseInt(name.substring(name.indexOf(ARG) + ARG.length()));
@@ -72,19 +73,19 @@ public final class ReflectionUtils {
     @SneakyThrows
     public static List<Class<?>> extractImplClasses(ParameterizedType genericType, Reflections reflections,
                                                     List<Class<? extends Annotation>> createdBeanAnnotations) {
-            Type actualTypeArgument = genericType.getActualTypeArguments()[0];
-            if (actualTypeArgument instanceof Class actualTypeArgumentClass) {
-                String name = actualTypeArgumentClass.getName();
-                Class<?> interfaceClass = Class.forName(name);
+        Type actualTypeArgument = genericType.getActualTypeArguments()[0];
+        if (actualTypeArgument instanceof Class actualTypeArgumentClass) {
+            String name = actualTypeArgumentClass.getName();
+            Class<?> interfaceClass = Class.forName(name);
 
-                return (List<Class<?>>) reflections.getSubTypesOf(interfaceClass)
-                        .stream()
-                        .filter(implementation -> isImplementationAnnotated(implementation, createdBeanAnnotations))
-                        .sorted(ORDER_COMPARATOR)
-                        .toList();
-            }
-            return Collections.emptyList();
+            return (List<Class<?>>) reflections.getSubTypesOf(interfaceClass)
+                    .stream()
+                    .filter(implementation -> isImplementationAnnotated(implementation, createdBeanAnnotations))
+                    .sorted(ORDER_COMPARATOR)
+                    .toList();
         }
+        return Collections.emptyList();
+    }
 
     private static boolean isImplementationAnnotated(Class<?> implementation, List<Class<? extends Annotation>> createdBeanAnnotations) {
         return Arrays.stream(implementation.getAnnotations())
@@ -102,6 +103,7 @@ public final class ReflectionUtils {
         };
     }
 
+
     public static Supplier<Object> createNewInstance(Constructor<?> constructor, Object[] args, Class<?> clazz,
                                                      boolean proxy) {
         return () -> {
@@ -116,9 +118,19 @@ public final class ReflectionUtils {
             }
         };
     }
-    
+
+    public static void processBeanPostProcessorAnnotation(Object bean,
+                                                          Method[] declaredMethods,
+                                                          Class<? extends Annotation> annotation) throws ReflectiveOperationException {
+        for (Method declaredMethod : declaredMethods) {
+            if (declaredMethod.isAnnotationPresent(annotation)) {
+                declaredMethod.invoke(bean);
+            }
+        }
+    }
+
     private static class QualifierAnnotationParanamer extends AnnotationParanamer {
-        
+
         public QualifierAnnotationParanamer(Paranamer fallback) {
             super(fallback);
         }
@@ -132,7 +144,7 @@ public final class ReflectionUtils {
                 return null;
             }
         }
-        
+
         @Override
         protected boolean isNamed(Annotation ann) {
             return Objects.equals(Qualifier.class, ann.annotationType());
