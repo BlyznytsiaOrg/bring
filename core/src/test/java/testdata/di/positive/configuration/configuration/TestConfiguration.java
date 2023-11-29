@@ -48,8 +48,8 @@ public class TestConfiguration {
     }
 
     @Bean
-    public BringService bringService3(@Qualifier("bringRestClient") RestClient сlient, String url) {
-        RestClient restClient = сlient.toBuilder().url(url).build();
+    public BringService bringService3(@Qualifier("bringRestClient") RestClient client, String url) {
+        RestClient restClient = client.toBuilder().url(url).build();
         
         return new BringService(restClient);
     }
