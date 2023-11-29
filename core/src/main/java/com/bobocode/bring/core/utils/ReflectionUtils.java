@@ -5,7 +5,10 @@ import com.bobocode.bring.core.annotation.Qualifier;
 import com.bobocode.bring.core.context.type.OrderComparator;
 import com.bobocode.bring.core.exception.BeanPostProcessorConstructionLimitationException;
 import com.bobocode.bring.core.exception.BringGeneralException;
-import com.thoughtworks.paranamer.*;
+import com.thoughtworks.paranamer.AnnotationParanamer;
+import com.thoughtworks.paranamer.BytecodeReadingParanamer;
+import com.thoughtworks.paranamer.CachingParanamer;
+import com.thoughtworks.paranamer.Paranamer;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -13,15 +16,21 @@ import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @UtilityClass
 @Slf4j
 public final class ReflectionUtils {
+    private static final String BEAN_SHOULD_HAVE_MESSAGE = "BeanProcessor '%s' should have ";
+    private static final String BEAN_SHOULD_HAVE_DEFAULT_CONSTRUCTOR_MESSAGE =
+            BEAN_SHOULD_HAVE_MESSAGE + "only default constructor without params";
+    private static final String BEAN_SHOULD_HAVE_CONSTRUCTOR_WITH_ONE_PARAMETER_MESSAGE =
+            BEAN_SHOULD_HAVE_MESSAGE + "constructor with one parameter '%s'.";
+    private static final String BEAN_SHOULD_HAVE_CONSTRUCTOR_WITH_PARAMETERS_MESSAGE =
+            BEAN_SHOULD_HAVE_MESSAGE + "constructor with parameters '%s'.";
+    public static final String DELIMITER = ", ";
 
     public static final OrderComparator ORDER_COMPARATOR = new OrderComparator();
     private static final Paranamer info = new CachingParanamer(new QualifierAnnotationParanamer(new BytecodeReadingParanamer()));
@@ -33,26 +42,39 @@ public final class ReflectionUtils {
         return method.isAnnotationPresent(Autowired.class) && method.getName().startsWith(SET_METHOD_START_PREFIX);
     }
 
-
-    public static Object getConstructorWithParameters(Class<?> clazz, Class<?> parameterTypes, Object instance) {
-        try {
-            Constructor<?> constructor = clazz.getConstructor(parameterTypes);
-            return constructor.newInstance(instance);
-        } catch (Exception ex) {
-            throw new BeanPostProcessorConstructionLimitationException(
-                    String.format("BeanProcessor '%s' should have only one constructor "
-                            + "with Reflections params", clazz.getSimpleName()));
-        }
-    }
-
     public static Object getConstructorWithOutParameters(Class<?> clazz) {
         try {
             Constructor<?> constructor = clazz.getConstructor();
             return constructor.newInstance();
         } catch (Exception ex) {
             throw new BeanPostProcessorConstructionLimitationException(
-                    String.format("BeanProcessor '%s' should have only default constructor "
-                            + "without params", clazz.getSimpleName()));
+                    String.format(BEAN_SHOULD_HAVE_DEFAULT_CONSTRUCTOR_MESSAGE, clazz.getSimpleName()));
+        }
+    }
+
+    public static Object getConstructorWithOneParameter(Class<?> clazz, Class<?> parameterType, Object instance) {
+        try {
+            Constructor<?> constructor = clazz.getConstructor(parameterType);
+            return constructor.newInstance(instance);
+        } catch (Exception ex) {
+            throw new BeanPostProcessorConstructionLimitationException(
+                    String.format(BEAN_SHOULD_HAVE_CONSTRUCTOR_WITH_ONE_PARAMETER_MESSAGE,
+                            clazz.getSimpleName(),
+                            parameterType.getSimpleName()));
+        }
+    }
+
+    public static Object getConstructorWithParameters(Class<?> clazz, Map<Class<?>, Object> parameterTypesToInstance) {
+        try {
+            Constructor<?> constructor = clazz.getConstructor(parameterTypesToInstance.keySet().toArray(new Class[0]));
+            return constructor.newInstance(parameterTypesToInstance.values().toArray());
+        } catch (Exception ex) {
+            throw new BeanPostProcessorConstructionLimitationException(
+                    String.format(BEAN_SHOULD_HAVE_CONSTRUCTOR_WITH_PARAMETERS_MESSAGE,
+                            clazz.getSimpleName(),
+                            parameterTypesToInstance.keySet().stream()
+                                    .map(Class::getSimpleName)
+                                    .collect(Collectors.joining(DELIMITER))));
         }
     }
 
@@ -62,11 +84,11 @@ public final class ReflectionUtils {
         field.setAccessible(true);
         field.set(obj, value);
     }
-    
+
     public static List<String> getParameterNames(AccessibleObject methodOrConstructor) {
         return Arrays.stream(info.lookupParameterNames(methodOrConstructor)).toList();
     }
-    
+
     public static int extractParameterPosition(Parameter parameter) {
         String name = parameter.getName();
         return Integer.parseInt(name.substring(name.indexOf(ARG) + ARG.length()));
@@ -75,20 +97,20 @@ public final class ReflectionUtils {
     @SneakyThrows
     public static List<Class<?>> extractImplClasses(ParameterizedType genericType, Reflections reflections,
                                                     List<Class<? extends Annotation>> createdBeanAnnotations) {
-            Type actualTypeArgument = genericType.getActualTypeArguments()[0];
-            if (actualTypeArgument instanceof Class actualTypeArgumentClass) {
-                String name = actualTypeArgumentClass.getName();
-                Class<?> interfaceClass = Class.forName(name);
-                log.trace("Extracting implementations of {} for injection", interfaceClass.getName());
+        Type actualTypeArgument = genericType.getActualTypeArguments()[0];
+        if (actualTypeArgument instanceof Class actualTypeArgumentClass) {
+            String name = actualTypeArgumentClass.getName();
+            Class<?> interfaceClass = Class.forName(name);
+            log.trace("Extracting implementations of {} for injection", interfaceClass.getName());
 
-                return (List<Class<?>>) reflections.getSubTypesOf(interfaceClass)
-                        .stream()
-                        .filter(implementation -> isImplementationAnnotated(implementation, createdBeanAnnotations))
-                        .sorted(ORDER_COMPARATOR)
-                        .toList();
-            }
-            return Collections.emptyList();
+            return reflections.getSubTypesOf(interfaceClass)
+                    .stream()
+                    .filter(implementation -> isImplementationAnnotated(implementation, createdBeanAnnotations))
+                    .sorted(ORDER_COMPARATOR)
+                    .collect(Collectors.toList());
         }
+        return Collections.emptyList();
+    }
 
     private static boolean isImplementationAnnotated(Class<?> implementation, List<Class<? extends Annotation>> createdBeanAnnotations) {
         return Arrays.stream(implementation.getAnnotations())
@@ -120,9 +142,9 @@ public final class ReflectionUtils {
             }
         };
     }
-    
+
     private static class QualifierAnnotationParanamer extends AnnotationParanamer {
-        
+
         public QualifierAnnotationParanamer(Paranamer fallback) {
             super(fallback);
         }
@@ -136,7 +158,7 @@ public final class ReflectionUtils {
                 return null;
             }
         }
-        
+
         @Override
         protected boolean isNamed(Annotation ann) {
             return Objects.equals(Qualifier.class, ann.annotationType());

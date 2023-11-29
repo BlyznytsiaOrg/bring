@@ -1,4 +1,4 @@
-package com.bobocode.bring.core.context.type;
+package com.bobocode.bring.core.context.type.field;
 
 import com.bobocode.bring.core.exception.PropertyValueNotFoundException;
 

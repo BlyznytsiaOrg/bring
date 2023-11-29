@@ -4,7 +4,7 @@ import com.bobocode.bring.core.annotation.Autowired;
 import com.bobocode.bring.core.annotation.Qualifier;
 import com.bobocode.bring.core.annotation.Value;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
-import com.bobocode.bring.core.context.type.FieldValueTypeInjector;
+import com.bobocode.bring.core.context.type.field.FieldValueTypeInjector;
 import com.bobocode.bring.core.exception.NoSuchBeanException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;

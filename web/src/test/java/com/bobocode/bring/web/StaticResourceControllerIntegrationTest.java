@@ -75,7 +75,7 @@ class StaticResourceControllerIntegrationTest {
         ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
 
         //then
-        assertEquals(HttpStatus.BAD_REQUEST.getValue(), errorResponse.getCode());
+        assertEquals(HttpStatus.NOT_FOUND.getValue(), errorResponse.getCode());
         assertEquals(errorMessage, errorResponse.getMessage());
     }
 

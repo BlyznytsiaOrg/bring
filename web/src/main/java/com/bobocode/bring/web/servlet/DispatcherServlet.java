@@ -1,9 +1,5 @@
 package com.bobocode.bring.web.servlet;
 
-import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getRequestPath;
-import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getShortenedPath;
-import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterType;
-
 import com.bobocode.bring.core.annotation.Component;
 import com.bobocode.bring.web.servlet.annotation.PathVariable;
 import com.bobocode.bring.web.servlet.annotation.RequestBody;
@@ -23,49 +19,49 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getRequestPath;
+import static com.bobocode.bring.web.utils.HttpServletRequestUtils.getShortenedPath;
+import static com.bobocode.bring.web.utils.ParameterTypeUtils.parseToParameterType;
 
 /**
  * The {@code DispatcherServlet} class extends {@code FrameworkServlet} and serves as the central
  * dispatcher for handling HTTP requests in a RESTful web application.
  * It processes incoming requests, resolves appropriate controllers and manages response generation.
  *
- *<p>
+ * <p>
  * The class supports the annotation-based mapping of controllers and provides a flexible mechanism
  * for handling various types of parameters in controller methods.
- *</p>
+ * </p>
  *
  * <p>
  * Key Constants:
  * - {@code REST_CONTROLLER_PARAMS}: Key for storing REST controller parameters in the servlet context.
  * - {@code REGEX_STATIC_URL}: Regular expression for matching static URLs.
- *</p>
+ * </p>
  *
  * <p>
  * Key Components:
  * - {@code objectMapper}: Object mapper for converting between JSON and Java objects.
- *</p>
+ * </p>
  *
  * @see RestControllerContext
- *
- * @author Blyzhnytsia Team
  * @since 1.0
  */
 @Component
 @Slf4j
 public class DispatcherServlet extends FrameworkServlet {
+    private static final String MISSING_APPLICATION_MAPPING_MESSAGE = "This application has no explicit mapping for '%s'";
     public static final String REST_CONTROLLER_PARAMS = "REST_CONTROLLER_PARAMS";
     public static final String REGEX_STATIC_URL = "^/static/.*$";
     public static final int HTTP_STATUS_OK = 200;
@@ -112,9 +108,9 @@ public class DispatcherServlet extends FrameworkServlet {
                 .filter(params -> checkParams(requestPath, params))
                 .findFirst()
                 .orElseThrow(() -> {
-                    log.error("Application has no explicit mapping for {}", getRequestPath(req));
+                    log.warn(String.format(MISSING_APPLICATION_MAPPING_MESSAGE, getRequestPath(req)));
                     return new MissingApplicationMappingException(
-                        String.format("This application has no explicit mapping for '%s'", getRequestPath(req)));
+                            String.format(MISSING_APPLICATION_MAPPING_MESSAGE, getRequestPath(req)), null, true, false);
                 });
     }
 
@@ -316,11 +312,11 @@ public class DispatcherServlet extends FrameworkServlet {
      * @param parameters  The array of parameters of the controller method.
      * @param args        The array of objects representing the prepared arguments.
      * @param index       The index of the current parameter being processed.
-     * @throws IOException If an I/O error occurs while processing the request or response.
+     * @throws IOException                  If an I/O error occurs while processing the request or response.
      * @throws MissingRequestParamException If a required request parameter is not present.
      */
     private void getParameterValue(HttpServletRequest req, HttpServletResponse resp, String requestPath,
-                           Method method, Parameter[] parameters, Object[] args, int index)
+                                   Method method, Parameter[] parameters, Object[] args, int index)
             throws IOException {
         if (parameters[index].isAnnotationPresent(PathVariable.class)) {
             extractPathVariable(requestPath, args, parameters, index);
@@ -341,10 +337,10 @@ public class DispatcherServlet extends FrameworkServlet {
      * Extracts the value of a request header parameter based on the specified annotation and sets
      * it in the corresponding position of the {@code args} array.
      *
-     * @param req         The {@code HttpServletRequest} object representing the HTTP request.
-     * @param args        The array of objects representing the prepared arguments.
-     * @param parameters  The array of parameters of the controller method.
-     * @param index           The index of the current parameter being processed.
+     * @param req        The {@code HttpServletRequest} object representing the HTTP request.
+     * @param args       The array of objects representing the prepared arguments.
+     * @param parameters The array of parameters of the controller method.
+     * @param index      The index of the current parameter being processed.
      */
     private void extractRequestHeaderParam(HttpServletRequest req, Object[] args,
                                            Parameter[] parameters, int index) {
@@ -359,10 +355,10 @@ public class DispatcherServlet extends FrameworkServlet {
      * Extracts the value of a request body parameter based on the specified annotation and sets
      * it in the corresponding position of the {@code args} array.
      *
-     * @param req         The {@code HttpServletRequest} object representing the HTTP request.
-     * @param args        The array of objects representing the prepared arguments.
-     * @param parameters  The array of parameters of the controller method.
-     * @param index       The index of the current parameter being processed.
+     * @param req        The {@code HttpServletRequest} object representing the HTTP request.
+     * @param args       The array of objects representing the prepared arguments.
+     * @param parameters The array of parameters of the controller method.
+     * @param index      The index of the current parameter being processed.
      * @throws IOException If an I/O error occurs while processing the request body.
      */
     private void extractRequestBody(HttpServletRequest req, Object[] args,
@@ -385,15 +381,15 @@ public class DispatcherServlet extends FrameworkServlet {
      * Extracts the value of a request parameter based on the specified annotation and sets
      * it in the corresponding position of the {@code args} array.
      *
-     * @param req         The {@code HttpServletRequest} object representing the HTTP request.
-     * @param method      The controller method for which arguments are being prepared.
-     * @param args        The array of objects representing the prepared arguments.
-     * @param index       The index of the current parameter being processed.
-     * @param parameters  The array of parameters of the controller method.
+     * @param req        The {@code HttpServletRequest} object representing the HTTP request.
+     * @param method     The controller method for which arguments are being prepared.
+     * @param args       The array of objects representing the prepared arguments.
+     * @param index      The index of the current parameter being processed.
+     * @param parameters The array of parameters of the controller method.
      * @throws MissingRequestParamException If a required request parameter is not present.
      */
     private void extractRequestParam(HttpServletRequest req, Method method, Object[] args,
-                                            int index, Parameter[] parameters) {
+                                     int index, Parameter[] parameters) {
         List<String> parameterNames = ReflectionUtils.getParameterNames(method);
         String parameterName = parameterNames.get(index);
         Class<?> type = parameters[index].getType();
@@ -418,7 +414,7 @@ public class DispatcherServlet extends FrameworkServlet {
      * @param index       The index of the current parameter being processed.
      */
     private void extractPathVariable(String requestPath, Object[] args,
-                                            Parameter[] parameters, int index) {
+                                     Parameter[] parameters, int index) {
         int lastIndexOf = requestPath.lastIndexOf("/");
         String pathVariable = requestPath.substring(lastIndexOf + 1);
         Class<?> type = parameters[index].getType();

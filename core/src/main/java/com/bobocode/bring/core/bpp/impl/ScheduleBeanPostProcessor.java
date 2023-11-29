@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
  * <p>Usage example:
  * <pre>{@code
  *
- * import com.bobocode.bring.core.anotation.Component;
+ * import com.bobocode.bring.core.annotation.Component;
  * import com.bobocode.bring.core.anotation.ScheduledTask;
  *
  * import java.time.LocalDateTime;
