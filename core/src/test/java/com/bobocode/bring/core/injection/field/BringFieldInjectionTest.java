@@ -110,9 +110,10 @@ class BringFieldInjectionTest {
         // given
         var bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".positive.setfieldinjector");
         var children = Set.of(
-                testdata.di.positive.setfieldinjector.B.class,
-                testdata.di.positive.setfieldinjector.D.class,
-                testdata.di.positive.setfieldinjector.C.class);
+                bringApplicationContext.getBean(testdata.di.positive.setfieldinjector.B.class),
+                bringApplicationContext.getBean(testdata.di.positive.setfieldinjector.D.class),
+                bringApplicationContext.getBean(testdata.di.positive.setfieldinjector.C.class)
+        );
 
         // when
         var aBean = bringApplicationContext.getBean(AField.class);
@@ -120,6 +121,7 @@ class BringFieldInjectionTest {
         // then
         assertThat(aBean).isNotNull();
         assertThat(aBean.getSet()).isNotNull();
-        assertThat(aBean.getSet()).allSatisfy(child -> assertThat(children).contains(child.getClass()));
+        assertThat(aBean.getSet()).hasSize(3)
+                .containsAll(children);
     }
 }

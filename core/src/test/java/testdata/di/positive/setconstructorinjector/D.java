@@ -2,7 +2,6 @@ package testdata.di.positive.setconstructorinjector;
 
 import com.bobocode.bring.core.annotation.Component;
 import com.bobocode.bring.core.annotation.Order;
-import testdata.di.positive.listfieldinjector.IA;
 
 @Component
 @Order(5)
