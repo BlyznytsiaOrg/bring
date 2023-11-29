@@ -25,13 +25,13 @@ class PostConstructBeanPostProcessorTest {
 
     @Test
     void shouldThrowException_postProcessInitialization() {
+        //given
+        var expectedMessage = "@PostConstruct should be added to method without parameters";
         // when
-        Executable executable = () -> {
-            //given
-            BringApplication.run("testdata.postconstruct.negative");
-        };
+        Executable executable = () -> BringApplication.run("testdata.postconstruct.negative");
 
         // then
-        assertThrows(PostConstructException.class, executable);
+        PostConstructException postConstructException = assertThrows(PostConstructException.class, executable);
+        assertThat(postConstructException.getMessage()).isEqualTo(expectedMessage);
     }
 }
