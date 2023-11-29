@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * RestController responsible for handling static resource requests.
+ * Controller responsible for handling static resource requests.
  * Provides an endpoint to retrieve static files based on the requested URI.
  *
  * @author Blyzhnytsia Team

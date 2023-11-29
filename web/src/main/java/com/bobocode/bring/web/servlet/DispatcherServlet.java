@@ -298,7 +298,8 @@ public class DispatcherServlet extends FrameworkServlet {
         RequestHeader annotation = parameters[index].getAnnotation(RequestHeader.class);
         String value = annotation.value();
         String header = req.getHeader(value);
-        args[index] = header;
+        Class<?> type = parameters[index].getType();
+        args[index] = parseToParameterType(header, type);
     }
 
     /**

@@ -19,6 +19,7 @@ public class RequestHeaderTest {
     public static final String URL = "http://localhost:%s%s";
     public static final String PACKAGE = "testdata.requestheader";
     public static final String HEADER = "/header";
+    public static final String HEADER_CONTENT_LENGTH = "/header-content-length";
     public static final String HEADER_NON_VALID = "/headerNonValid";
     public static final String CUSTOM = "/custom";
     public static final String CONTENT_TYPE = "Content-Type";
@@ -44,7 +45,7 @@ public class RequestHeaderTest {
         //given
         String url = getHost() + HEADER;
         String headerValue = APPLICATION_JSON;
-        HttpRequest request = getHttpRequest(CONTENT_TYPE, headerValue, url);
+        HttpRequest request = getHttpGetRequest(CONTENT_TYPE, headerValue, url);
 
         //when
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
@@ -54,11 +55,26 @@ public class RequestHeaderTest {
     }
 
     @Test
+    @DisplayName("should return Content-Length request header")
+    void shouldReturnRequestHeaderContentLength() throws URISyntaxException, IOException, InterruptedException {
+        //given
+        String url = getHost() + HEADER_CONTENT_LENGTH;
+        String body = "body message";
+        HttpRequest request = getHttpPostRequest(body, url);
+
+        //when
+        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+
+        //then
+        assertThat(Integer.parseInt(actualResponse)).isEqualTo(body.length());
+    }
+
+    @Test
     @DisplayName("should return empty string for not existing request header")
     void shouldReturnEmptyString() throws URISyntaxException, IOException, InterruptedException {
         //given
         String url = getHost() + HEADER_NON_VALID;
-        HttpRequest request = getHttpRequest(CONTENT_TYPE, APPLICATION_JSON, url);
+        HttpRequest request = getHttpGetRequest(CONTENT_TYPE, APPLICATION_JSON, url);
 
         //when
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
@@ -73,7 +89,7 @@ public class RequestHeaderTest {
         //given
         String url = getHost() + CUSTOM;
         String customHeaderValue = "bring";
-        HttpRequest request = getHttpRequest(CUSTOM_HEADER, customHeaderValue, url);
+        HttpRequest request = getHttpGetRequest(CUSTOM_HEADER, customHeaderValue, url);
 
         //when
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
@@ -82,12 +98,20 @@ public class RequestHeaderTest {
         assertThat(actualResponse).isEqualTo(customHeaderValue);
     }
 
-    private static HttpRequest getHttpRequest(String headerName, String headerValue,
-                                              String url)
+    private static HttpRequest getHttpGetRequest(String headerName, String headerValue,
+                                                 String url)
             throws URISyntaxException {
         return HttpRequest.newBuilder()
                 .GET()
                 .header(headerName, headerValue)
+                .uri(new URI(url))
+                .build();
+    }
+
+    private static HttpRequest getHttpPostRequest(String body, String url)
+            throws URISyntaxException {
+        return HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(body))
                 .uri(new URI(url))
                 .build();
     }

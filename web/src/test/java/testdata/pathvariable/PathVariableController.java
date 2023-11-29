@@ -57,5 +57,11 @@ public class PathVariableController implements BringServlet {
         return value;
     }
 
+    @GetMapping(path = "/invalidType/{value}")
+    public User getPathVariableInvalidType(@PathVariable User user) {
+        return user;
+    }
 
+    public record User(String name, int age) {
+    }
 }

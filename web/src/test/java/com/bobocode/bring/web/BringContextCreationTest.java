@@ -19,7 +19,7 @@ public class BringContextCreationTest {
 
         //when
         RuntimeException exception = Assertions.catchRuntimeException(
-                () -> BringWebApplication.run(PACKAGE, PACKAGE));
+                () -> BringWebApplication.run(PACKAGE));
         String actualMessage = exception.getMessage();
 
         //then
