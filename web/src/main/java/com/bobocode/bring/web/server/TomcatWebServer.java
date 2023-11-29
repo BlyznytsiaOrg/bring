@@ -98,7 +98,7 @@ public class TomcatWebServer implements WebServer {
     }
 
     @Override
-    public void start() throws WebServerException {
+    public void start() {
         synchronized (this.monitor) {
             if (this.started) {
                 return;
@@ -144,7 +144,7 @@ public class TomcatWebServer implements WebServer {
     }
 
     @Override
-    public void stop() throws WebServerException {
+    public void stop() {
         synchronized (this.monitor) {
             try {
                 this.started = false;

@@ -9,7 +9,6 @@
   <packaging>pom</packaging>
 
   <name>bring-project</name>
-  <url>https://www.bobocode.com</url>
   <description>This project is a bring framework.</description>
 
   <licenses>
