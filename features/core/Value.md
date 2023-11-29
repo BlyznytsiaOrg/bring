@@ -3,7 +3,7 @@
 
 ### Purpose:
 
-The @Value annotation in Bring is used to inject values from property files into Bring beans.
+The `@Value` annotation in Bring is used to inject values from property files into Bring beans.
 
 - Syntax:
 
@@ -38,9 +38,9 @@ public class MyComponent {
 
 - Explanation:
   - Import Statements: 
-    - com.bobocode.bring.core.annotation.Value: Import the @Value annotation.
+    - com.bobocode.bring.core.annotation.Value: Import the `@Value` annotation.
   - Annotation Usage: 
-    - Annotate the fields in your class that you want to populate with values from the properties file using @Value("${property.key}").
+    - Annotate the fields in your class that you want to populate with values from the properties file using `@Value("${property.key}"`).
   - Property Injection:
     - The username and password fields will be populated from the application.properties file or any other property file specified in your Bring configuration.
   - Usage in application.properties:
@@ -51,7 +51,7 @@ public class MyComponent {
 
 Ensure that application.properties is placed in the classpath of your application.
 
-The @Value annotation is a convenient way to inject property values into your Bring components, allowing for externalized configuration and flexibility in managing your application's properties.
+The `@Value` annotation is a convenient way to inject property values into your Bring components, allowing for externalized configuration and flexibility in managing your application's properties.
 
 
 //TODO add addition link to bringplayground repo with more examples:

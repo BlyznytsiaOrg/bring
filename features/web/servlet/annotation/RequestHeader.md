@@ -19,3 +19,5 @@ public class MyRestController implements BringServlet {
     }
 }
 ```
+### See Also
+- [Building REST API with Bring: A Quick Guide](../RestApi.md)

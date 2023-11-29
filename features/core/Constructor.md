@@ -68,7 +68,7 @@ In this case:
 Using @Autowired in Bring helps resolve ambiguity when there are multiple constructors, allowing the framework to identify and use the correct constructor for dependency injection.
 
 
-### Node
+### Note
 
 If you're interested in exploring examples of constructor injection in Bring, you can refer to the test case BringConstructorInjectionTest. 
 This tests case typically demonstrates how Bring instantiates classes and injects dependencies through constructors.

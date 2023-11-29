@@ -14,52 +14,41 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
 
 ## Documentations
 
-- We have two types of it via Markdown (see below) and [JavaDoc](https://yevgendemotestorganization.github.io/bring-core-javadoc/)
+- There are two types of documentation: Markdown (see below) and [JavaDoc](https://yevgendemotestorganization.github.io/bring-core-javadoc/)
 
 
 ## Features:
 
-If we need diagram classes we should use Wiki and add link to it.
-
  - Dependency Injection
-   - [Constructor](/features/core/Constructor.md)
-   - [Setter](/features/core/Setter.md)
-   - [Field](/features/core/Field.md)
+   - [Constructor](core/Constructor.md)
+   - [Setter](core/Setter.md)
+   - [Field](core/Field.md)
    - Collections
    - @Primary
    - @Qualifier
    - @Order
-   - [@Value](/features/core/Value.md)
+   - [@Value](core/Value.md)
    - Prototype Beans into a Singleton
 
 
  - Configuration support
-   - Annotation configuration @Component @Server
-   - Annotation @Autowired (use for constructor (if you have one constructor no need to add it), field and setter)
-   - Java Configuration @Bean @Configuration
+   - Annotation configuration `@Component`, `@Server`.
+   - Annotation `@Autowired`
+   - Java Configuration `@Bean`, `@Configuration`.
 
 
 - Dependency Injection exceptions
-  - [Circular Dependencies](/features/core/CircularDependencies.md)
-  - No such bean exception
-  - No unique bean exception
-  - No constructor with Autowired annotation
+  - [Circular Dependencies](core/CircularDependencies.md)
+  - NoSuchBeanException
+  - NoUniqueBeanException
+  - NoConstructorWithAutowiredAnnotationBeanException
   - etc
 
 
 - addition items:
-  - [Scheduling](/features/core/Scheduling.md)
-  - Properties file support 
-
-    
-    The `ValuePropertiesPostProcessor` class supports dynamic profile configuration using VM parameters. 
-    Set the active profile with the `-Dbring.profiles.active=dev` parameter during application launch. 
-    This enables the class to resolve profile-specific properties and apply them to the `DefaultBringBeanFactory`, allowing for adaptable configuration based on the specified profile. 
-    Additionally, the active profiles influence the loading of different `application.properties` files. 
-    For example, with an active profile of "dev," the class will load properties from `application-dev.properties`. This mechanism allows for customized property sets tailored to specific application environments.
-
-
-  - [Logging](/features/core/Logging.md)
-  - [@PostConstruct](/features/core/PostConstruct.md)
+  - [Scheduling](core/Scheduling.md)
+  - [Properties File Support](core/PropertiesFileSupport.md)
+  - [Logging](core/Logging.md)
+  - [@PostConstruct](core/PostConstruct.md)
   - PreDestroy
   - Logo

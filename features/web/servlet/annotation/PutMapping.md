@@ -22,4 +22,5 @@ This annotation is used to declare a method as a handler for HTTP `PUT` requests
 ```
 
 ### See Also
-[ResponseEntity](https://github.com/YevgenDemoTestOrganization/bring/blob/09aafc6d471c5f793eea58cf8793c68443ec14e8/features/web/servlet/ResponseEntity.md)
+- [ResponseEntity](../ResponseEntity.md)
+- [Building REST API with Bring: A Quick Guide](../RestApi.md)

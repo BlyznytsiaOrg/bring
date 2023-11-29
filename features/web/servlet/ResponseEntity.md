@@ -1,6 +1,6 @@
 # ResponseEntity Class Documentation
 
-The `ResponseEntity` class represents an HTTP response entity in the context of a Spring application. It encapsulates the response body, headers, and HTTP status, providing flexibility and control over the structure of the API response.
+The `ResponseEntity` class represents an HTTP response entity in the context of a Bring application. It encapsulates the response body, headers, and HTTP status, providing flexibility and control over the structure of the API response.
 
 ## Overview
 

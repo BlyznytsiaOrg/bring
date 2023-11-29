@@ -24,14 +24,14 @@ public class MyClass {
 
 ### In this example:
 
-- MyClass contains a setter method setDependency, annotated with @Autowired, to set the MyDependency instance.
+- MyClass contains a setter method setDependency, annotated with `@Autowired`, to set the MyDependency instance.
 - Bring identifies this annotated setter method as the injection point and uses it to supply the necessary dependency.
 
-Unlike constructor injection, in setter injection, the presence of @Autowired explicitly marks the method as an injection point in Bring. 
+Unlike constructor injection, in setter injection, the presence of `@Autowired` explicitly marks the method as an injection point in Bring. 
 This annotation instructs Bring to use the annotated setter method for dependency injection when instantiating the class.
 
 
-### Node
+### Note
 
-If you're interested in exploring examples of setter injection in Bring, you can refer to the test case BringSetterInjectionTest.
+If you're interested in exploring examples of setter injection in Bring, you can refer to the test case `BringSetterInjectionTest`.
 This tests case typically demonstrates how Bring instantiates classes and injects dependencies through setter.
