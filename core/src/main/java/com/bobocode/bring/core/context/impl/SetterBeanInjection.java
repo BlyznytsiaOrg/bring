@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.bobocode.bring.core.utils.ReflectionUtils.*;
 import static com.bobocode.bring.core.utils.ReflectionUtils.isAutowiredSetterMethod;
 
 /**
@@ -85,7 +86,8 @@ public class SetterBeanInjection {
     @SneakyThrows
     private Object injectDependencyViaParameter(Method method, Parameter parameter, Object bean,
                                                 ParameterValueTypeInjector valueType) {
-        Object dependency = valueType.setValueToSetter(parameter, classPathScannerFactory.getCreatedBeanAnnotations());
+        String paramName = getParameterNames(method).get(extractParameterPosition(parameter));
+        Object dependency = valueType.setValueToSetter(parameter, paramName, classPathScannerFactory.getCreatedBeanAnnotations());
         method.invoke(bean, dependency);
         return dependency;
     }

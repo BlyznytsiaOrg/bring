@@ -27,9 +27,9 @@ public class ParameterInterfaceValueTypeInjector extends AbstractValueTypeInject
   }
 
   @Override
-  public Object setValueToSetter(Parameter parameter, List<Class<? extends Annotation>> createdBeanAnnotations) {
+  public Object setValueToSetter(Parameter parameter, String parameterName, List<Class<? extends Annotation>> createdBeanAnnotations) {
     var implementations = extractImplClasses(parameter.getType(), reflections, createdBeanAnnotations);
     String qualifier = parameter.isAnnotationPresent(Qualifier.class) ? parameter.getAnnotation(Qualifier.class).value() : null;
-    return findImplementationByPrimaryOrQualifier(implementations, parameter.getType(), qualifier, parameter.getName());
+    return findImplementationByPrimaryOrQualifier(implementations, parameter.getType(), qualifier, parameterName);
   }
 }
