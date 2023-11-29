@@ -20,7 +20,7 @@ import java.net.http.HttpResponse;
 import static com.bobocode.bring.web.RestControllerTest.APPLICATION_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MixConfigurationBeanAndRestControllerTest {
+class MixConfigurationBeanAndRestControllerTest {
 
     public static final String SHORTEN_PATH = "/api/shorten";
 

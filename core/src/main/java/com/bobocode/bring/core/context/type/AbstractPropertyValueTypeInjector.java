@@ -33,7 +33,7 @@ public abstract class AbstractPropertyValueTypeInjector {
      *
      * @param properties a Map containing property key-value pairs
      */
-    public AbstractPropertyValueTypeInjector(Map<String, String> properties) {
+    protected AbstractPropertyValueTypeInjector(Map<String, String> properties) {
         this.properties = properties;
     }
 

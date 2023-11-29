@@ -1,7 +1,6 @@
 package com.bobocode.bring.core.context.impl;
 
 import com.bobocode.bring.core.annotation.Autowired;
-import com.bobocode.bring.core.annotation.Qualifier;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.NoConstructorWithAutowiredAnnotationBeanException;

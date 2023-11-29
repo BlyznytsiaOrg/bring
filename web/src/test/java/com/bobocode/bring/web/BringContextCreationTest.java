@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class BringContextCreationTest {
+class BringContextCreationTest {
     public static final String PACKAGE = "testdata.contextcreation.nobringservlet";
 
     @Test
