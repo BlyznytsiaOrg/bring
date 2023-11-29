@@ -13,10 +13,10 @@ import java.lang.annotation.Target;
  * <pre>
  * {@code
  * @RestController
- * public class MyController implements BringServlet {
+ * public class MyRestController implements BringServlet {
  *
  *      @GetMapping(path = "/resource")
- *      public Resource getResource(@RequestParam Long id, @RequestParam String name) {
+ *      public ResponseEntity<Resource> getResource(@RequestParam Long id, @RequestParam String name) {
  *          // Your implementation logic here
  *      }
  *    }

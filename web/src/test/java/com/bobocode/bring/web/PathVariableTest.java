@@ -1,5 +1,6 @@
 package com.bobocode.bring.web;
 
+import static com.bobocode.bring.web.utils.TestUtils.getHttpDeleteRequest;
 import static com.bobocode.bring.web.utils.TestUtils.getHttpGetRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,7 +60,7 @@ public class PathVariableTest {
         //given
         long pathVariable = 10;
         String url = getHost() + "/long/" + pathVariable;
-        HttpRequest request = getHttpGetRequest(url);
+        HttpRequest request = getHttpDeleteRequest(url);
 
         //when
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
@@ -90,7 +91,7 @@ public class PathVariableTest {
                 + "to required type 'java.lang.Long'; Invalid value [not-long]";
         String pathVariable = "not-long";
         String url = getHost() + "/long/" + pathVariable;
-        HttpRequest request = getHttpGetRequest(url);
+        HttpRequest request = getHttpDeleteRequest(url);
 
         //when
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();

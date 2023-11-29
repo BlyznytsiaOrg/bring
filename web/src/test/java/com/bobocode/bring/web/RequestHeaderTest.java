@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
@@ -92,10 +93,11 @@ public class RequestHeaderTest {
         HttpRequest request = getHttpGetRequest(CUSTOM_HEADER, customHeaderValue, url);
 
         //when
-        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        HttpHeaders headers = httpClient.send(request, HttpResponse.BodyHandlers.discarding()).headers();
+        String actualHeaderValue = headers.firstValue("Custom").orElseThrow();
 
         //then
-        assertThat(actualResponse).isEqualTo(customHeaderValue);
+        assertThat(actualHeaderValue).isEqualTo(customHeaderValue);
     }
 
     private static HttpRequest getHttpGetRequest(String headerName, String headerValue,

@@ -13,10 +13,10 @@ import java.lang.annotation.Target;
  * <pre>
  * {@code
  * @RestController
- * public class MyController implements BringServlet {
+ * public class MyRestController implements BringServlet {
  *
  *      @GetMapping(path = "/resource/{id}")
- *      public Resource getResource(@PathVariable Long id) {
+ *      public ResponseEntity<Resource> getResource(@PathVariable Long id) {
  *          // Your implementation logic here
  *      }
  *    }
@@ -27,6 +27,7 @@ import java.lang.annotation.Target;
  * @see PostMapping
  * @see PutMapping
  * @see PatchMapping
+ * @see com.bobocode.bring.web.servlet.http.ResponseEntity
  *
  * @author Blyzhnytsia Team
  * @since 1.0

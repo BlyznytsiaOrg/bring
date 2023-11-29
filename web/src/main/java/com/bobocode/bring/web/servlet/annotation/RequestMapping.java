@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * {@code
  * @RestController
  * @RequestMapping(path = "/example")
- * public class MyController implements BringServlet {
+ * public class MyRestController implements BringServlet {
  *
  *        // Your implementation logic here
  *    }

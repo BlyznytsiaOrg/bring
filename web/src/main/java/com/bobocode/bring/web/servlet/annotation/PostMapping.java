@@ -13,6 +13,21 @@ import java.lang.annotation.Target;
  * @see DeleteMapping
  * @see PutMapping
  * @see PatchMapping
+ * @see com.bobocode.bring.web.servlet.http.ResponseEntity
+ *
+ * <p><strong>Usage Example:</strong>
+ * <pre>
+ * {@code
+ * @RestController
+ * public class MyRestController implements BringServlet {
+ *
+ *      @PostMapping(path = "/resource")
+ *      public void saveResource(@RequestBody UserDto dto) {
+ *          // Your implementation logic here
+ *      }
+ *    }
+ *  }
+ * </pre>
  *
  * <p><strong>Usage Example:</strong>
  * <pre>

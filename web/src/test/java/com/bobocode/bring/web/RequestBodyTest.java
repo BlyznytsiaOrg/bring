@@ -84,13 +84,12 @@ public class RequestBodyTest {
         String body = objectMapper.writeValueAsString(user);
         String url = getHost() + BODY_AS_ENTITY;
         HttpRequest request = getHttpPostRequest(url, body);
-        String expectedValue = user.toString();
 
         //when
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
 
         //then
-        assertThat(actualResponse).isEqualTo(expectedValue);
+        assertThat(actualResponse).isEqualTo(body);
     }
 
     @Test
@@ -101,7 +100,6 @@ public class RequestBodyTest {
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("name", NAME);
         userMap.put("age", AGE);
-        String expectedValue = userMap.toString();
         String body = objectMapper.writeValueAsString(userMap);
         String url = getHost() + BODY_AS_MAP;
         HttpRequest request = getHttpPostRequest(url, body);
@@ -110,7 +108,7 @@ public class RequestBodyTest {
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
 
         //then
-        assertThat(actualResponse).isEqualTo(expectedValue);
+        assertThat(actualResponse).isEqualTo(body);
     }
 
 //    @Test

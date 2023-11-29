@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * <pre>
  * {@code
  * @RestController
- * public class MyController implements BringServlet {
+ * public class MyRestController implements BringServlet {
  *
  *      @PatchMapping(path = "/resource")
  *      public void patchResource(@RequestBody UserDto dto) {
@@ -27,6 +27,7 @@ import java.lang.annotation.Target;
  * @see PostMapping
  * @see PutMapping
  * @see DeleteMapping
+ * @see com.bobocode.bring.web.servlet.http.ResponseEntity
  *
  * @author Blyzhnytsia Team
  * @since 1.0

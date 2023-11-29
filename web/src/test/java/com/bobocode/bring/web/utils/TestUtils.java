@@ -15,6 +15,13 @@ public final class TestUtils {
                 .build();
     }
 
+    public static HttpRequest getHttpDeleteRequest(String url) throws URISyntaxException {
+        return HttpRequest.newBuilder()
+                .DELETE()
+                .uri(new URI(url))
+                .build();
+    }
+
     public static HttpRequest getHttpPutRequest(String url, String body) throws URISyntaxException {
         return HttpRequest.newBuilder()
                 .PUT(HttpRequest.BodyPublishers.ofString(body))

@@ -11,11 +11,13 @@ This annotation is used to declare a method as a handler for HTTP `GET` requests
 **Usage Example:**
 ```java
  @RestController
- public class MyController implements BringServlet {
+ public class MyRestController implements BringServlet {
     
     @GetMapping(path = "/resource/{id}")
-    public Resource getResource(@PathVariable Long id) {
+    public ResponseEntity<Resource> getResource(@PathVariable Long id) {
          // Your implementation logic here
     }
  }
 ```
+### See Also
+[ResponseEntity](https://github.com/YevgenDemoTestOrganization/bring/blob/09aafc6d471c5f793eea58cf8793c68443ec14e8/features/web/servlet/ResponseEntity.md)

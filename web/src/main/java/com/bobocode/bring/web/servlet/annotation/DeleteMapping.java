@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * <pre>
  * {@code
  * @RestController
- * public class MyController implements BringServlet {
+ * public class MyRestController implements BringServlet {
  *
  *      @DeleteMapping(path = "/resource/{id}")
  *      public void deleteResource(@PathVariable Long id) {
@@ -27,6 +27,7 @@ import java.lang.annotation.Target;
  * @see PostMapping
  * @see PutMapping
  * @see PatchMapping
+ * @see com.bobocode.bring.web.servlet.http.ResponseEntity
  *
  * @author Blyzhnytsia Team
  * @since 1.0

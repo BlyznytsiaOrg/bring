@@ -5,6 +5,9 @@ import com.bobocode.bring.web.servlet.annotation.GetMapping;
 import com.bobocode.bring.web.servlet.annotation.PostMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestHeader;
 import com.bobocode.bring.web.servlet.annotation.RestController;
+import com.bobocode.bring.web.servlet.http.HttpHeaders;
+import com.bobocode.bring.web.servlet.http.HttpStatus;
+import com.bobocode.bring.web.servlet.http.ResponseEntity;
 
 @RestController
 public class RequestHeaderController implements BringServlet {
@@ -25,8 +28,10 @@ public class RequestHeaderController implements BringServlet {
     }
 
     @GetMapping(path = "/custom")
-    public String customHeader(@RequestHeader(value = "Custom") String header) {
-        return header;
+    public ResponseEntity<Void> customHeader(@RequestHeader(value = "Custom") String header) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Custom", header);
+        return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
 }
