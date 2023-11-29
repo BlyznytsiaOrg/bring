@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class BringContextCreationTest {
+class BringContextCreationTest {
     public static final String PACKAGE = "testdata.contextcreation.nobringservlet";
 
     @Test
@@ -19,7 +19,7 @@ public class BringContextCreationTest {
 
         //when
         RuntimeException exception = Assertions.catchRuntimeException(
-                () -> BringWebApplication.run(PACKAGE, PACKAGE));
+                () -> BringWebApplication.run(PACKAGE));
         String actualMessage = exception.getMessage();
 
         //then

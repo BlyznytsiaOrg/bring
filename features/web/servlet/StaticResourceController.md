@@ -17,7 +17,7 @@ The `StaticResourceController` facilitates the serving of static files (e.g., HT
 
 ## Methods
 
-### `getStaticFile(HttpServletRequest request, HttpServletResponse response)`
+#### `getStaticFile(HttpServletRequest request, HttpServletResponse response)`
 
 Handles GET requests for static resources.
 
@@ -25,7 +25,7 @@ Handles GET requests for static resources.
     - `request`: The incoming HTTP request.
     - `response`: The outgoing HTTP response.
 
-### `setContentType(HttpServletResponse response, Path path)`
+#### `setContentType(HttpServletResponse response, Path path)`
 
 Sets the content type in the HTTP response based on the file type.
 
@@ -38,7 +38,7 @@ Sets the content type in the HTTP response based on the file type.
 
 ## Details
 
-- Annotated with `@RestController` to mark it as a controller handling web requests.
+- Annotated with `@Controller` to mark it as a controller handling web requests.
 - Implements the `BringServlet` interface, indicating its role in the Bring Framework's servlet infrastructure.
 - The `getStaticFile` method uses the `StaticResourceService` to retrieve the absolute path of the requested static file.
 - The `setContentType` method determines the content type based on the file type and sets it in the HTTP response.

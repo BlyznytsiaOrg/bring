@@ -22,7 +22,6 @@ import java.util.Optional;
  * @author Blyzhnytsia Team
  * @since  1.0
  */
-@Component
 @RequiredArgsConstructor
 public class JsonExceptionHandler extends ErrorReportValve {
 

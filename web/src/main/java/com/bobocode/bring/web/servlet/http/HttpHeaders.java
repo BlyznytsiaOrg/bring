@@ -24,7 +24,7 @@ public class HttpHeaders {
     /**
      * List containing all header names as strings.
      */
-    List<String> headersNameList;
+    private List<String> headersNameList;
 
     /**
      * Constructs a new HttpHeaders object with an empty header map and initializes the list of header names.

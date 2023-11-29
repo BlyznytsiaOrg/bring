@@ -10,6 +10,18 @@ import java.lang.annotation.Target;
  * This annotation is applied at the class level to define the base path or URL pattern
  * for all handler methods within the controller.
  *
+ * <p><strong>Usage Example:</strong>
+ * <pre>
+ * {@code
+ * @RestController
+ * @RequestMapping(path = "/example")
+ * public class MyRestController implements BringServlet {
+ *
+ *        // Your implementation logic here
+ *    }
+ *  }
+ * </pre>
+ *
  * @author Blyzhnytsia Team
  * @since 1.0
  */

@@ -9,6 +9,7 @@ import com.bobocode.bring.core.exception.PostConstructException;
 import com.thoughtworks.paranamer.*;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
@@ -20,6 +21,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 @UtilityClass
+@Slf4j
 public final class ReflectionUtils {
 
     public static final OrderComparator ORDER_COMPARATOR = new OrderComparator();
@@ -57,14 +59,15 @@ public final class ReflectionUtils {
 
     @SneakyThrows
     public static void setField(Field field, Object obj, Object value) {
+        log.trace("Setting into field \"{}\" of {} the value {}", field.getName(), obj, value);
         field.setAccessible(true);
         field.set(obj, value);
     }
-
+    
     public static List<String> getParameterNames(AccessibleObject methodOrConstructor) {
         return Arrays.stream(info.lookupParameterNames(methodOrConstructor)).toList();
     }
-
+    
     public static int extractParameterPosition(Parameter parameter) {
         String name = parameter.getName();
         return Integer.parseInt(name.substring(name.indexOf(ARG) + ARG.length()));
@@ -73,19 +76,20 @@ public final class ReflectionUtils {
     @SneakyThrows
     public static List<Class<?>> extractImplClasses(ParameterizedType genericType, Reflections reflections,
                                                     List<Class<? extends Annotation>> createdBeanAnnotations) {
-        Type actualTypeArgument = genericType.getActualTypeArguments()[0];
-        if (actualTypeArgument instanceof Class actualTypeArgumentClass) {
-            String name = actualTypeArgumentClass.getName();
-            Class<?> interfaceClass = Class.forName(name);
+            Type actualTypeArgument = genericType.getActualTypeArguments()[0];
+            if (actualTypeArgument instanceof Class actualTypeArgumentClass) {
+                String name = actualTypeArgumentClass.getName();
+                Class<?> interfaceClass = Class.forName(name);
+                log.trace("Extracting implementations of {} for injection", interfaceClass.getName());
 
-            return (List<Class<?>>) reflections.getSubTypesOf(interfaceClass)
-                    .stream()
-                    .filter(implementation -> isImplementationAnnotated(implementation, createdBeanAnnotations))
-                    .sorted(ORDER_COMPARATOR)
-                    .toList();
+                return (List<Class<?>>) reflections.getSubTypesOf(interfaceClass)
+                        .stream()
+                        .filter(implementation -> isImplementationAnnotated(implementation, createdBeanAnnotations))
+                        .sorted(ORDER_COMPARATOR)
+                        .toList();
+            }
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
-    }
 
     private static boolean isImplementationAnnotated(Class<?> implementation, List<Class<? extends Annotation>> createdBeanAnnotations) {
         return Arrays.stream(implementation.getAnnotations())
@@ -102,7 +106,6 @@ public final class ReflectionUtils {
             }
         };
     }
-
 
     public static Supplier<Object> createNewInstance(Constructor<?> constructor, Object[] args, Class<?> clazz,
                                                      boolean proxy) {
@@ -130,7 +133,7 @@ public final class ReflectionUtils {
     }
 
     private static class QualifierAnnotationParanamer extends AnnotationParanamer {
-
+        
         public QualifierAnnotationParanamer(Paranamer fallback) {
             super(fallback);
         }

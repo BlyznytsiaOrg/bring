@@ -18,7 +18,7 @@ import java.net.http.HttpResponse;
 import static com.bobocode.bring.web.utils.TestUtils.getHttpGetRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JsonExceptionHandlerIntegrationTest {
+class JsonExceptionHandlerIntegrationTest {
 
     public static final String CUSTOM_EXCEPTION_PATH = "/example/custom-exception";
     public static final String DEFAULT_EXCEPTION_PATH = "/example/default-exception";

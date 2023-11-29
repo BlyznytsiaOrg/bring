@@ -11,6 +11,8 @@ import com.bobocode.bring.web.servlet.exception.RequestPathDuplicateException;
 import com.bobocode.bring.web.servlet.mapping.request.RequestParamsResolver;
 import com.bobocode.bring.web.servlet.mapping.RestControllerParams;
 import com.bobocode.bring.web.utils.ReflectionUtils;
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -24,14 +26,15 @@ import java.util.stream.Collectors;
 /**
  * The {@code RestControllerContext} class represents the context for managing
  * REST controllers and their associated parameters in a web application.
- *<p>
+ * <p>
  * This class is responsible for collecting and organizing information about controllers,
  * resolving parameters and performing checks
- *</p>
+ * </p>
  *
  * @author Blyzhnytsia Team
  * @since 1.0
  */
+@Slf4j
 @Component
 public class RestControllerContext {
 
@@ -70,8 +73,8 @@ public class RestControllerContext {
     /**
      * Constructs a new RestControllerContext with the specified BringServlets and RequestParamsResolvers.
      *
-     * @param bringServlets           The list of BringServlet instances.
-     * @param requestParamsResolvers  The list of RequestParamsResolver instances.
+     * @param bringServlets          The list of BringServlet instances.
+     * @param requestParamsResolvers The list of RequestParamsResolver instances.
      */
     public RestControllerContext(List<BringServlet> bringServlets,
                                  List<RequestParamsResolver> requestParamsResolvers) {
@@ -83,8 +86,8 @@ public class RestControllerContext {
      * Retrieves a map containing controller paths and associated parameters.
      *
      * @return A map containing controller paths and associated parameters.
-     * @throws RequestPathDuplicateException If duplicate paths are detected.
-     * @throws RequestBodyTypeUnsupportedException If an unsupported type is found in @RequestBody annotation.
+     * @throws RequestPathDuplicateException                If duplicate paths are detected.
+     * @throws RequestBodyTypeUnsupportedException          If an unsupported type is found in @RequestBody annotation.
      * @throws MissingRequestHeaderAnnotationValueException If a missing @RequestHeader annotation value is detected.
      */
     public Map<String, List<RestControllerParams>> getParamsMap() {
@@ -106,6 +109,7 @@ public class RestControllerContext {
         }
         checkOnDuplicatePath(methodToPathsMap);
         checkParameters(restControllerParams);
+        log.info("Retrieving a map containing controller paths and associated parameters was successfully completed");
         return restControllerParams;
     }
 
@@ -120,9 +124,10 @@ public class RestControllerContext {
         for (var entry : methodToPathsMap.entrySet()) {
             List<String> pathsList = entry.getValue();
             Set<String> duplicateSet = pathsList.stream()
+                    .peek(path -> log.trace("Checking on duplicate path: {}", path))
                     .filter(path -> Collections.frequency(pathsList, path) > 1)
                     .collect(Collectors.toSet());
-            if(!duplicateSet.isEmpty()) {
+            if (!duplicateSet.isEmpty()) {
                 duplicatePaths.put(entry.getKey(), duplicateSet);
             }
         }
@@ -131,15 +136,17 @@ public class RestControllerContext {
                 .collect(Collectors.joining(", "));
 
         if (!exceptionMessage.isBlank()) {
+            log.error("Duplicated path event occurred!");
             throw new RequestPathDuplicateException(ERROR_ON_DUPLICATE_PATH + exceptionMessage);
         }
+        log.debug("Checking of duplicating path was successfully completed");
     }
 
     /**
      * Checks parameters for @RequestBody and @RequestHeader annotations.
      *
      * @param params A map containing controller paths and associated parameters.
-     * @throws RequestBodyTypeUnsupportedException If an unsupported type is found in @RequestBody annotation.
+     * @throws RequestBodyTypeUnsupportedException          If an unsupported type is found in @RequestBody annotation.
      * @throws MissingRequestHeaderAnnotationValueException If a missing @RequestHeader annotation value is detected.
      */
     private void checkParameters(Map<String, List<RestControllerParams>> params) {
@@ -169,15 +176,18 @@ public class RestControllerContext {
      * @throws MissingRequestHeaderAnnotationValueException If the @RequestHeader annotation value is blank.
      */
     private void checkRequestHeaderAnnotation(Method method, Parameter[] parameters,
-                                  List<String> parameterNames, int index) {
+                                              List<String> parameterNames, int index) {
         RequestHeader annotation = parameters[index].getAnnotation(RequestHeader.class);
         String requestHeaderValue = annotation.value();
+        String parameterName = parameterNames.get(index);
         if (requestHeaderValue.isBlank()) {
-            String parameterName = parameterNames.get(index);
+            log.error("Missed value for @RequestHeader for parameter {}", parameterName);
             throw new MissingRequestHeaderAnnotationValueException(
                     String.format(REQUEST_HEADER_EXCEPTION_MESSAGE,
                             parameterName, method.getName()));
         }
+        log.trace("Checking the presence of a value in the @RequestHeader for parameter {} in the method {} was successfully completed",
+                parameterName, method.getName());
     }
 
     /**
@@ -190,15 +200,18 @@ public class RestControllerContext {
      * @throws RequestBodyTypeUnsupportedException If the type annotated with @RequestBody is unsupported.
      */
     private void checkRequestBodyAnnotation(Method method, Parameter[] parameters,
-                                                   List<String> parameterNames, int index) {
+                                            List<String> parameterNames, int index) {
         Class<?> type = parameters[index].getType();
         String packageName = type.getPackageName();
         if (!type.equals(String.class) && !type.equals(byte[].class)
                 && packageName.contains(JAVA_LANG_PACKAGE)) {
             String parameterName = parameterNames.get(index);
+            log.error("Unsupported type {} for @RequestBody", type.getSimpleName());
             throw new RequestBodyTypeUnsupportedException(
                     String.format(REQUEST_BODY_EXCEPTION_MESSAGE,
                             type.getSimpleName(), parameterName, method.getName()));
         }
+        log.trace("Checking of argument type {} for parameter {} of @RequestBody in the method {} was successfully completed",
+                type.getSimpleName(), parameterNames.get(index), method.getName());
     }
 }

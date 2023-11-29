@@ -44,9 +44,12 @@ public class ComponentBeanNameAnnotationResolver implements AnnotationResolver {
     @Override
     public String resolve(Class<?> clazz) {
         String value = clazz.getAnnotation(Component.class).value();
+        String componentName = value.isEmpty() ? getSimpleName(clazz) : value;
+        
         String qualifier = getQualifier(clazz);
+        
         // qualifier -> Component.value -> className
-        return qualifier != null ? qualifier : value.isEmpty() ? clazz.getSimpleName() : value;
+        return qualifier != null ? qualifier : componentName;
     }
 
     private String getQualifier (Class<?> clazz) {

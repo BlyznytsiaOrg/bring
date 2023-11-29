@@ -9,10 +9,25 @@ import java.lang.annotation.Target;
  * Annotation for mapping HTTP {@code GET} requests onto specific handler
  * methods.
  *
+ * <p><strong>Usage Example:</strong>
+ * <pre>
+ * {@code
+ * @RestController
+ * public class MyRestController implements BringServlet {
+ *
+ *      @GetMapping(path = "/resource/{id}")
+ *      public ResponseEntity<Resource> getResource(@PathVariable Long id) {
+ *          // Your implementation logic here
+ *      }
+ *    }
+ *  }
+ * </pre>
+ *
  * @see DeleteMapping
  * @see PostMapping
  * @see PutMapping
  * @see PatchMapping
+ * @see com.bobocode.bring.web.servlet.http.ResponseEntity
  *
  * @author Blyzhnytsia Team
  * @since 1.0

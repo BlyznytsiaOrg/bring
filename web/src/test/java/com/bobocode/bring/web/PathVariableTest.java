@@ -1,5 +1,6 @@
 package com.bobocode.bring.web;
 
+import static com.bobocode.bring.web.utils.TestUtils.getHttpDeleteRequest;
 import static com.bobocode.bring.web.utils.TestUtils.getHttpGetRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,13 +12,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import testdata.pathvariable.PathVariableController;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class PathVariableTest {
+class PathVariableTest {
 
     public static final String URL = "http://localhost:%s%s";
     public static final String PACKAGE = "testdata.pathvariable";
@@ -58,7 +60,7 @@ public class PathVariableTest {
         //given
         long pathVariable = 10;
         String url = getHost() + "/long/" + pathVariable;
-        HttpRequest request = getHttpGetRequest(url);
+        HttpRequest request = getHttpDeleteRequest(url);
 
         //when
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
@@ -89,7 +91,7 @@ public class PathVariableTest {
                 + "to required type 'java.lang.Long'; Invalid value [not-long]";
         String pathVariable = "not-long";
         String url = getHost() + "/long/" + pathVariable;
-        HttpRequest request = getHttpGetRequest(url);
+        HttpRequest request = getHttpDeleteRequest(url);
 
         //when
         String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
@@ -212,6 +214,25 @@ public class PathVariableTest {
         String expectedMessage = String.format("Failed to convert value of type 'java.lang.String' "
                 + "to required type 'boolean'; Invalid value [%s]", pathVariable);
         String url = getHost() + "/boolean/" + pathVariable;
+        HttpRequest request = getHttpGetRequest(url);
+
+        // when
+        String actualResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString()).body();
+        ErrorResponse errorResponse = objectMapper.readValue(actualResponse, ErrorResponse.class);
+
+        // then
+        assertThat(errorResponse.getMessage()).isEqualTo(expectedMessage);
+    }
+
+    @Test
+    @DisplayName("should throw exception with message for invalid boolean value")
+    void shouldThrowExceptionOnUnsupportedArgType() throws URISyntaxException, IOException, InterruptedException {
+        //given
+        PathVariableController.User user = new PathVariableController.User("Bob", 22);
+        String pathVariable = "invalid";
+        String expectedMessage = String.format("The type parameter: '%s' is not supported",
+                user.getClass().getName());
+        String url = getHost() + "/invalidType/" + pathVariable;
         HttpRequest request = getHttpGetRequest(url);
 
         // when
