@@ -147,7 +147,7 @@ public abstract class AbstractValueTypeInjector {
         Class<?> interfaceType, String qualifier, BiFunction<List<BeanDefinition>, String, List<BeanDefinition>>filter) {
         if (beanDefinitions.size() == 1) {
             var beanDefinition = beanDefinitions.get(0);
-            return Optional.ofNullable(beanRegistry.getOrCreateBean(beanDefinition.getFactoryBeanName()));
+            return Optional.ofNullable(beanRegistry.getOrCreateBean(classPathScannerFactory.resolveBeanName(beanDefinition.getBeanClass())));
         } else {
             var filteredBeanDefinitions = filter.apply(beanDefinitions, qualifier);
 
