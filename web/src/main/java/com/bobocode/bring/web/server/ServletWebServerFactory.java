@@ -1,6 +1,7 @@
 package com.bobocode.bring.web.server;
 
 import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleListener;
 
 /**
  * A factory interface for creating and configuring servlet-based web servers.
@@ -39,4 +40,6 @@ public interface ServletWebServerFactory {
      * @return the context path
      */
     String getContextPath();
+
+    void setTomcatAppLifecycleListener(LifecycleListener tomcatAppLifecycleListener);
 }

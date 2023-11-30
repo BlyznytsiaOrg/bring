@@ -1,8 +1,11 @@
 package com.bobocode.bring.web.server;
 
 import com.bobocode.bring.web.server.exception.WebServerException;
+import jakarta.servlet.ServletContextListener;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.catalina.Context;
+import org.apache.catalina.LifecycleListener;
 import org.apache.catalina.startup.Tomcat;
 
 import java.io.File;
@@ -33,6 +36,8 @@ public class TomcatServletWebServerFactory implements ServletWebServerFactory {
     @Getter
     private File baseDirectory;
     private Context context;
+    @Setter
+    private LifecycleListener tomcatAppLifecycleListener;
 
     public TomcatServletWebServerFactory() {
     }
