@@ -1,6 +1,7 @@
 package com.bobocode.bring.web;
 
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
+import com.bobocode.bring.core.utils.Banner;
 import com.bobocode.bring.web.servlet.WebStarter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +32,9 @@ public class BringWebApplication {
      * @see BringApplicationContext
      */
     public static BringApplicationContext run(String basePackage) {
+        // print banner
+        Banner.printBanner();
+
         // Create context: register Bean definitions
         String[] bringPackages = new String[]{BRING_CORE_PACKAGE, BRING_WEB_PACKAGE, basePackage};
         log.info("Starting {} using Java {}", basePackage, System.getProperty("java.version"));
@@ -55,6 +59,9 @@ public class BringWebApplication {
      * @see BringApplicationContext
      */
     public static BringApplicationContext run(Class<?> clazz) {
+        // print banner
+        Banner.printBanner();
+
         // Create context: register Bean definitions
         String[] bringPackages = new String[]{BRING_CORE_PACKAGE, BRING_WEB_PACKAGE, clazz.getPackageName()};
         log.info("Starting {} using Java {}", clazz, System.getProperty("java.version"));
@@ -77,6 +84,9 @@ public class BringWebApplication {
      * @return the initialized {@link BringApplicationContext} instance
      */
     public static BringApplicationContext run(String... basePackages) {
+        // print banner
+        Banner.printBanner();
+
         // Create context: register Bean definitions
         String[] bringPackages = basePackages(basePackages);
 
