@@ -1,6 +1,7 @@
 package com.bobocode.bring.core;
 
 import com.bobocode.bring.core.context.impl.BringApplicationContext;
+import com.bobocode.bring.core.utils.Banner;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -51,6 +52,9 @@ public class BringApplication {
      * @see BringApplicationContext
      */
     public static BringApplicationContext run(Class<?> clazz) {
+        // print banner
+        Banner.printBanner();
+
         // Create context: register Bean definitions
         String[] bringPackages = new String[]{BRING_PACKAGE, clazz.getPackageName()};
         BringApplicationContext context = new BringApplicationContext(bringPackages);
@@ -69,6 +73,9 @@ public class BringApplication {
      * @see BringApplicationContext
      */
     public static BringApplicationContext run(String basePackage) {
+        // print banner
+        Banner.printBanner();
+
         // Create context: register Bean definitions
         String[] bringPackages = new String[]{BRING_PACKAGE, basePackage};
         BringApplicationContext context = new BringApplicationContext(bringPackages);
@@ -86,6 +93,9 @@ public class BringApplication {
      * @return the initialized {@link BringApplicationContext} instance
      */
     public static BringApplicationContext run(String... basePackages) {
+        // print banner
+        Banner.printBanner();
+
         // Create context: register Bean definitions
         String[] bringPackages = basePackages(basePackages);
 

@@ -50,7 +50,7 @@ public class Banner {
     /**
      * The resource folder.
      */
-    private static final String RESOURCE_FOLDER = "resource";
+    private static final String RESOURCE_FOLDER = "resources";
 
     /**
      * Message displayed when the resource folder is not found.
