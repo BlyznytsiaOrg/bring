@@ -1,7 +1,7 @@
 package com.bobocode.bring.core.context.impl;
 
+
 import com.bobocode.bring.core.annotation.Autowired;
-import com.bobocode.bring.core.annotation.Qualifier;
 import com.bobocode.bring.core.annotation.Value;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.context.type.field.FieldValueTypeInjector;
@@ -73,8 +73,7 @@ public class FieldBeanInjection {
                 log.trace("Cannot find any beans for field {}", field.getName());
                 throw new NoSuchBeanException(field.getType());
             }
-            String qualifier = field.isAnnotationPresent(Qualifier.class) ? field.getAnnotation(Qualifier.class).value() : null;
-            Object dependencyObject = beanRegistry.getOrCreateBean(dependencyBeanName, field.getType(), qualifier);
+            Object dependencyObject = beanRegistry.getOrCreateBean(dependencyBeanName);
             setField(field, bean, dependencyObject);
         }
     }

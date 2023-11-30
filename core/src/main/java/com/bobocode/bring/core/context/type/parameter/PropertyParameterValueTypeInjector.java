@@ -55,7 +55,7 @@ public class PropertyParameterValueTypeInjector extends AbstractPropertyValueTyp
      */
     @SneakyThrows
     @Override
-    public Object setValueToSetter(Parameter parameter, List<Class<? extends Annotation>> createdBeanAnnotations) {
-        return TypeCast.cast(getValue(parameter.getAnnotation(Value.class), parameter.getName()), parameter.getType());
+    public Object setValueToSetter(Parameter parameter, String parameterName, List<Class<? extends Annotation>> createdBeanAnnotations) {
+        return TypeCast.cast(getValue(parameter.getAnnotation(Value.class), parameterName), parameter.getType());
     }
 }

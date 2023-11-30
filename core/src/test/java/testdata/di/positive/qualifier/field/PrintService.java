@@ -10,7 +10,7 @@ import lombok.Getter;
 public class PrintService {
 
   @Autowired
-  @Qualifier("CanonPrinter")
+  @Qualifier("canonPrinter")
   private Printer printer;
 
 }
