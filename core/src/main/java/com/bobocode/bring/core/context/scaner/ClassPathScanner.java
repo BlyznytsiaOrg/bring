@@ -7,6 +7,28 @@ import java.util.Set;
  * Defines an interface for scanning the classpath to discover classes.
  * Implementations of this interface are responsible for scanning the classpath
  * and returning a set of discovered classes.
+ * Then, add annotation @BeanProcessor and Bring will automatically pick it up.
+ *
+ * <p>
+ *     Example: implement custom scanner to scan classes from a custom package.
+ *     <pre>
+ *         @BeanProcessor
+ *         @AllArgsConstructor
+ *         @Slf4j
+ *         public class CustomClassPathScanner implements ClassPathScanner {
+ *               private final Reflections reflections;
+ *
+ *               @Override
+ *               public Set<Class<?>> scan() {
+ *                   return reflections.getTypesAnnotatedWith(getAnnotation());
+ *               }
+ *
+ *              @Override
+ *              public Class<? extends Annotation> getAnnotation() {
+ *                     return YourCustomAnnotation.class;
+ *              }
+ *         }
+ * </p>
  *
  *  @author Blyzhnytsia Team
  *  @since 1.0
