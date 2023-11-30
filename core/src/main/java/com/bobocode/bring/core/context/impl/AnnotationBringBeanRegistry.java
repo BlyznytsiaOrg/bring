@@ -89,6 +89,12 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         addBeanDefinition(beanName, beanDefinition);
     }
 
+    /**
+     * Retrieves an existing bean with the given name from the container, or creates and registers a new bean if it doesn't exist.
+     *
+     * @param beanName The name of the bean to retrieve or create.
+     * @return An instance of the requested bean. If the bean already exists, the existing instance is returned; otherwise, a new instance is created and returned.
+     */
     public Object getOrCreateBean(String beanName) {
         Object existingBean = getBeanByName(beanName);
 
