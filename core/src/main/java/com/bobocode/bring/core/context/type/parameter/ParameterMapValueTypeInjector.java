@@ -60,7 +60,7 @@ public class ParameterMapValueTypeInjector extends AbstractValueTypeInjector imp
      * @throws UnsupportedOperationException If the injection is attempted for Map types.
      */
     @Override
-    public Object setValueToSetter(Parameter parameter, List<Class<? extends Annotation>> createdBeanAnnotations) {
+    public Object setValueToSetter(Parameter parameter, String parameterName, List<Class<? extends Annotation>> createdBeanAnnotations) {
         log.error(String.format(UN_SUPPORTED_OPERATION_MESSAGE, parameter.getName()));
         throw new UnsupportedOperationException(String.format(UN_SUPPORTED_OPERATION_MESSAGE, parameter.getName()));
     }

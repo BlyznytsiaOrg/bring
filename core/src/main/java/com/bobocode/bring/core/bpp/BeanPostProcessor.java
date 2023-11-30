@@ -5,6 +5,7 @@ package com.bobocode.bring.core.bpp;
  * Interface for post-processing beans during their initialization phase.
  * Implementations of this interface can intercept bean creation and manipulate
  * the bean instance initialization.
+ * Then, add annotation @BeanProcessor and Bring will automatically pick it up.
  *
  *  @author Blyzhnytsia Team
  *  @since 1.0

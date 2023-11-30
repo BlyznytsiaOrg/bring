@@ -7,6 +7,7 @@ import java.util.Set;
  * Defines an interface for scanning the classpath to discover classes.
  * Implementations of this interface are responsible for scanning the classpath
  * and returning a set of discovered classes.
+ * Then, add annotation @BeanProcessor and Bring will automatically pick it up.
  *
  *  @author Blyzhnytsia Team
  *  @since 1.0

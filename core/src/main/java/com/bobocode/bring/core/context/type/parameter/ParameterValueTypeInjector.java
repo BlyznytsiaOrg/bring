@@ -37,5 +37,5 @@ public interface ParameterValueTypeInjector {
      * @return The injected value converted to the type of the parameter.
      * @throws PropertyValueNotFoundException If the property value is not found for the specified key.
      */
-    Object setValueToSetter(Parameter parameter, List<Class<? extends Annotation>> createdBeanAnnotations);
+    Object setValueToSetter(Parameter parameter, String parameterName, List<Class<? extends Annotation>> createdBeanAnnotations);
 }

@@ -5,15 +5,27 @@ import com.bobocode.bring.core.context.BeanRegistry;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.CyclicBeanException;
-import com.bobocode.bring.core.exception.NoSuchBeanException;
-import com.bobocode.bring.core.exception.NoUniqueBeanException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
-import java.lang.annotation.Annotation;
 import java.util.*;
 
+/**
+ * Registry class responsible for:
+ * <ol>
+ *      <li>Registering beans by bean name and bean definition: The bean name is created using 
+ *      {@code AnnotationResolver} and is the key of the {@code DefaultBringBeanFactory.beanDefinitionMap}. 
+ *      The bean definition contains all the necessary information that is needed to create a bean. Depending on the 
+ *      bean scope, an object or a supplier will be stored in the application context.</li>
+ *
+ *      <li>Registering bean definitions: storing bean definitions in {@code DefaultBringBeanFactory.beanDefinitionMap}. 
+ *      Those will be used in the future to create or retrieve beans.</li>
+ * </ol>
+ * 
+ *  @author Blyzhnytsia Team
+ *  @since 1.0
+ */
 @Slf4j
 public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory implements BeanRegistry, BeanDefinitionRegistry {
 
@@ -30,6 +42,14 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         this.beanCreator = new BeanCreator(this, classPathScannerFactory);
     }
 
+    /**
+     * Registers beans in the application context. Creates and stores singleton bean objects or suppliers for prototype beans.
+     * Also defines the proper way to create beans depending on the type of the bean (annotated class or configuration bean) 
+     * and injects dependant beans.
+     * 
+     * @param beanName       The name of the bean to be registered.
+     * @param beanDefinition The definition of the bean being registered.
+     */
     @Override
     public void registerBean(String beanName, BeanDefinition beanDefinition) {
         log.info("Registering Bean with name \"{}\" into Bring context...", beanName);
@@ -57,13 +77,25 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         currentlyCreatingBeans.clear();
     }
 
+    /**
+     * Stores a bean definition into {@code DefaultBringBeanFactory.beanDefinitionMap} by a name generated via 
+     * {@code AnnotationResolver}. Beans are created based on these bean definitions. 
+     * 
+     * @param beanDefinition The definition of the bean to be registered.
+     */
     @Override
     public void registerBeanDefinition(BeanDefinition beanDefinition) {
         String beanName = classPathScannerFactory.resolveBeanName(beanDefinition.getBeanClass());
         addBeanDefinition(beanName, beanDefinition);
     }
 
-    public Object getOrCreateBean(String beanName, Class<?> beanType, String qualifier) {
+    /**
+     * Retrieves an existing bean with the given name from the container, or creates and registers a new bean if it doesn't exist.
+     *
+     * @param beanName The name of the bean to retrieve or create.
+     * @return An instance of the requested bean. If the bean already exists, the existing instance is returned; otherwise, a new instance is created and returned.
+     */
+    public Object getOrCreateBean(String beanName) {
         Object existingBean = getBeanByName(beanName);
 
         if (Objects.nonNull(existingBean)) {
@@ -72,69 +104,11 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
 
         BeanDefinition beanDefinition = getBeanDefinitionMap().get(beanName);
 
-        if (Objects.isNull(beanDefinition)) {
-            //TODO this is like workaround need to think how to populate bean definition for interface & dependencies
-            if (beanType.isInterface()) {
-                registerImplementations(beanName, beanType, qualifier);
-            }
-        } else {
+        if (beanDefinition != null) {
             registerBean(beanName, beanDefinition);
         }
 
         return getBeanByName(beanName);
     }
 
-    private <T> void registerImplementations(String beanName, Class<T> interfaceType, String qualifier) {
-        Set<Class<? extends T>> implementations = reflections.getSubTypesOf(interfaceType);
-
-        List<BeanDefinition> beanDefinitionsForRegistration = new ArrayList<>();
-
-        for (Class<? extends T> implementation : implementations) {
-            boolean hasRequiredAnnotation = Arrays.stream(implementation.getAnnotations())
-                    .map(Annotation::annotationType)
-                    .anyMatch(classPathScannerFactory.getCreatedBeanAnnotations()::contains);
-
-            if (hasRequiredAnnotation) {
-                List<String> beanNames = Optional.ofNullable(getTypeToBeanNames().get(implementation))
-                        .orElseThrow(() -> {
-                            if (implementation.isInterface()) {
-                                return new NoSuchBeanException(String.format("No such bean that implements this %s ", implementation));
-                            }
-                            return new NoSuchBeanException(implementation);
-                        });
-
-                if (beanNames.size() != 1) {
-                    throw new NoUniqueBeanException(implementation);
-                }
-
-                String implementationBeanName = beanNames.get(0);
-                BeanDefinition beanDefinition = getBeanDefinitionMap().get(implementationBeanName);
-                beanDefinitionsForRegistration.add(beanDefinition);
-            }
-        }
-        findPrimaryOrQualifierAndRegisterBean(beanName, beanDefinitionsForRegistration, interfaceType, qualifier);
-    }
-
-    private <T> void findPrimaryOrQualifierAndRegisterBean (String beanName, List<BeanDefinition> beanDefinitions,
-                                                            Class<T> interfaceType, String qualifier) {
-        if (beanDefinitions.size() > 1){
-            var beanDefinitionsForRegistration = beanDefinitions.stream()
-                    .filter(BeanDefinition::isPrimary
-                    ).toList();
-            if(beanDefinitionsForRegistration.size() > 1) {
-                throw new NoUniqueBeanException(interfaceType);
-            } else if (beanDefinitionsForRegistration.isEmpty()) {
-                //check qualifier
-                beanDefinitionsForRegistration = beanDefinitions.stream()
-                        .filter(bd -> bd.getFactoryBeanName().equals(qualifier))
-                        .toList();
-                if(beanDefinitionsForRegistration.size() != 1){
-                    throw new NoUniqueBeanException(interfaceType);
-                }
-            }
-            registerBean(beanName, beanDefinitionsForRegistration.get(0));
-        } else if (beanDefinitions.size() == 1) {
-            registerBean(beanName, beanDefinitions.get(0));
-        }
-    }
 }
