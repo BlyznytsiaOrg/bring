@@ -110,6 +110,13 @@ public abstract class AbstractValueTypeInjector {
     }
 
     private String checkByBeanName(List<String> beanNames, String paramName, Class<?> type) {
+        if (beanNames.isEmpty()) {
+            if (type.isInterface()) {
+                throw  new NoSuchBeanException(String.format("No such bean that implements this %s ", type));
+            }
+            throw new NoSuchBeanException(type);
+        }
+
         return beanNames.stream()
             .filter(name -> name.equalsIgnoreCase(paramName))
             .findFirst()

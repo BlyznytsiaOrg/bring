@@ -50,28 +50,19 @@ class BringSetterInjectionTest {
         assertThat(noSuchBeanException.getMessage()).isEqualTo(expectedMessage);
     }
 
-    @DisplayName("Should not set dependency implementation is missing via setter")
+    @DisplayName("Should throw exception when dependency implementation is missing via setter")
     @Test
     void shouldThrowExceptionWhenDependencyImplementationIsMissingViaSetter() {
         // given
         var expectedMessage = "No such bean that implements this interface testdata.di.negative.noimplementationviasetter.A ";
 
-        //when
-        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".negative.noimplementationviasetter");
-
-
-        var bBean = bringApplicationContext.getBean(testdata.di.negative.noimplementationviasetter.B.class);
-
 
         Executable executable = () -> {
             //when
-             bringApplicationContext.getBean(testdata.di.negative.noimplementationviasetter.A.class);
+            BringApplication.run(TEST_DATA_PACKAGE + ".negative.noimplementationviasetter");
         };
 
         // then
-        assertThat(bBean).isNotNull();
-        assertThat(bBean.getA()).isNull();
-
         var noSuchBeanException = assertThrows(NoSuchBeanException.class, executable);
         assertThat(noSuchBeanException.getMessage()).isEqualTo(expectedMessage);
     }

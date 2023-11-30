@@ -56,18 +56,14 @@ class BringFieldInjectionTest {
     @Test
     void shouldThrowExceptionWhenFieldInjectIsNotPossibleViaInterfaceNoImplementationFound() {
         //given
-        BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".negative.nofieldinterfaceimplementation");
         var expectedMessage = "No such bean that implements this interface testdata.di.negative.nofieldinterfaceimplementation.A ";
-        var bBean = bringApplicationContext.getBean(testdata.di.negative.nofieldinterfaceimplementation.B.class);
 
         Executable executable = () -> {
             //when
-            bringApplicationContext.getBean(testdata.di.negative.nofieldinterfaceimplementation.A.class);
+            BringApplication.run(TEST_DATA_PACKAGE + ".negative.nofieldinterfaceimplementation");
         };
 
         // then
-        assertThat(bBean).isNotNull();
-        assertThat(bBean.getA()).isNull();
         var noSuchBeanException = assertThrows(NoSuchBeanException.class, executable);
         assertThat(noSuchBeanException.getMessage()).isEqualTo(expectedMessage);
     }

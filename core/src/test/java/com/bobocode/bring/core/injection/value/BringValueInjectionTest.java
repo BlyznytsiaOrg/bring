@@ -99,7 +99,7 @@ class BringValueInjectionTest {
                 () -> BringApplication.run(TEST_DATA_NEGATIVE_PACKAGE + ".properties.constructor"));
 
         Assertions.assertEquals(
-                "Property value not found for the specified key: bring.banner-mode.constructor, field: arg0.",
+                "Property value not found for the specified key: bring.banner-mode.constructor, field: banner.",
                 exception.getMessage());
     }
 

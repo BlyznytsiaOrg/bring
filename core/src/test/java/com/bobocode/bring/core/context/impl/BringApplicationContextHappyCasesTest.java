@@ -293,7 +293,7 @@ class BringApplicationContextHappyCasesTest {
 
     @DisplayName("Should autowire appropriate bean when we have 2 implementations and @Qualifier annotation")
     @Test
-    void ShouldRegisterQualifierComponent() {
+    void shouldRegisterQualifierComponent() {
         // given
         BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".qualifier.field");
 
