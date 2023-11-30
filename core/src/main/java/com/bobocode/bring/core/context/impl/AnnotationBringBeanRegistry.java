@@ -11,6 +11,21 @@ import org.reflections.Reflections;
 
 import java.util.*;
 
+/**
+ * Registry class responsible for:
+ * <ol>
+ *      <li>Registering beans by bean name and bean definition: The bean name is created using 
+ *      {@code AnnotationResolver} and is the key of the {@code DefaultBringBeanFactory.beanDefinitionMap}. 
+ *      The bean definition contains all the necessary information that is needed to create a bean. Depending on the 
+ *      bean scope, an object or a supplier will be stored in the application context.</li>
+ *
+ *      <li>Registering bean definitions: storing bean definitions in {@code DefaultBringBeanFactory.beanDefinitionMap}. 
+ *      Those will be used in the future to create or retrieve beans.</li>
+ * </ol>
+ * 
+ *  @author Blyzhnytsia Team
+ *  @since 1.0
+ */
 @Slf4j
 public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory implements BeanRegistry, BeanDefinitionRegistry {
 
@@ -27,6 +42,14 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         this.beanCreator = new BeanCreator(this, classPathScannerFactory);
     }
 
+    /**
+     * Registers beans in the application context. Creates and stores singleton bean objects or suppliers for prototype beans.
+     * Also defines the proper way to create beans depending on the type of the bean (annotated class or configuration bean) 
+     * and injects dependant beans.
+     * 
+     * @param beanName       The name of the bean to be registered.
+     * @param beanDefinition The definition of the bean being registered.
+     */
     @Override
     public void registerBean(String beanName, BeanDefinition beanDefinition) {
         log.info("Registering Bean with name \"{}\" into Bring context...", beanName);
@@ -54,6 +77,12 @@ public class AnnotationBringBeanRegistry extends DefaultBringBeanFactory impleme
         currentlyCreatingBeans.clear();
     }
 
+    /**
+     * Stores a bean definition into {@code DefaultBringBeanFactory.beanDefinitionMap} by a name generated via 
+     * {@code AnnotationResolver}. Beans are created based on these bean definitions. 
+     * 
+     * @param beanDefinition The definition of the bean to be registered.
+     */
     @Override
     public void registerBeanDefinition(BeanDefinition beanDefinition) {
         String beanName = classPathScannerFactory.resolveBeanName(beanDefinition.getBeanClass());
