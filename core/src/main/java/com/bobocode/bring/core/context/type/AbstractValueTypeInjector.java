@@ -31,13 +31,10 @@ public abstract class AbstractValueTypeInjector {
             .filter(BeanDefinition::isPrimary
             ).toList();
 
-    private final static BiFunction<List<BeanDefinition>, String, List<BeanDefinition>>  QUALIFIER_FILTER_FUNCTION =
-        (beanDefinitions, qualifier) -> beanDefinitions.stream()
-            .filter(bd -> bd.getFactoryBeanName().equals(qualifier))
-            .toList();
-
     private final AnnotationBringBeanRegistry beanRegistry;
     private final ClassPathScannerFactory classPathScannerFactory;
+
+    private final BiFunction<List<BeanDefinition>, String, List<BeanDefinition>>  QUALIFIER_FILTER_FUNCTION;
 
     /**
      * Constructs a new instance of {@code AbstractValueTypeInjector}.
@@ -49,6 +46,10 @@ public abstract class AbstractValueTypeInjector {
                                         ClassPathScannerFactory classPathScannerFactory) {
         this.beanRegistry = beanRegistry;
         this.classPathScannerFactory = classPathScannerFactory;
+
+        QUALIFIER_FILTER_FUNCTION = (beanDefinitions, qualifier) -> beanDefinitions.stream()
+            .filter(bd -> classPathScannerFactory.resolveBeanName(bd.getBeanClass()).equals(qualifier))
+            .toList();
     }
 
     /**
@@ -146,7 +147,8 @@ public abstract class AbstractValueTypeInjector {
             if(filteredBeanDefinitions.size() > 1) {
                 throw new NoUniqueBeanException(interfaceType);
             } else if (filteredBeanDefinitions.size() == 1) {
-                return Optional.ofNullable(beanRegistry.getOrCreateBean(filteredBeanDefinitions.get(0).getFactoryBeanName()));
+                var beanName = classPathScannerFactory.resolveBeanName(filteredBeanDefinitions.get(0).getBeanClass());
+                return Optional.ofNullable(beanRegistry.getOrCreateBean(beanName));
             }
         }
         return Optional.empty();

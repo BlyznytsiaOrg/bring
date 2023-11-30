@@ -57,7 +57,7 @@ public class ParameterListValueTypeInjector extends AbstractValueTypeInjector im
      * @return The result of injecting dependencies into the List parameter.
      */
     @Override
-    public Object setValueToSetter(Parameter parameter, List<Class<? extends Annotation>> createdBeanAnnotations) {
+    public Object setValueToSetter(Parameter parameter, String parameterName, List<Class<? extends Annotation>> createdBeanAnnotations) {
         ParameterizedType genericTypeOfField = (ParameterizedType) parameter.getParameterizedType();
         List<Class<?>> dependencies = extractImplClasses(genericTypeOfField, reflections, createdBeanAnnotations);
         return injectListDependency(dependencies);

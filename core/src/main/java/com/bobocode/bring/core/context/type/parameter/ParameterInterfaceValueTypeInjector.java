@@ -1,10 +1,12 @@
-package com.bobocode.bring.core.context.type;
+package com.bobocode.bring.core.context.type.parameter;
 
 import static com.bobocode.bring.core.utils.ReflectionUtils.extractImplClasses;
 
 import com.bobocode.bring.core.annotation.Qualifier;
+
 import com.bobocode.bring.core.context.impl.AnnotationBringBeanRegistry;
 import com.bobocode.bring.core.context.scaner.ClassPathScannerFactory;
+import com.bobocode.bring.core.context.type.AbstractValueTypeInjector;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.util.Collection;
@@ -15,7 +17,7 @@ public class ParameterInterfaceValueTypeInjector extends AbstractValueTypeInject
 
   private final Reflections reflections;
 
-  protected ParameterInterfaceValueTypeInjector(Reflections reflections, AnnotationBringBeanRegistry beanRegistry,
+  public ParameterInterfaceValueTypeInjector(Reflections reflections, AnnotationBringBeanRegistry beanRegistry,
       ClassPathScannerFactory classPathScannerFactory) {
     super(beanRegistry, classPathScannerFactory);
     this.reflections = reflections;
