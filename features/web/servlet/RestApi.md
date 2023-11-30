@@ -2,23 +2,17 @@
 
 ## Introduction
 
-When building a RESTful API using the Bring framework, the annotations like [`@RestController`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RestController.md), 
-[`@RequestMapping`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/PostMapping.md), 
-[`@GetMapping`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/GetMapping.md), 
-[`@PathVariable`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/PathVariable.md),
-[`@RequstBody`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RequestBody.md) and others can be used. 
+When building a RESTful API using the Bring framework, the annotations like `@RestController`, `@RequestMapping`, `@GetMapping`, `@PathVariable`, `@RequstBody` and others can be used. 
 These annotations simplify the development process and ensure a standardized approach to creating web services. 
-[`ResponseEntity`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/ResponseEntity.md) allows you to customize the HTTP response, including status codes, headers, and the response body.
+`ResponseEntity` allows you to customize the HTTP response, including status codes, headers, and the response body.
 This guide will walk you through the essential steps to set up a REST controller.
 
 **1. Create a REST Controller**
 
-To get started, create a class and annotate it with 
-[`@RestController`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RestController.md). 
+To get started, create a class and annotate it with`@RestController`. 
 This annotation indicates that the class will handle HTTP requests and produce HTTP responses for a RESTful API. 
-The class should implement marker interface 
-[`BringServlet`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/BringServlet.md) to be recognized as controller by the framework and setup of the REST controller context.
-The [`@RequestMapping`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RequestMapping.md) annotation can be utilized to define the base path for all endpoints in the controller (`/api`).
+The class should implement marker interface `BringServlet` to be recognized as controller by the framework and setup of the REST controller context.
+The `@RequestMapping` annotation can be utilized to define the base path for all endpoints in the controller (`/api`).
 
 **Example:**
 ```java
@@ -28,6 +22,8 @@ public class MyRestController implements BringServlet {
     // REST controller logic and methods
 }
 ```
+**NOTE:** If there is a duplication of request paths in the web application, the `RequestPathDuplicateException` is thrown.
+
 
 **2. Define Endpoints with @GetMapping**
 
@@ -58,6 +54,7 @@ public class MyRestController implements BringServlet {
     }
 }
 ```
+**NOTE:** If a required request parameter is absent for a method parameter type annotated with `@RequestParam`, the `MissingRequestParamException` is thrown.
 
 **3. Define Endpoints with @PutMapping**
 
@@ -95,6 +92,8 @@ public class MyRestController implements BringServlet {
     }
 }
 ```
+**NOTE:** If the required value is missing for the @RequestHeader annotation, the MissingRequestHeaderAnnotationValueException is thrown.
+
 **5. Use ResponseEntity for Flexible Responses**
 
 `ResponseEntity` allows to customize the HTTP response, including status codes, headers and the response body.
@@ -115,7 +114,7 @@ public class MyRestController implements BringServlet {
         
         // Set custom headers
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Custom", "Value");
+        headers.set("HeaderName", "HeaderValue");
         
         // return instance of ResponseEntity
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
@@ -143,3 +142,6 @@ Utilize the @ResponseStatus annotation to define the desired HTTP response statu
 ```
 **NOTE:** When both `ResponseEntity` and `@ResponseStatus` are used in a controller method, 
 the HTTP status from `ResponseEntity` takes precedence over the one specified by `@ResponseStatus`.
+
+### See Also
+- [Web Module](../../Web.md)

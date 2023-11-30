@@ -11,6 +11,7 @@ import com.bobocode.bring.web.servlet.annotation.RequestMapping;
 import com.bobocode.bring.web.servlet.annotation.RequestParam;
 import com.bobocode.bring.web.servlet.annotation.ResponseStatus;
 import com.bobocode.bring.web.servlet.annotation.RestController;
+import com.bobocode.bring.web.servlet.http.HttpHeaders;
 import com.bobocode.bring.web.servlet.http.HttpStatus;
 import com.bobocode.bring.web.servlet.http.ResponseEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,12 +25,6 @@ import java.util.Map;
 @RestController
 @RequestMapping(path = "/example")
 public class ExampleRestController implements BringServlet {
-
-    private final ObjectMapper objectMapper;
-
-    public ExampleRestController(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
 
     @GetMapping(path = "/hello")
     public String sayHello() {
@@ -94,7 +89,7 @@ public class ExampleRestController implements BringServlet {
                           @RequestHeader(value = "Accept") String header,
                           @RequestBody User user,
                           HttpServletRequest request,
-                          HttpServletResponse response) throws JsonProcessingException {
+                          HttpServletResponse response) {
         String contentType = request.getContentType();
         int status = response.getStatus();
         Map<String, Object> objectMap = new HashMap<>();

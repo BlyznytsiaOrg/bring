@@ -12,4 +12,4 @@ public MissingRequestHeaderAnnotationValueException(String message)
 
 ### See Also
 
-- [`@RequestHeader`](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RequestHeader.md)
+- [`@RequestHeader`](../annotation/RequestHeader.md)

@@ -18,5 +18,8 @@ public class MyRestController implements BringServlet {
 }
 ```
 
+**NOTE:** The class annotated with `@RestController`  should implement marker interface `BringServlet` to be recognized as controller by the framework.
+
 ### See Also
-[BringServlet](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/BringServlet.md)
+- [BringServlet](../BringServlet.md)
+- [Building REST API with Bring: A Quick Guide](../RestApi.md)
