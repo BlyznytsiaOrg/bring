@@ -63,21 +63,6 @@ public class TypeResolverFactory {
         this.properties = properties;
     }
 
-//    public TypeResolverFactory(Map<String, String> properties, Reflections reflections,
-//        AnnotationBringBeanRegistry beanRegistry) {
-//        this.properties = properties;
-//        this.fieldValueTypeInjectors = List.of(
-//            new PropertyFieldValueTypeInjector(properties),
-//            new FieldListValueTypeInjector(reflections, beanRegistry, beanRegistry.getClassPathScannerFactory()),
-//            new FieldInterfaceValueTypeInjector(reflections, beanRegistry, beanRegistry.getClassPathScannerFactory())
-//        );
-//        this.parameterValueTypeInjectors = List.of(
-//            new PropertyParameterValueTypeInjector(properties),
-//            new ParameterListValueTypeInjector(reflections, beanRegistry, beanRegistry.getClassPathScannerFactory()),
-//            new ParameterInterfaceValueTypeInjector(reflections, beanRegistry, beanRegistry.getClassPathScannerFactory())
-//        );
-//    }
-
     /**
      * Initializes the list of field value type injectors by scanning the classpath for implementations
      * of {@link FieldValueTypeInjector}. Additional injectors are added to handle property-based dependencies.
