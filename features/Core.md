@@ -51,4 +51,4 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
   - [Logging](core/Logging.md)
   - [@PostConstruct](core/PostConstruct.md)
   - PreDestroy
-  - Logo
+  - [Banner](core/Banner.md)

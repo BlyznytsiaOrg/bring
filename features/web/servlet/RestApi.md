@@ -137,6 +137,7 @@ Utilize the @ResponseStatus annotation to define the desired HTTP response statu
     public ResponseEntity<String> updateResource(@PathVariable Long id, 
                                                  @RequestBody UserDto dto) {
          // Your implementation logic here
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
  }
 ```

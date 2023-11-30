@@ -3,7 +3,6 @@ package com.bobocode.bring.core.utils;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,30 +37,30 @@ public class Banner {
     public static final String BRING_BANNER_VALUE = "OFF";
 
     /**
-     * Key for specifying the path to the banner file. Default is "resource/banner.txt".
+     * Key for specifying the path to the banner file. Default is "resources/banner.txt".
      */
     public static final String BRING_BANNER_FILE_KEY = "bring.main.banner.file";
 
     /**
      * Default value for specifying the path to the banner file.
      */
-    public static final String BRING_BANNER_FILE_VALUE = "resource/banner.txt";
+    public static final String BRING_BANNER_FILE_VALUE = "resources/banner.txt";
 
     /**
-     * The resource folder.
+     * The banner.txt file.
      */
-    private static final String RESOURCE_FOLDER = "resources";
+    public static final String BANNER_TXT = "banner.txt";
 
     /**
      * Message displayed when the resource folder is not found.
      */
-    private static final String RESOURCE_FOLDER_NOT_FOUND_MESSAGE = "Resource folder can't be Null";
+    private static final String FILE_NOT_FOUND_MESSAGE = "banner.txt file can't be Null";
 
 
     /**
      * The default banner content.
      */
-    private static final String DEFAULT_BANNER_CONTENT = """
+    public static final String DEFAULT_BANNER_CONTENT = """
                   ____       _              ______ \s
                  | __ ) _ __(_)_ __   __ _  \\ \\ \\ \\\s
                  |  _ \\| '__| | '_ \\ / _` |  | | | |
@@ -77,11 +76,11 @@ public class Banner {
     public static void printBanner() {
        Mode bannerMode = getBannerMode();
        if (bannerMode == Mode.ON) {
-           if (isReadFromFile()) {
+           if (hasToReadFromFile()) {
                try {
                    String bannerContent = new String(Files.readAllBytes(getPath()));
                    System.out.println(bannerContent);
-               } catch (IOException e) {
+               } catch (Exception e) {
                    log.warn("Can't print banner from the file {}", BRING_BANNER_FILE_VALUE);
                }
            } else {
@@ -105,7 +104,7 @@ public class Banner {
      *
      * @return {@code true} if reading from a file is configured, {@code false} otherwise.
      */
-    private static boolean isReadFromFile() {
+    private static boolean hasToReadFromFile() {
         String bringFileToReadBanner = System.getProperty(BRING_BANNER_FILE_KEY);
         return BRING_BANNER_FILE_VALUE.equals(bringFileToReadBanner);
     }
@@ -117,11 +116,11 @@ public class Banner {
      */
     @SneakyThrows
     private static Path getPath() {
-        URL folderUrl = Banner.class.getClassLoader().getResource(RESOURCE_FOLDER);
-        Objects.requireNonNull(folderUrl, RESOURCE_FOLDER_NOT_FOUND_MESSAGE);
+        URL fileUrl = Banner.class.getClassLoader().getResource(BANNER_TXT);
+        Objects.requireNonNull(fileUrl, FILE_NOT_FOUND_MESSAGE);
 
-        Path folderPath = Paths.get(folderUrl.toURI()).resolve("..").normalize();
-        return Paths.get(folderPath.toString(), "/" + BRING_BANNER_FILE_VALUE);
+        Path folderPath = Paths.get(fileUrl.toURI()).resolve("..").normalize();
+        return Paths.get(folderPath.toString(), "/" + BANNER_TXT);
     }
 
     /**

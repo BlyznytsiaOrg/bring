@@ -1,12 +1,10 @@
 package com.bobocode.bring.web.servlet;
 
 import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import java.io.IOException;
 
 /**
  * The {@code FrameworkServlet} is an abstract class that extends {@code HttpServlet}
@@ -28,10 +26,9 @@ public abstract class FrameworkServlet extends HttpServlet {
      * Initializes the servlet with the provided configuration.
      *
      * @param config The servlet configuration.
-     * @throws ServletException If an error occurs during initialization.
      */
     @Override
-    public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) {
         log.info("Initializing Bring Servlet " + this.getClass().getSimpleName()
                 + "'" + config.getServletName() + "'");
     }
@@ -40,8 +37,7 @@ public abstract class FrameworkServlet extends HttpServlet {
      * Handles HTTP GET requests by delegating to the common {@code processRequest} method.
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         processRequest(req, resp);
     }
 
@@ -49,8 +45,7 @@ public abstract class FrameworkServlet extends HttpServlet {
      * Handles HTTP HEAD requests by delegating to the common {@code processRequest} method.
      */
     @Override
-    protected void doHead(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doHead(HttpServletRequest req, HttpServletResponse resp) {
         processRequest(req, resp);
     }
 
@@ -58,8 +53,7 @@ public abstract class FrameworkServlet extends HttpServlet {
      * Handles HTTP POST requests by delegating to the common {@code processRequest} method.
      */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         processRequest(req, resp);
     }
 
@@ -67,8 +61,7 @@ public abstract class FrameworkServlet extends HttpServlet {
      * Handles HTTP PUT requests by delegating to the common {@code processRequest} method.
      */
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) {
         processRequest(req, resp);
     }
 
@@ -76,8 +69,7 @@ public abstract class FrameworkServlet extends HttpServlet {
      * Handles HTTP DELETE requests by delegating to the common {@code processRequest} method.
      */
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         processRequest(req, resp);
     }
 
@@ -85,8 +77,7 @@ public abstract class FrameworkServlet extends HttpServlet {
      * Handles HTTP OPTIONS requests by delegating to the common {@code processRequest} method.
      */
     @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) {
         processRequest(req, resp);
     }
 
@@ -94,8 +85,7 @@ public abstract class FrameworkServlet extends HttpServlet {
      * Handles HTTP TRACE requests by delegating to the common {@code processRequest} method.
      */
     @Override
-    protected void doTrace(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doTrace(HttpServletRequest req, HttpServletResponse resp) {
         processRequest(req, resp);
     }
 
