@@ -1,10 +1,13 @@
 package com.bobocode.bring.core.context.impl;
 
+import com.bobocode.bring.core.annotation.PreDestroy;
 import com.bobocode.bring.core.context.BringBeanFactory;
 import com.bobocode.bring.core.context.type.TypeResolverFactory;
 import com.bobocode.bring.core.domain.BeanDefinition;
 import com.bobocode.bring.core.exception.NoSuchBeanException;
 import com.bobocode.bring.core.exception.NoUniqueBeanException;
+import com.bobocode.bring.core.exception.PreDestroyException;
+import com.bobocode.bring.core.utils.ReflectionUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -136,12 +139,25 @@ public class DefaultBringBeanFactory implements BringBeanFactory {
         return (Map<String, T>) singletonObjects;
     }
 
+    @Override
+    public void close() {
+        for (var bean : singletonObjects.values()) {
+            var declaredMethods = bean.getClass().getMethods();
+            try {
+                ReflectionUtils.processBeanPostProcessorAnnotation(bean, declaredMethods, PreDestroy.class);
+            } catch (Exception e) {
+                throw new PreDestroyException(e);
+            }
+        }
+    }
+
     /**
      * Adds a singleton bean to the factory with the given name and instance.
      *
      * @param beanName The name of the singleton bean.
      * @param bean     The instance of the singleton bean to be added.
      */
+
     void addSingletonBean(String beanName, Object bean) {
         singletonObjects.put(beanName, bean);
     }

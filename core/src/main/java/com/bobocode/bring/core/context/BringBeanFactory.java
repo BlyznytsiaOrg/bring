@@ -46,5 +46,7 @@ public interface BringBeanFactory {
      * @return A map containing all registered bean names as keys and corresponding bean instances as values.
      */
     <T> Map<String, T> getAllBeans();
+
+    void close();
 }
 
