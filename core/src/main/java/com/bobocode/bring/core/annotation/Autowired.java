@@ -18,8 +18,34 @@ import java.lang.annotation.Target;
  * <p>This annotation is part of the Bring Framework's dependency injection mechanism, enabling the creation of loosely
  * coupled and easily testable components.
  *
- * <p><strong>Usage Example:</strong>
+ * <p>When we have a class possesses only one constructor, explicitly adding the @Autowired annotation isn't mandatory.
+ * Bring inherently knows which constructor to invoke and handles it accordingly.</p>
+ *
+ * <p>For classes with multiple constructors, it becomes imperative to specify to Bring which constructor should be utilized
+ * through the @Autowired annotation. This annotation acts as a directive for Bing to identify
+ * and use the designated constructor to resolve dependencies properly.</p>
+ *
+ * <p>This way, when Bring encounters multiple constructors within a class, the @Autowired annotation guides it in selecting the appropriate constructor for dependency resolution.</p>
+ *
+ * <p><strong>Usage Examples:</strong>
+ *
  * <pre>
+ * {@code
+ *  import com.bobocode.bring.core.annotation.Service;
+ *
+ * import java.util.List;
+ * import java.util.stream.Collectors;
+ *
+ * @Service
+ * public class Barista {
+ *     private final List<Drink> drinks;
+ *
+ *     public Barista(List<Drink> drinks) {
+ *         this.drinks = drinks;
+ *     }
+ * }
+ * <pre>
+ *
  * {@code
  *  @Component
  *  public class MyComponent {
