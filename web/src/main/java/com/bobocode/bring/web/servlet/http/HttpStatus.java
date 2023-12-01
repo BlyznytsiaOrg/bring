@@ -12,7 +12,6 @@ import lombok.Getter;
  * @author Blyzhnytsia Team
  * @since 1.0
  */
-@Getter
 public enum HttpStatus {
 
     // 1xx Informational
@@ -354,6 +353,17 @@ public enum HttpStatus {
         this.reasonPhrase = reasonPhrase;
     }
 
+    public int getValue() {
+        return value;
+    }
+
+    public Series getSeries() {
+        return series;
+    }
+
+    public String getReasonPhrase() {
+        return reasonPhrase;
+    }
 
     public enum Series {
 
@@ -368,5 +378,9 @@ public enum HttpStatus {
         }
 
         private final int value;
+
+        public int getValue() {
+            return value;
+        }
     }
 }
