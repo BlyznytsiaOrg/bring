@@ -47,6 +47,11 @@ public interface BringBeanFactory {
      */
     <T> Map<String, T> getAllBeans();
 
+    /**
+     * Closes the container.This method is typically
+     * called when the container is being shut down to allow beans to perform
+     * necessary cleanup operations or release resources before being destroyed.
+     */
     void close();
 }
 

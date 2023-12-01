@@ -15,7 +15,6 @@ public class PredestroyTest {
 
   private static final String TEST_DATA_PACKAGE = "testdata.predestroy";
 
-
   @DisplayName("Should invoke method marked by @PreDestroy annotation on context.close()")
   @Test
   void shouldInvokeMethodMarkedByPreDestroyAnnotation() {
@@ -45,18 +44,6 @@ public class PredestroyTest {
     // then
     PreDestroyException preDestroyException = assertThrows(PreDestroyException.class, executable);
     assertThat(preDestroyException.getMessage()).isEqualTo(expectedMessage);
-
-
-    // given
-    BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".positive");
-
-    // when
-    var messenger = bringApplicationContext.getBean(Messenger.class);
-    bringApplicationContext.close();
-
-    // then
-
-    assertThat(messenger.getMessage()).isEqualTo("PreDestroy works fine");
   }
 
 }
