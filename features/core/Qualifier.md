@@ -155,5 +155,10 @@ Next, initiate the application context and check what will be returned by playMu
 The assertion indicates that the ambiguity has been resolved for both parameters using the @Qualifier 
 annotation during the autowiring process.
 
+## Important Points
+Bring supports several options for disambiguating the search for dependencies for injection. 
+If it is necessary to inject a dependency and there are several suitable beans of the same type, 
+then Bring initially tries to disambiguate with the help of `@Primary`, then with the help of `@Qualifier` 
+and ultimately by matching the bean names and field/parameter names
 
 
