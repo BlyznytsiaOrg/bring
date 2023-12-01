@@ -23,7 +23,7 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
    - [Constructor](core/Constructor.md)
    - [Setter](core/Setter.md)
    - [Field](core/Field.md)
-   - Collections
+   - [Collections](core/Collections.md)
    - Prototype Bean
    - Singleton Bean
 
