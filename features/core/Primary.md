@@ -63,8 +63,6 @@ Consequently, when Bring performs injection, it will prioritize the jerryEmploye
 
 Next, initiate the application context and retrieve the Employee bean from it:
 
-BringApplicationContext bringApplicationContext = BringApplication.run(TEST_DATA_PACKAGE + ".primary.bean");
-
 ```java
         BringApplicationContext bringApplicationContext = BringApplication.run(Config.class);
         Employee employee = bringApplicationContext.getBean(Employee.class);
@@ -116,6 +114,5 @@ Since we designated the A bean with `@Primary`, it will be chosen for dependency
     C c = bringApplicationContext.getBean(C.class);
     assertThat(c.getField()).isInstanceOf(A.class);
 
-}
    ```
 The assertion reveals a preference for the A instance during the autowiring process.
