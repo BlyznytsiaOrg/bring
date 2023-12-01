@@ -24,14 +24,14 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
    - [Setter](core/Setter.md)
    - [Field](core/Field.md)
    - [Collections](core/Collections.md)
-   - Prototype Bean
-   - Singleton Bean
+   - [Prototype Bean](core/Prototype.md)
+   - [Singleton Bean](core/Singleton.md)
 
 
  - Configuration support
-   - Annotation configuration `@Component`, `@Service`.
-   - Annotation `@Autowired`
-   - Java Configuration `@Bean`, `@Configuration`.
+   - [Annotation configuration](core/Component.md) `@Component`, `@Service`.
+   - [Annotation](core/Autowired.md) `@Autowired`
+   - [Java Configuration](core/Configuration.md) `@Bean`, `@Configuration`.
 
 
  - Annotations
