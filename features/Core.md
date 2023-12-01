@@ -74,4 +74,4 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
   - [Properties File Support](core/PropertiesFileSupport.md)
   - [Logging](core/Logging.md)
   - PreDestroy
-  - Logo
+  - [Banner](core/Banner.md)
