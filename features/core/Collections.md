@@ -22,7 +22,7 @@ Bring supports the injection of various types of collections:
 
 ### 1.List Injection
 
-* **Through constructor**
+* **Via constructor**
 
 ```java
 import com.bobocode.bring.core.annotation.Autowired;
@@ -44,7 +44,7 @@ public class MyListBean {
 }
 ```
 
-* **Through field**
+* **Via field**
 
 ```java
 import com.bobocode.bring.core.annotation.Autowired;
@@ -66,7 +66,7 @@ public class MyListBean {
 }
 ```
 
-* **Through setter**
+* **Via setter**
 
 ```java
 import com.bobocode.bring.core.annotation.Autowired;
@@ -90,7 +90,7 @@ public class MyListBean {
 
 ### 2. Set Injection
 
-Supported injections like in previous example (through constructor, field, setter).
+Supported injections like in previous example (via constructor, field, setter).
 
 ```java
 import com.bobocode.bring.core.annotation.Autowired;
