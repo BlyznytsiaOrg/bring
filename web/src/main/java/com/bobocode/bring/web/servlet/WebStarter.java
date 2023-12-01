@@ -110,6 +110,7 @@ public class WebStarter {
         // Get Tomcat web server and context
         webServer = (TomcatWebServer) servletWebServerFactory.getWebServer();
         Context context = servletWebServerFactory.getContext();
+        context.addLifecycleListener(new BringTomcatApplicationLifecycleListener(bringApplicationContext));
 
         // Add JsonExceptionHandler as a valve to the Tomcat pipeline
         log.debug("Adding JsonExceptionHandler {} as a valve to the Tomcat pipeline...", jsonExceptionHandler.getClass().getName());
