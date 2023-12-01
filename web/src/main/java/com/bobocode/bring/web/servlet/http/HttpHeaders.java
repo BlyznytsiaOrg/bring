@@ -19,12 +19,12 @@ public class HttpHeaders {
     /**
      * Map to store header name-value pairs.
      */
-    Map<String, String> headers;
+    private final Map<String, String> headers;
 
     /**
      * List containing all header names as strings.
      */
-    private List<String> headersNameList;
+    private final List<String> headersNameList;
 
     /**
      * Constructs a new HttpHeaders object with an empty header map and initializes the list of header names.

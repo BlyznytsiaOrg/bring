@@ -43,7 +43,7 @@ public class BeanPostProcessorDefinitionFactory {
     /**
      * The list of bean factory post-processors created by this factory.
      */
-    private final List<BeanFactoryPostProcessor> beanFactoryPostProcessors;
+    private final List<? extends BeanFactoryPostProcessor> beanFactoryPostProcessors;
 
     /**
      * Constructs a new BeanPostProcessorDefinitionFactory and initializes the list of post-processors.
@@ -57,7 +57,7 @@ public class BeanPostProcessorDefinitionFactory {
                 .stream()
                 .sorted(ORDER_COMPARATOR)
                 .map(clazz -> clazz.cast(getConstructorWithOutParameters(clazz)))
-                .collect(Collectors.toList());
+                .toList();
 
         log.info("Register BeanFactoryPostProcessors {}", Arrays.toString(beanFactoryPostProcessors.toArray()));
     }
