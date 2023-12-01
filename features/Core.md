@@ -28,6 +28,12 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
    - Singleton Bean
 
 
+ - Configuration support
+   - Annotation configuration `@Component`, `@Service`.
+   - Annotation `@Autowired`
+   - Java Configuration `@Bean`, `@Configuration`.
+
+
  - Annotations
    - [@Autowired](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Autowired.html)
    - [@Bean](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Bean.html)
@@ -56,11 +62,6 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
    - [PostConstructException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/PostConstructException.html)
    - [PropertyValueNotFoundException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/PropertyValueNotFoundException.html)
 
-
- - Configuration support
-   - Annotation configuration `@Component`, `@Service`.
-   - Annotation `@Autowired`
-   - Java Configuration `@Bean`, `@Configuration`.
 
 
 - addition items:
