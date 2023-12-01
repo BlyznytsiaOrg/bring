@@ -47,4 +47,13 @@ public class ServerProperties {
     @Value("server.withStackTrace:false")
     private boolean withStackTrace;
 
+    /**
+     * Configuration property for controlling whether commit messages are included in GitInfo responses.
+     * It is used by the DefaultActuatorService to determine whether to fetch and display commit messages.
+     *
+     * <p>The default value is {@code false}, meaning commit messages will not be included.
+     */
+    @Value("server.actuator.git.commit.withMessage:false")
+    private boolean withMessage;
+
 }
