@@ -26,7 +26,7 @@ import java.util.function.BiFunction;
  */
 public abstract class AbstractValueTypeInjector {
 
-    private final static BiFunction<List<BeanDefinition>, String, List<BeanDefinition>> PRIMARY_FILTER_FUNCTION =
+    private static final BiFunction<List<BeanDefinition>, String, List<BeanDefinition>> PRIMARY_FILTER_FUNCTION =
         (beanDefinitions, qualifier) -> beanDefinitions.stream()
             .filter(BeanDefinition::isPrimary
             ).toList();
