@@ -24,11 +24,35 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
    - [Setter](core/Setter.md)
    - [Field](core/Field.md)
    - Collections
-   - @Primary
-   - @Qualifier
-   - @Order
-   - [@Value](core/Value.md)
    - Prototype Beans into a Singleton
+
+
+ - Annotations
+   - [@Autowired](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Autowired.html)
+   - [@Bean](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Bean.html)
+   - [@BeanProcessor](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/BeanProcessor.html)
+   - [@Component](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Component.html)
+   - [@Configuration](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Configuration.html)
+   - [@Order](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Order.html)
+   - [@PostConstruct](core/PostConstruct.md)
+   - [@Primary](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Primary.html)
+   - [@Qualifier](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Qualifier.html)
+   - [@ScheduledTask](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/ScheduledTask.html)
+   - [@Scope](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/package-summary.html#:~:text=a%20scheduled%20task.-,Scope,-Annotation%20indicating%20the)
+   - [@Service](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Service.html)
+   - [@Value](core/Value.md)
+
+
+ - Exceptions
+   - [BeanAnnotationMissingException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/BeanAnnotationMissingException.html)
+   - [BeanPostProcessorConstructionLimitationException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/BeanPostProcessorConstructionLimitationException.html)
+   - [BringGeneralException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/BringGeneralException.html)
+   - [CyclicBeanException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/CyclicBeanException.html)
+   - [NoConstructorWithAutowiredAnnotationBeanException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/NoConstructorWithAutowiredAnnotationBeanException.html)
+   - [NoSuchBeanException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/NoSuchBeanException.html)
+   - [NoUniqueBeanException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/NoUniqueBeanException.html)
+   - [PostConstructException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/PostConstructException.html)
+   - [PropertyValueNotFoundException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/PropertyValueNotFoundException.html)
 
 
  - Configuration support
@@ -49,6 +73,5 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
   - [Scheduling](core/Scheduling.md)
   - [Properties File Support](core/PropertiesFileSupport.md)
   - [Logging](core/Logging.md)
-  - [@PostConstruct](core/PostConstruct.md)
   - PreDestroy
   - Logo
