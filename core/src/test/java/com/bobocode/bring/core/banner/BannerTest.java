@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-public class BannerTest {
+class BannerTest {
 
     public static final String ON = "ON";
     public static final String OFF = "OFF";
