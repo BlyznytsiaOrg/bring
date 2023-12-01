@@ -24,7 +24,8 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
    - [Setter](core/Setter.md)
    - [Field](core/Field.md)
    - Collections
-   - Prototype Beans into a Singleton
+   - Prototype Bean
+   - Singleton Bean
 
 
  - Annotations
@@ -44,6 +45,7 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
 
 
  - Exceptions
+   - [Circular Dependencies](core/CircularDependencies.md)
    - [BeanAnnotationMissingException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/BeanAnnotationMissingException.html)
    - [BeanPostProcessorConstructionLimitationException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/BeanPostProcessorConstructionLimitationException.html)
    - [BringGeneralException](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/BringGeneralException.html)
@@ -56,17 +58,9 @@ It initializes the list with default post-processors such as the ScheduleBeanPos
 
 
  - Configuration support
-   - Annotation configuration `@Component`, `@Server`.
+   - Annotation configuration `@Component`, `@Service`.
    - Annotation `@Autowired`
    - Java Configuration `@Bean`, `@Configuration`.
-
-
-- Dependency Injection exceptions
-  - [Circular Dependencies](core/CircularDependencies.md)
-  - NoSuchBeanException
-  - NoUniqueBeanException
-  - NoConstructorWithAutowiredAnnotationBeanException
-  - etc
 
 
 - addition items:
