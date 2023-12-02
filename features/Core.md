@@ -42,6 +42,7 @@ It initializes the list with default post-processors such as the **ScheduleBeanP
    - [@Configuration](core/annotation/Configuration.md)
    - [@Order](core/annotation/Order.md)
    - [@PostConstruct](core/annotation/PostConstruct.md)
+   - [@PreDestroy](core/annotation/PreDestroy.md)
    - [@Primary](core/annotation/Primary.md)
    - [@Qualifier](core/annotation/Qualifier.md)
    - [@ScheduledTask](core/annotation/ScheduledTask.md)
