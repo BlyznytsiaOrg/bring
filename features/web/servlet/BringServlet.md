@@ -1,4 +1,4 @@
-# BringServlet Interface Documentation
+# BringServlet Interface
 
 The `BringServlet` interface is a marker interface used to identify classes that need to be implemented for use as REST controllers within the Bring framework. Classes implementing this interface play a significant role in the configuration and setup of the REST controller context.
 
@@ -17,5 +17,7 @@ public class MyRestController implements BringServlet {
 }
 ```
 
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/BringServlet.html)
+
 ### See Also
-[RestController](https://github.com/YevgenDemoTestOrganization/bring/blob/d1df5bd13e15033caad3f012bc3ef5c3be780c1f/features/web/servlet/annotation/RestController.md)
+[RestController](annotation/RestController.md)

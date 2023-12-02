@@ -12,31 +12,34 @@ import java.lang.annotation.Target;
  * When applied to a method or exception, the specified HTTP status code and reason will be used for the response.
  * When both {@code ResponseEntity} and {@code @ResponseStatus} are used in a controller method,
  * the HTTP status from {@code ResponseEntity} takes precedence over the one specified by {@code @ResponseStatus}.
+ *
  * <p>
  * Example usage:
  * <p>
  * 1. Applied to a method:
- * <p>
- *    {@code
- *    @ResponseStatus(HttpStatus.CREATED)
- *    public String createResource() {
+ * <pre>
+ * {@code
+ * @ResponseStatus(HttpStatus.CREATED)
+ * public String createResource() {
  *        // Method implementation
- *    }
+ *      }
  *    }
  *
- *    This sets the HTTP response status code to 201 (Created) for the annotated method.
- * <p>
+ * This sets the HTTP response status code to 201 (Created) for the annotated method.
+ * </pre>
+ *
  * 2. Custom Exception Usage:
- * <p>
+ * <pre>
  *    {@code
  *    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
  *    public class CustomAppException extends RuntimeException {
- * <p>
- *        // Constructors...
- * <p>
- *    }
- *    }
  *
+ *        // Constructors...
+ *    }
+ *  }
+ *  </pre>
+ *
+ *  <pre>
  *    {@code
  *    @GetMapping("/example")
  *    public String exampleEndpoint() {
@@ -44,11 +47,11 @@ import java.lang.annotation.Target;
  *        if (true) {
  *            throw new CustomAppException("Custom exception occurred.");
  *        }
- * <p>
  *        // Rest of the method logic
  *        return "Success";
  *    }
- *    }
+ *  }
+ * </pre>
  *
  *    In this example, if the condition is met and the CustomAppException is thrown, the response will have a
  *    status of 500 (INTERNAL_SERVER_ERROR). You can customize the CustomAppException class to include any

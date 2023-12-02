@@ -6,5 +6,8 @@ The `MethodArgumentTypeMismatchException` class is a runtime exception that indi
 This exception is thrown when there is a mismatch in converting a method argument to the expected type.
 
 ### Constructor
-```java
+```
 public MethodArgumentTypeMismatchException(String message)
+```
+
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/MethodArgumentTypeMismatchException.html)

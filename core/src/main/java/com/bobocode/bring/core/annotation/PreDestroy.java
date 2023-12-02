@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * The annotated method must have no parameters, must be non-static and return void.
  * It is invoked before the bean is destroyed, allowing the bean to perform necessary
  * cleanup tasks.
- * If multiple methods are annotated with {@code @PostConstruct} within a single
+ * If multiple methods are annotated with {@code @PreDestroy} within a single
  * class, the order of execution is not guaranteed.</p>
  *
  * <p>Example of usage:</p>

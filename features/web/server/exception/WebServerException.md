@@ -10,3 +10,6 @@ Instances of this exception can be thrown to indicate unexpected issues or error
 
 ```java
 public WebServerException(String message, Throwable cause)
+```
+
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/server/exception/WebServerException.html)

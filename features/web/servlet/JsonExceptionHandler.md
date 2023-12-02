@@ -1,5 +1,7 @@
 # JsonExceptionHandler
 
+[Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/JsonExceptionHandler.html)
+
 ## Overview
 
 **Exception Handler:** This component specializes in managing exceptions by intercepting and customizing error responses in JSON format. It extends `ErrorReportValve` to provide tailored error handling within a Servlet container.

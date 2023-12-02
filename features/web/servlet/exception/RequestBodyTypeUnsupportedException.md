@@ -10,5 +10,7 @@ This exception is thrown when the type specified for the `@RequestBody` annotati
 public RequestBodyTypeUnsupportedException(String message)
 ```
 
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/RequestBodyTypeUnsupportedException.html)
+
 ### See Also
-- [`@RequestBody`](../annotation/RequestBody.md)
+- [@RequestBody](../annotation/RequestBody.md)

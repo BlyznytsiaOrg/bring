@@ -2,12 +2,23 @@
 
 ## Introduction
 
-When building a RESTful API using the Bring framework, the annotations like `@RestController`, `@RequestMapping`, `@GetMapping`, `@PathVariable`, `@RequstBody` and others can be used. 
+When building a RESTful API using *the Bring Framework*, the annotations like `@RestController`, `@RequestMapping`, `@GetMapping`, `@PathVariable`, `@RequstBody` and others can be used. 
 These annotations simplify the development process and ensure a standardized approach to creating web services. 
 `ResponseEntity` allows you to customize the HTTP response, including status codes, headers, and the response body.
 This guide will walk you through the essential steps to set up a REST controller.
 
-**1. Create a REST Controller**
+**1. Custom Configure Properties**
+
+To customize application properties, set the desired configurations in the `application.properties` file:
+```properties
+server.port=
+server.contextPath=
+server.withStackTrace=
+```
+#### See Also
+- [Web Configuration Guide](../server/ConfigGuide.md)
+
+**2. Create a REST Controller**
 
 To get started, create a class and annotate it with`@RestController`. 
 This annotation indicates that the class will handle HTTP requests and produce HTTP responses for a RESTful API. 
@@ -25,7 +36,7 @@ public class MyRestController implements BringServlet {
 **NOTE:** If there is a duplication of request paths in the web application, the `RequestPathDuplicateException` is thrown.
 
 
-**2. Define Endpoints with @GetMapping**
+**3. Define Endpoints with @GetMapping**
 
 Use the @GetMapping annotation to define methods that handle HTTP GET requests. These methods will serve as endpoints for retrieving information.
 When you need to extract values from the URI use the `@PathVariable` or `@RequestParam` annotation.
@@ -56,7 +67,7 @@ public class MyRestController implements BringServlet {
 ```
 **NOTE:** If a required request parameter is absent for a method parameter type annotated with `@RequestParam`, the `MissingRequestParamException` is thrown.
 
-**3. Define Endpoints with @PutMapping**
+**4. Define Endpoints with @PutMapping**
 
 Use the `@PutMapping` annotation to define methods that handle HTTP PUT requests. These methods will serve as endpoints for updating existing resources.
 
@@ -76,7 +87,7 @@ Use the `@PutMapping` annotation to define methods that handle HTTP PUT requests
 Here, the updateResource method handles `PUT` requests to `/api/resource/{id}`. 
 The `@PathVariable` annotation extracts the id from the URI and `@RequestBody` is used to capture the data sent in the request body.
 
-**4. Define Endpoints with  @RequestHeader**
+**5. Define Endpoints with  @RequestHeader**
 
 Utilize the @RequestHeader annotation to extract values from HTTP headers in your endpoint methods.
 
@@ -94,7 +105,7 @@ public class MyRestController implements BringServlet {
 ```
 **NOTE:** If the required value is missing for the @RequestHeader annotation, the MissingRequestHeaderAnnotationValueException is thrown.
 
-**5. Use ResponseEntity for Flexible Responses**
+**6. Use ResponseEntity for Flexible Responses**
 
 `ResponseEntity` allows to customize the HTTP response, including status codes, headers and the response body.
 
@@ -122,7 +133,7 @@ public class MyRestController implements BringServlet {
 }
 ```
 
-**6. Define Endpoints with @ResponseStatus**
+**7. Define Endpoints with @ResponseStatus**
 
 Utilize the @ResponseStatus annotation to define the desired HTTP response status code for specific methods.
 
