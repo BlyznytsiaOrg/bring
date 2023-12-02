@@ -6,5 +6,6 @@ The `RequestPathDuplicateException` class is a runtime exception that indicates 
 This exception is thrown when duplicate request paths are detected in the web application.
 
 ### Constructor
-```java
+```
 public RequestPathDuplicateException(String message)
+```

@@ -1,4 +1,4 @@
-# @Primary
+# Primary Annotation
 
 ## Introduction
 
@@ -63,7 +63,7 @@ Consequently, when Bring performs injection, it will prioritize the jerryEmploye
 
 Next, initiate the application context and retrieve the Employee bean from it:
 
-```java
+```
         BringApplicationContext bringApplicationContext = BringApplication.run(Config.class);
         Employee employee = bringApplicationContext.getBean(Employee.class);
         assertThat(employee.getName()).isEqualTo("Jerry");
@@ -109,10 +109,12 @@ Let’s create a bean to use dependency injection while finding the right bean:
 In this case, both the A and B beans are candidates for autowiring.
 Since we designated the A bean with `@Primary`, it will be chosen for dependency injection:
 
-```java
+```
     BringApplicationContext bringApplicationContext = BringApplication.run(Config.class);
     C c = bringApplicationContext.getBean(C.class);
     assertThat(c.getField()).isInstanceOf(A.class);
 
    ```
 The assertion reveals a preference for the A instance during the autowiring process.
+
+[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Primary.html)

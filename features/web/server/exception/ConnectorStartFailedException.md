@@ -14,3 +14,6 @@ Instances of this exception are typically thrown when an embedded web server, su
 
 ```java
 public ConnectorStartFailedException(int port)
+```
+
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/server/exception/ConnectorStartFailedException.html)

@@ -1,5 +1,3 @@
-# Component and Service Annotations
-
 ## Component Annotation
 
 The `@Component` annotation in Bring indicates that an annotated class is a Bring component. This annotation serves as a marker for Bring to automatically detect and register the annotated class as a bean during component scanning.
@@ -25,28 +23,6 @@ public class AnotherComponent {
 In the above example, `MyComponent` and `AnotherComponent` are annotated with `@Component`. 
 This allows Bring to automatically detect and register these classes as beans during component scanning.
 
-## Service Annotation
+[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Component.html)
 
-The `@Service` annotation in Bring is also used to indicate that an annotated class is a Bring component. 
-It serves the same purpose as the `@Component` annotation, providing a marker for Bring to automatically 
-detect and register the annotated class as a bean during component scanning.
 
-Similarly, you can customize the bean name using the value attribute.
-
-### Usage Example:
-
-```java
-@Service
-public class MyComponent {
-    // Class definition
-}
-
-// Custom bean name
-@Service("customBeanName")
-public class AnotherComponent {
-    // Class definition
-}
-```
-
-In this example, `MyComponent` and `AnotherComponent` are annotated with `@Service`. 
-This annotation is often used for classes that define business services or service components.

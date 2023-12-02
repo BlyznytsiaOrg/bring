@@ -1,5 +1,7 @@
 # StaticResourceController
 
+[Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/staticcontent/controller/StaticResourceController.html)
+
 ## Overview
 
 **Static Resource Controller:** This `RestController` is responsible for handling static resource requests. It provides an endpoint to retrieve static files based on the requested URI.

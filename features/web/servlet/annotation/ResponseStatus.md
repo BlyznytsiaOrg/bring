@@ -2,7 +2,7 @@
 
 ## Purpose:
 
-The `@ResponseStatus` annotation in the `com.bobocode.bring.web.servlet.annotation` package is used to mark a class or method with the desired HTTP response status code and an optional reason. When applied to a method or exception, the specified HTTP status code and reason will be used for the response. When both `ResponseEntity` and `@ResponseStatus` are used in a controller method, the HTTP status from `ResponseEntity` takes precedence over the one specified by `@ResponseStatus`.
+The `@ResponseStatus` annotation is used to mark a class or method with the desired HTTP response status code and an optional reason. When applied to a method or exception, the specified HTTP status code and reason will be used for the response. When both `ResponseEntity` and `@ResponseStatus` are used in a controller method, the HTTP status from `ResponseEntity` takes precedence over the one specified by `@ResponseStatus`.
 
 ## Example Usage:
 
@@ -44,6 +44,8 @@ Note: If a reason is provided, it will be included in the response alongside the
 ### Additional Information:
 
 The @ResponseStatus annotation is a convenient way to specify HTTP response status codes and reasons for methods or exceptions, allowing for better control over the HTTP responses in your web application.
+
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/ResponseStatus.html)
 
 ### See Also
 - [Building REST API with Bring: A Quick Guide](../RestApi.md)

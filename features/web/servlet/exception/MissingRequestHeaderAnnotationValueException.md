@@ -10,6 +10,8 @@ This exception is thrown when a required value is missing for the `@RequestHeade
 public MissingRequestHeaderAnnotationValueException(String message)
 ```
 
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/MissingRequestHeaderAnnotationValueException.html)
+
 ### See Also
 
-- [`@RequestHeader`](../annotation/RequestHeader.md)
+- [@RequestHeader](../annotation/RequestHeader.md)

@@ -1,6 +1,6 @@
 # Bring Web
 
-## General Web flow diagram
+## General Web Flow Diagram
 
 ![Bring DI diagram](https://github.com/YevgenDemoTestOrganization/bring/assets/114337016/06604708-d660-4e2c-ba08-ef8b215bbcb3)
 
@@ -44,6 +44,7 @@
 - [Exception handler](web/servlet/JsonExceptionHandler.md): This component specializes in managing exceptions by intercepting and customizing error responses in JSON format. It extends ErrorReportValve to provide tailored error handling within a Servlet container.
 - [Actuator](web/servlet/Actuator.md): Provides endpoints for checking application health, retrieving environment properties, Git information, and dynamically changing log levels.
 
+[**Web Configuration Guide**](web/server/ConfigGuide.md)
 
 - addition items:
   - The code supports the generation of a random port based on the key ${random.port}. When this key is encountered as the value for a property, it is replaced with a randomly generated port number within the specified range. The range for the random port generation is defined by the constants START_PORT_RANGE and END_PORT_RANGE, which are set to 8000 and 9000, respectively. This feature allows dynamic allocation of ports, which can be useful in scenarios where a unique port is needed, and the actual port number is not predetermined but instead generated at runtime.
@@ -77,3 +78,4 @@ Exception scenarios:
 - [RequestBodyTypeUnsupportedException](web/servlet/exception/RequestBodyTypeUnsupportedException.md)
 - [RequestPathDuplicateException](web/servlet/exception/RequestPathDuplicateException.md)
 - [TypeArgumentUnsupportedException](web/servlet/exception/TypeArgumentUnsupportedException.md)
+

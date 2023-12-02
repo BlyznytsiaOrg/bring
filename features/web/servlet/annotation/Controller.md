@@ -17,3 +17,6 @@ This annotation does not have additional attributes when applied to a class.
 public class MyController {
     // Controller logic and methods
 }
+```
+
+[Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/Controller.html)

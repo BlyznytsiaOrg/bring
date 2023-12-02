@@ -35,3 +35,5 @@ public class MyConfiguration {
 In this example, `MyConfiguration` is a configuration class annotated with `@Configuration`. 
 It declares two beans (myBean and anotherBean) using methods annotated with `@Bean`. 
 These beans will be registered with the Bring context during the application context initialization.
+
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Configuration.html)

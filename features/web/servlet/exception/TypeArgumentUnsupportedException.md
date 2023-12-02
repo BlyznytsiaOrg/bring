@@ -6,5 +6,8 @@ The `TypeArgumentUnsupportedException` class is a runtime exception that indicat
 This exception is thrown when an unsupported type argument is encountered.
 
 ### Constructor
-```java
+```
 public TypeArgumentUnsupportedException(String message)
+```
+
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/TypeArgumentUnsupportedException.html)

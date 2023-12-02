@@ -20,6 +20,8 @@ public class MyRestController implements BringServlet {
 
 **NOTE:** The class annotated with `@RestController`  should implement marker interface `BringServlet` to be recognized as controller by the framework.
 
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/RestController.html)
+
 ### See Also
 - [BringServlet](../BringServlet.md)
 - [Building REST API with Bring: A Quick Guide](../RestApi.md)

@@ -6,5 +6,7 @@ The `MissingApplicationMappingException` class is a runtime exception that indic
 This exception is thrown when there is no defined mapping for a specific request path in the web application.
 
 ### Constructor
-```java
+```
 public MissingApplicationMappingException(String message)
+```
+- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/MissingApplicationMappingException.html)

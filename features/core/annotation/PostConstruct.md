@@ -64,3 +64,6 @@ public class ExampleBean {
         return message;
     }
 }
+```
+
+[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/PostConstruct.html)

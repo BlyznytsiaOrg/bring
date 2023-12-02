@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * <p>
  * Example:
  * <pre>{@code
- * {@literal @}Controller
+ * @Controller
  * public class MyController {
  *     // Controller logic and methods
  * }
