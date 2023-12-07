@@ -12,7 +12,7 @@ For *the Bring Framework* 1.0 development and Java 17 is the required version.
 *The Bring Framework* consists of features organized into two modules. 
 These modules are grouped into **Core Container** and **Web** as shown in the following diagram.
 
-<img width="922" alt="image" src="https://github.com/YevgenDemoTestOrganization/bring/assets/73576438/eff5591f-ddb3-41f1-9c18-b476836abcf0">
+<img width="922" alt="image" src="https://github.com/BlyznytsiaOrg/bring/assets/73576438/eff5591f-ddb3-41f1-9c18-b476836abcf0">
 
 
 The **Core Container** is the backbone of the Bring framework, offering essential functionalities like the Inversion of Control (IoC) container and the ApplicationContext. 
@@ -44,11 +44,11 @@ It serves as a guide to understanding the construction of web servlet applicatio
 
 # Feedback and Contributions
 
-If you suspect an issue within *the Bring Framework* or wish to propose a new feature, kindly utilize [GitHub Issues](https://github.com/YevgenDemoTestOrganization/bring/issues/new) for reporting problems or submitting feature suggestions
-If you have a solution in mind or a suggested fix, you can submit a pull request on [Github](https://github.com/YevgenDemoTestOrganization/bring). In addition, please read and configure you idea to follow our [Setup Code Style Guidelines](https://github.com/YevgenDemoTestOrganization/bring/wiki/Setup-Code-Style-Guidelines)
+If you suspect an issue within *the Bring Framework* or wish to propose a new feature, kindly utilize [GitHub Issues](https://github.com/BlyznytsiaOrg/bring/issues/new) for reporting problems or submitting feature suggestions
+If you have a solution in mind or a suggested fix, you can submit a pull request on [Github](https://github.com/BlyznytsiaOrg/bring). In addition, please read and configure you idea to follow our [Setup Code Style Guidelines](https://github.com/YevgenDemoTestOrganization/bring/wiki/Setup-Code-Style-Guidelines)
 
 # Getting Started
 
-If you're new to *Bring*, consider initiating your experience with a [Bring playground application repo](https://github.com/YevgenDemoTestOrganization/bring-playground) with a variety of examples of how to use it. 
+If you're new to *Bring*, consider initiating your experience with a [Bring playground application repo](https://github.com/BlyznytsiaOrg/bring-playground) with a variety of examples of how to use it. 
 It offers a swift and opinionated method to develop a Bring-based application ready for play. 
 Leveraging *the Bring Framework*, it prioritizes conventions over extensive configurations, aiming to accelerate your setup process and swiftly get you up and running.
