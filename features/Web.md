@@ -2,7 +2,7 @@
 
 ## General Web Flow Diagram
 
-![Bring DI diagram](https://github.com/YevgenDemoTestOrganization/bring/assets/114337016/06604708-d660-4e2c-ba08-ef8b215bbcb3)
+![Bring DI diagram](https://github.com/BlyznytsiaOrg/bring/assets/114337016/06604708-d660-4e2c-ba08-ef8b215bbcb3)
 
 1. The **BringWebApplication** offers a straightforward way to initialize and operate. Users can
    establish and customize it using a core **BringApplicationContext** delegate, allowing the return
@@ -33,7 +33,7 @@
 
 ## Documentations
 
-- There are two types of documentation: Markdown (see below) and [JavaDoc](https://yevgendemotestorganization.github.io/bring-web-javadoc/)
+- There are two types of documentation: Markdown (see below) and [JavaDoc](https://blyznytsiaOrg.github.io/bring-web-javadoc/)
 
 ## Features:
 

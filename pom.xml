@@ -46,9 +46,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:YevgenDemoTestOrganization/bring.git</connection>
-    <developerConnection>scm:git:ssh://github.com:YevgenDemoTestOrganization/bring.git</developerConnection>
-    <url>https://github.com/YevgenDemoTestOrganization/bring</url>
+    <connection>scm:git:git@github.com:BlyznytsiaOrg/bring.git</connection>
+    <developerConnection>scm:git:ssh://github.com:BlyznytsiaOrg/bring.git</developerConnection>
+    <url>https://github.com/BlyznytsiaOrg/bring</url>
   </scm>
     
   <modules>

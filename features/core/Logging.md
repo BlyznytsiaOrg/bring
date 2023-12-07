@@ -34,4 +34,4 @@ The level of Bring log can be configured in VM options
 ```
 -Dcom.bobocode.bring.web.log.level=TRACE
 ```
-![Example of logging](https://github.com/YevgenDemoTestOrganization/bring/assets/66901090/c4aea013-15ca-4eab-9898-feb465937eb6)
+![Example of logging](https://github.com/BlyznytsiaOrg/bring/assets/66901090/c4aea013-15ca-4eab-9898-feb465937eb6)
