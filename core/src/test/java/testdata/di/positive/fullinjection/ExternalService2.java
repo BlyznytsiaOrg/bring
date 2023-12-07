@@ -1,6 +1,6 @@
 package testdata.di.positive.fullinjection;
 
-import com.bobocode.bring.core.annotation.Service;
+import io.github.blyznytsiaorg.bring.core.annotation.Service;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;

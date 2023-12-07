@@ -1,6 +1,6 @@
 package testdata.di.positive.constructor;
 
-import com.bobocode.bring.core.annotation.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
 
 @Component
 public class BringComponent {

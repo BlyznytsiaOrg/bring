@@ -1,9 +1,9 @@
 package testdata.di.positive.prototype.off;
 
-import com.bobocode.bring.core.annotation.Bean;
-import com.bobocode.bring.core.annotation.Configuration;
-import com.bobocode.bring.core.annotation.Scope;
-import com.bobocode.bring.core.domain.BeanScope;
+import io.github.blyznytsiaorg.bring.core.annotation.Bean;
+import io.github.blyznytsiaorg.bring.core.annotation.Configuration;
+import io.github.blyznytsiaorg.bring.core.annotation.Scope;
+import io.github.blyznytsiaorg.bring.core.domain.BeanScope;
 
 @Configuration
 public class TestConfiguration {

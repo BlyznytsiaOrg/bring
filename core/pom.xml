@@ -4,12 +4,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.bobocode.bring</groupId>
+    <groupId>io.github.blyznytsiaorg.bring</groupId>
     <artifactId>bring-project</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.bobocode.bring.core</groupId>
+  <groupId>io.github.blyznytsiaorg.bring.core</groupId>
   <artifactId>core</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>core</name>

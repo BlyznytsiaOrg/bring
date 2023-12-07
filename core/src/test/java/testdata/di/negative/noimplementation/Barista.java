@@ -1,7 +1,7 @@
 package testdata.di.negative.noimplementation;
 
-import com.bobocode.bring.core.annotation.Autowired;
-import com.bobocode.bring.core.annotation.Service;
+import io.github.blyznytsiaorg.bring.core.annotation.Autowired;
+import io.github.blyznytsiaorg.bring.core.annotation.Service;
 
 @Service
 public class Barista {

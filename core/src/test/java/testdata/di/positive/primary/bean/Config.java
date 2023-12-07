@@ -1,8 +1,8 @@
 package testdata.di.positive.primary.bean;
 
-import com.bobocode.bring.core.annotation.Bean;
-import com.bobocode.bring.core.annotation.Configuration;
-import com.bobocode.bring.core.annotation.Primary;
+import io.github.blyznytsiaorg.bring.core.annotation.Bean;
+import io.github.blyznytsiaorg.bring.core.annotation.Configuration;
+import io.github.blyznytsiaorg.bring.core.annotation.Primary;
 
 @Configuration
 public class Config {

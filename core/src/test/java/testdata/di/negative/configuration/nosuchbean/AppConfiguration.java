@@ -1,7 +1,7 @@
 package testdata.di.negative.configuration.nosuchbean;
 
-import com.bobocode.bring.core.annotation.Bean;
-import com.bobocode.bring.core.annotation.Configuration;
+import io.github.blyznytsiaorg.bring.core.annotation.Bean;
+import io.github.blyznytsiaorg.bring.core.annotation.Configuration;
 import testdata.di.negative.configuration.A;
 import testdata.di.negative.configuration.B;
 

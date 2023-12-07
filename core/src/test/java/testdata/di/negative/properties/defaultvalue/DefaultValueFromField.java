@@ -1,7 +1,7 @@
 package testdata.di.negative.properties.defaultvalue;
 
-import com.bobocode.bring.core.annotation.Component;
-import com.bobocode.bring.core.annotation.Value;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.Value;
 import lombok.Getter;
 import lombok.Setter;
 

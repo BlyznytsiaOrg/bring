@@ -12,8 +12,8 @@ The `@ScheduledTask` annotation provides the following attributes for customizat
 ### Usage Example
 
 ```
-import com.bobocode.bring.core.annotation.Component;
-import com.bobocode.bring.core.annotation.ScheduledTask;
+import annotation.io.github.blyznytsiaorg.bring.core.Component;
+import annotation.io.github.blyznytsiaorg.bring.core.ScheduledTask;
 
 import java.time.LocalDateTime;
 

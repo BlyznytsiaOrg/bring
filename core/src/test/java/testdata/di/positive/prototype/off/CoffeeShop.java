@@ -2,9 +2,9 @@ package testdata.di.positive.prototype.off;
 
 import java.util.UUID;
 
-import com.bobocode.bring.core.annotation.Scope;
-import com.bobocode.bring.core.annotation.Service;
-import com.bobocode.bring.core.domain.BeanScope;
+import io.github.blyznytsiaorg.bring.core.annotation.Scope;
+import io.github.blyznytsiaorg.bring.core.annotation.Service;
+import io.github.blyznytsiaorg.bring.core.domain.BeanScope;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
