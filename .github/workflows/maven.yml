@@ -11,6 +11,8 @@ name: Java CI with Maven
 env:
   SONAR_USERNAME: ${{ secrets.SONAR_USERNAME }}
   SONAR_HOST: ${{ secrets.SONAR_HOST }}
+  REPO_USERNAME: ${{ secrets.REPO_USERNAME }}
+  REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 on:
