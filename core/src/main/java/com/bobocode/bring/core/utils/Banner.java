@@ -61,13 +61,14 @@ public class Banner {
      * The default banner content.
      */
     public static final String DEFAULT_BANNER_CONTENT = """
+                  \033[1;94m
                   ____       _              ______ \s
                  | __ ) _ __(_)_ __   __ _  \\ \\ \\ \\\s
-                 |  _ \\| '__| | '_ \\ / _` |  | | | |
+                 |  _ \\| '__| | '_ \\ / _` |  | | | |\033[1;93m
                  | |_) | |  | | | | | (_| |  | | | |
                  |____/|_|  |_|_| |_|\\__, |  | | | |
-                 :: By Blyznytsia :: |___/  /_/_/_/\s
-                                
+                 \033[1;97m:: By Blyznytsia ::\033[1;93m |___/  /_/_/_/\s
+                 \033[0m
                 """;
 
     /**
