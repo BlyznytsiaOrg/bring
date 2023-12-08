@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class BringApplication {
-    private static final String BRING_PACKAGE = "com.bobocode.bring";
+    private static final String BRING_PACKAGE = "io.github.blyznytsiaorg";
 
     /**
      * Private constructor to prevent instantiation of the class.

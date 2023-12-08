@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class BringWebApplication {
-    private static final String BRING_CORE_PACKAGE = "com.bobocode.bring";
+    private static final String BRING_CORE_PACKAGE = "io.github.blyznytsiaorg";
     private static final String BRING_WEB_PACKAGE = BRING_CORE_PACKAGE + ".web";
 
     private BringWebApplication() {
