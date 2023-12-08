@@ -1,0 +1,1 @@
+./mvnw mvn clean deploy -P release

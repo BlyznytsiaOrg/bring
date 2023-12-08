@@ -6,12 +6,12 @@
   <parent>
     <groupId>io.github.blyznytsiaorg.bring</groupId>
     <artifactId>bring-project</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
 
   <groupId>io.github.blyznytsiaorg.bring.core</groupId>
   <artifactId>core</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>core</name>
 
   <properties>
