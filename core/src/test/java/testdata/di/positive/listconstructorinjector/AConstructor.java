@@ -1,8 +1,8 @@
 package testdata.di.positive.listconstructorinjector;
 
 
-import com.bobocode.bring.core.annotation.Autowired;
-import com.bobocode.bring.core.annotation.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.Autowired;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
 import lombok.Getter;
 
 import java.util.List;

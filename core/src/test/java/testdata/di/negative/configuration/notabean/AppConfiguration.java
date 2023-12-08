@@ -1,6 +1,6 @@
 package testdata.di.negative.configuration.notabean;
 
-import com.bobocode.bring.core.annotation.Configuration;
+import io.github.blyznytsiaorg.bring.core.annotation.Configuration;
 import testdata.di.negative.configuration.A;
 
 @Configuration

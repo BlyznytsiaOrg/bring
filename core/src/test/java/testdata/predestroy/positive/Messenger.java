@@ -1,7 +1,7 @@
 package testdata.predestroy.positive;
 
-import com.bobocode.bring.core.annotation.Component;
-import com.bobocode.bring.core.annotation.PreDestroy;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.PreDestroy;
 import lombok.Getter;
 
 @Component

@@ -1,7 +1,7 @@
 package testdata.bpp;
 
-import com.bobocode.bring.core.annotation.BeanProcessor;
-import com.bobocode.bring.core.bpp.BeanPostProcessor;
+import io.github.blyznytsiaorg.bring.core.annotation.BeanProcessor;
+import io.github.blyznytsiaorg.bring.core.bpp.BeanPostProcessor;
 
 @BeanProcessor
 public class NoDefaultConstructorBeanPostProcessor implements BeanPostProcessor {

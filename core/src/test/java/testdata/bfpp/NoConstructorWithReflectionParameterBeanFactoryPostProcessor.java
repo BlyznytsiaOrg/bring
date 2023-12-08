@@ -1,8 +1,8 @@
 package testdata.bfpp;
 
-import com.bobocode.bring.core.annotation.BeanProcessor;
-import com.bobocode.bring.core.bfpp.BeanFactoryPostProcessor;
-import com.bobocode.bring.core.context.impl.DefaultBringBeanFactory;
+import io.github.blyznytsiaorg.bring.core.annotation.BeanProcessor;
+import io.github.blyznytsiaorg.bring.core.bfpp.BeanFactoryPostProcessor;
+import io.github.blyznytsiaorg.bring.core.context.impl.DefaultBringBeanFactory;
 
 @BeanProcessor
 public class NoConstructorWithReflectionParameterBeanFactoryPostProcessor implements BeanFactoryPostProcessor {

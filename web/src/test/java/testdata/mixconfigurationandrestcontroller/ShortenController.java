@@ -1,10 +1,10 @@
 package testdata.mixconfigurationandrestcontroller;
 
-import com.bobocode.bring.web.servlet.BringServlet;
-import com.bobocode.bring.web.servlet.annotation.PostMapping;
-import com.bobocode.bring.web.servlet.annotation.RequestBody;
-import com.bobocode.bring.web.servlet.annotation.RequestMapping;
-import com.bobocode.bring.web.servlet.annotation.RestController;
+import io.github.blyznytsiaorg.bring.web.servlet.BringServlet;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.PostMapping;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.RequestBody;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.RequestMapping;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import testdata.mixconfigurationandrestcontroller.dto.UserRequest;

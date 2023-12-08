@@ -1,8 +1,12 @@
 package testdata.di.positive.configuration.configuration;
 
-import com.bobocode.bring.core.annotation.*;
-import com.bobocode.bring.core.domain.BeanScope;
-import com.bobocode.bring.core.domain.ProxyMode;
+import io.github.blyznytsiaorg.bring.core.annotation.Bean;
+import io.github.blyznytsiaorg.bring.core.annotation.Configuration;
+import io.github.blyznytsiaorg.bring.core.annotation.Primary;
+import io.github.blyznytsiaorg.bring.core.annotation.Qualifier;
+import io.github.blyznytsiaorg.bring.core.annotation.Scope;
+import io.github.blyznytsiaorg.bring.core.domain.BeanScope;
+import io.github.blyznytsiaorg.bring.core.domain.ProxyMode;
 import testdata.di.positive.configuration.client.RestClient;
 import testdata.di.positive.configuration.service.BringService;
 

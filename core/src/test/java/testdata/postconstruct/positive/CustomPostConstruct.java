@@ -1,7 +1,7 @@
 package testdata.postconstruct.positive;
 
-import com.bobocode.bring.core.annotation.Component;
-import com.bobocode.bring.core.annotation.PostConstruct;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.PostConstruct;
 import lombok.Getter;
 
 @Component

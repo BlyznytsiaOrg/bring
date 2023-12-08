@@ -1,7 +1,7 @@
 package testdata.di.negative.settercyclic;
 
-import com.bobocode.bring.core.annotation.Autowired;
-import com.bobocode.bring.core.annotation.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.Autowired;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
 
 @Component
 public class A {

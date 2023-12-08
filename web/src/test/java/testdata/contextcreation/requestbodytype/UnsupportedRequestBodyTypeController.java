@@ -1,9 +1,9 @@
 package testdata.contextcreation.requestbodytype;
 
-import com.bobocode.bring.web.servlet.BringServlet;
-import com.bobocode.bring.web.servlet.annotation.PostMapping;
-import com.bobocode.bring.web.servlet.annotation.RequestBody;
-import com.bobocode.bring.web.servlet.annotation.RestController;
+import io.github.blyznytsiaorg.bring.web.servlet.BringServlet;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.PostMapping;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.RequestBody;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.RestController;
 
 @RestController
 public class UnsupportedRequestBodyTypeController implements BringServlet {

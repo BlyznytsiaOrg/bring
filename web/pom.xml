@@ -3,11 +3,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.bobocode.bring</groupId>
+    <groupId>io.github.blyznytsiaorg.bring</groupId>
     <artifactId>bring-project</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <groupId>com.bobocode.bring.web</groupId>
+  <groupId>io.github.blyznytsiaorg.bring.web</groupId>
   <artifactId>web</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>web</name>
@@ -32,7 +32,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.bobocode.bring.core</groupId>
+      <groupId>io.github.blyznytsiaorg.bring.core</groupId>
       <artifactId>core</artifactId>
       <version>1.0-SNAPSHOT</version>
       <scope>compile</scope>

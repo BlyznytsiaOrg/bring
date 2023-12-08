@@ -1,10 +1,10 @@
 package testdata.pathvariable;
 
-import com.bobocode.bring.web.servlet.BringServlet;
-import com.bobocode.bring.web.servlet.annotation.DeleteMapping;
-import com.bobocode.bring.web.servlet.annotation.GetMapping;
-import com.bobocode.bring.web.servlet.annotation.PathVariable;
-import com.bobocode.bring.web.servlet.annotation.RestController;
+import io.github.blyznytsiaorg.bring.web.servlet.BringServlet;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.DeleteMapping;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.GetMapping;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.PathVariable;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.RestController;
 
 @RestController
 public class PathVariableController implements BringServlet {

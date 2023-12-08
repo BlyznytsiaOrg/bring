@@ -1,13 +1,13 @@
 package testdata.requestheader;
 
-import com.bobocode.bring.web.servlet.BringServlet;
-import com.bobocode.bring.web.servlet.annotation.GetMapping;
-import com.bobocode.bring.web.servlet.annotation.PostMapping;
-import com.bobocode.bring.web.servlet.annotation.RequestHeader;
-import com.bobocode.bring.web.servlet.annotation.RestController;
-import com.bobocode.bring.web.servlet.http.HttpHeaders;
-import com.bobocode.bring.web.servlet.http.HttpStatus;
-import com.bobocode.bring.web.servlet.http.ResponseEntity;
+import io.github.blyznytsiaorg.bring.web.servlet.BringServlet;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.GetMapping;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.PostMapping;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.RequestHeader;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.RestController;
+import io.github.blyznytsiaorg.bring.web.servlet.http.HttpHeaders;
+import io.github.blyznytsiaorg.bring.web.servlet.http.HttpStatus;
+import io.github.blyznytsiaorg.bring.web.servlet.http.ResponseEntity;
 
 @RestController
 public class RequestHeaderController implements BringServlet {

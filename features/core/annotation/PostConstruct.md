@@ -10,7 +10,7 @@ To use `@PostConstruct`, follow these steps:
 1. **Add the Annotation**: Place the `@PostConstruct` annotation on a method within your Bring bean class.
 
     ```java
-    import com.bobocode.bring.core.annotation.PostConstruct;
+    import io.github.blyznytsiaorg.bring.core.annotation.PostConstruct;
 
     public class MyBean {
 
@@ -26,7 +26,7 @@ To use `@PostConstruct`, follow these steps:
 2. **Invoke the Bring Container**: Make sure that you obtain the bean from the Bring container. The `@PostConstruct` annotated method will be automatically invoked.
 
     ```java
-    import com.bobocode.bring.core.BringApplication;
+    import io.github.blyznytsiaorg.bring.core.BringApplication;
 
     public class MyApp {
         public static void main(String[] args) {
@@ -48,7 +48,7 @@ To use `@PostConstruct`, follow these steps:
 Here is a simple example of a class using `@PostConstruct`:
 
 ```java
-import com.bobocode.bring.core.annotation.PostConstruct;
+import io.github.blyznytsiaorg.bring.core.annotation.PostConstruct;
 
 public class ExampleBean {
 

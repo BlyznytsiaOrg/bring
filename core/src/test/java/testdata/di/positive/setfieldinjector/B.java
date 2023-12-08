@@ -1,7 +1,7 @@
 package testdata.di.positive.setfieldinjector;
 
-import com.bobocode.bring.core.annotation.Component;
-import com.bobocode.bring.core.annotation.Order;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.Order;
 
 @Order(-1)
 @Component

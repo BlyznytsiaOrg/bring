@@ -1,9 +1,9 @@
 package testdata.contextcreation.requestheaders;
 
-import com.bobocode.bring.web.servlet.BringServlet;
-import com.bobocode.bring.web.servlet.annotation.GetMapping;
-import com.bobocode.bring.web.servlet.annotation.RequestHeader;
-import com.bobocode.bring.web.servlet.annotation.RestController;
+import io.github.blyznytsiaorg.bring.web.servlet.BringServlet;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.GetMapping;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.RequestHeader;
+import io.github.blyznytsiaorg.bring.web.servlet.annotation.RestController;
 
 @RestController
 public class RequestHeadersMissingValueController implements BringServlet {
