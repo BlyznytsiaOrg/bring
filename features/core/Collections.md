@@ -25,8 +25,8 @@ Bring supports the injection of various types of collections:
 * **Via constructor**
 
 ```java
-import annotation.io.github.blyznytsiaorg.bring.core.Autowired;
-import annotation.io.github.blyznytsiaorg.bring.core.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.Autowired;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
 
 import java.util.List;
 
@@ -47,8 +47,8 @@ public class MyListBean {
 * **Via field**
 
 ```java
-import annotation.io.github.blyznytsiaorg.bring.core.Autowired;
-import annotation.io.github.blyznytsiaorg.bring.core.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.Autowired;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
 
 import java.util.List;
 
@@ -69,8 +69,8 @@ public class MyListBean {
 * **Via setter**
 
 ```java
-import annotation.io.github.blyznytsiaorg.bring.core.Autowired;
-import annotation.io.github.blyznytsiaorg.bring.core.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.Autowired;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
 
 import java.util.List;
 
@@ -93,8 +93,8 @@ public class MyListBean {
 Supported injections like in previous example (via constructor, field, setter).
 
 ```java
-import annotation.io.github.blyznytsiaorg.bring.core.Autowired;
-import annotation.io.github.blyznytsiaorg.bring.core.Component;
+import io.github.blyznytsiaorg.bring.core.annotation.Autowired;
+import io.github.blyznytsiaorg.bring.core.annotation.Component;
 
 import java.util.Set;
 
