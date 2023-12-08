@@ -11,4 +11,4 @@ Constructs a new `PropertyValueNotFoundException` with the specified detail mess
 - **Parameters:**
     - `message`: The detail message explaining the specific property value not being found.
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/PropertyValueNotFoundException.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/PropertyValueNotFoundException.html)

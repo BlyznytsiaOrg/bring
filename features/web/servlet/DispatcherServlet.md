@@ -1,6 +1,6 @@
 # DispatcherServlet
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/DispatcherServlet.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/DispatcherServlet.html)
 
 The `DispatcherServlet` class extends `FrameworkServlet` and serves as the central dispatcher for handling HTTP requests in a RESTful web application. It processes incoming requests, resolves appropriate controllers, and manages response generation.
 

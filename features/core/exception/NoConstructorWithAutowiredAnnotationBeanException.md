@@ -12,4 +12,4 @@ Constructs a new `NoConstructorWithAutowiredAnnotationBeanException` with a mess
     - `clazz`: The class for which no constructor with Autowired annotation is found.
     - `listOfConstructors`: String representation of the list of constructors found for the class (to guide adding Autowired annotation to one of them).
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/NoConstructorWithAutowiredAnnotationBeanException.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/NoConstructorWithAutowiredAnnotationBeanException.html)

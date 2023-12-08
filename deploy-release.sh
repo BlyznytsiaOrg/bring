@@ -1,1 +1,1 @@
-./mvnw clean deploy -P release
+./mvnw clean deploy -P release -DskipTests

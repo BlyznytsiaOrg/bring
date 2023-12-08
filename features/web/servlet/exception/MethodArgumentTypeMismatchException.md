@@ -10,4 +10,4 @@ This exception is thrown when there is a mismatch in converting a method argumen
 public MethodArgumentTypeMismatchException(String message)
 ```
 
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/MethodArgumentTypeMismatchException.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/MethodArgumentTypeMismatchException.html)

@@ -19,7 +19,7 @@ public class MyRestController implements BringServlet {
     }
 }
 ```
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/PathVariable.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/PathVariable.html)
 
 ### See Also
 - [Building REST API with Bring: A Quick Guide](../RestApi.md)

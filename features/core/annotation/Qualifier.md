@@ -161,6 +161,6 @@ If it is necessary to inject a dependency and there are several suitable beans o
 then Bring initially tries to disambiguate with the help of `@Primary`, then with the help of `@Qualifier` 
 and ultimately by matching the bean names and field/parameter names
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Qualifier.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Qualifier.html)
 
 

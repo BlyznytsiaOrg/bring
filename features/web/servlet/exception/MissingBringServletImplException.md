@@ -10,7 +10,7 @@ This exception is thrown when a `BringServlet` interface implementation is missi
 public MissingBringServletImplException(String message)
 ```
 
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/MissingBringServletImplException.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/MissingBringServletImplException.html)
 
 ### See Also
 

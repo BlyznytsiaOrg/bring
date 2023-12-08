@@ -18,4 +18,4 @@ public class MyScheduledService {
 }
 ```
 
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/ScheduledTask.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/ScheduledTask.html)

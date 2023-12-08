@@ -20,4 +20,4 @@ public class AnotherComponent {
 }
 ```
 
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Service.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Service.html)

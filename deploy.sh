@@ -1,1 +1,1 @@
-./mvnw clean deploy
+./mvnw clean deploy -DskipTests

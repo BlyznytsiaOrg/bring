@@ -13,4 +13,4 @@ public class MyCustomProcessor {
     // Your custom processing logic here
 }
 ```
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/BeanProcessor.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/BeanProcessor.html)

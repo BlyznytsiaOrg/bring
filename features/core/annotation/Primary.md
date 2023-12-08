@@ -117,4 +117,4 @@ Since we designated the A bean with `@Primary`, it will be chosen for dependency
    ```
 The assertion reveals a preference for the A instance during the autowiring process.
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Primary.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Primary.html)

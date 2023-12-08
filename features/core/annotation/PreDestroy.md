@@ -32,7 +32,7 @@ The `@PreDestroy` annotated method will be automatically invoked on context clos
 - The method annotated with `@PreDestroy` must not have any parameters.
 - This annotation is generally used in conjunction with the `@Component` stereotype annotations (e.g., `@Service`, `@Repository`, `@Controller`) or in configuration classes.
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/PreDestroy.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/PreDestroy.html)
 
 
 

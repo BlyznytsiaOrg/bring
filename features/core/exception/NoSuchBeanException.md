@@ -18,4 +18,4 @@ Constructs a new `NoSuchBeanException` with a custom detail message.
 - **Parameters:**
     - `message`: The custom message explaining the exception.
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/NoSuchBeanException.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/NoSuchBeanException.html)

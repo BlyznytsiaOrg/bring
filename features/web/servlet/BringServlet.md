@@ -17,7 +17,7 @@ public class MyRestController implements BringServlet {
 }
 ```
 
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/BringServlet.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/BringServlet.html)
 
 ### See Also
 [RestController](annotation/RestController.md)

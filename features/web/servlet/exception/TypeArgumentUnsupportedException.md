@@ -10,4 +10,4 @@ This exception is thrown when an unsupported type argument is encountered.
 public TypeArgumentUnsupportedException(String message)
 ```
 
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/TypeArgumentUnsupportedException.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/exception/TypeArgumentUnsupportedException.html)

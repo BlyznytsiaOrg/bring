@@ -11,4 +11,4 @@ Constructs a `PostConstructException` with the specified message.
 - **Parameters:**
     - `cause`: The Throwable cause for this exception.
   
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/PostConstructException.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/PostConstructException.html)

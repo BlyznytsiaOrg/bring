@@ -26,4 +26,4 @@ Constructs a new `NoUniqueBeanException` with a message indicating that no quali
      - `clazz`: The class type for which no qualifying bean is found.
      - `implementations`: The list of implementations found for the specified type.
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/NoUniqueBeanException.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/NoUniqueBeanException.html)

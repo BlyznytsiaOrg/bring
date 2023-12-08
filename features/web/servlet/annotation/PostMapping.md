@@ -19,7 +19,7 @@ This annotation is used to declare a method as a handler for HTTP `POST` request
     }
  }
 ```
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/PostMapping.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/PostMapping.html)
 
 ### See Also
 - [ResponseEntity](../ResponseEntity.md)

@@ -50,4 +50,4 @@ public class BeanB {
 Using setter or field injection can be an alternative approach to address cycle dependencies within a Bring DI framework. 
 However, careful management is crucial to avoid reintroducing cyclic dependencies through setter or field methods, maintaining the framework's integrity and preventing runtime issues.
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/CyclicBeanException.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/CyclicBeanException.html)

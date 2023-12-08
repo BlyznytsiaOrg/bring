@@ -1,6 +1,6 @@
 # JsonExceptionHandler
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/JsonExceptionHandler.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/JsonExceptionHandler.html)
 
 ## Overview
 

@@ -13,4 +13,4 @@ Constructs a `BeanAnnotationMissingException` with the specified message.
     - `args`: Arguments to be formatted into the message string.
 
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/BeanAnnotationMissingException.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/BeanAnnotationMissingException.html)

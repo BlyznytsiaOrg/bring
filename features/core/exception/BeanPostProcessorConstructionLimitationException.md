@@ -11,4 +11,4 @@ Constructs a new `BeanPostProcessorConstructionLimitationException` with the spe
 - **Parameters:**
     - `message`: The detail message describing the limitation or issue encountered.
   
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/BeanPostProcessorConstructionLimitationException.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/exception/BeanPostProcessorConstructionLimitationException.html)

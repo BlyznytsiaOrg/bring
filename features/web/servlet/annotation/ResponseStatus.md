@@ -45,7 +45,7 @@ Note: If a reason is provided, it will be included in the response alongside the
 
 The @ResponseStatus annotation is a convenient way to specify HTTP response status codes and reasons for methods or exceptions, allowing for better control over the HTTP responses in your web application.
 
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/ResponseStatus.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/ResponseStatus.html)
 
 ### See Also
 - [Building REST API with Bring: A Quick Guide](../RestApi.md)

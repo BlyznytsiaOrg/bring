@@ -19,4 +19,4 @@ public class MyController {
 }
 ```
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/Controller.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/servlet/annotation/Controller.html)

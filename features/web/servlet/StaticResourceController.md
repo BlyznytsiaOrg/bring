@@ -1,6 +1,6 @@
 # StaticResourceController
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-web-javadoc/com/bobocode/bring/web/staticcontent/controller/StaticResourceController.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-web-javadoc/com/bobocode/bring/web/staticcontent/controller/StaticResourceController.html)
 
 ## Overview
 

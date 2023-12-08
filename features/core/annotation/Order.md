@@ -12,4 +12,4 @@ public class MyOrderedComponent {
 }
 ```
 
-- [Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Order.html)
+- [Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Order.html)

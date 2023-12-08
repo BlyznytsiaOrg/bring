@@ -23,6 +23,6 @@ public class AnotherComponent {
 In the above example, `MyComponent` and `AnotherComponent` are annotated with `@Component`. 
 This allows Bring to automatically detect and register these classes as beans during component scanning.
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Component.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/Component.html)
 
 

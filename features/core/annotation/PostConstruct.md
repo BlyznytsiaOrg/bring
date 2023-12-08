@@ -66,4 +66,4 @@ public class ExampleBean {
 }
 ```
 
-[Java Doc](https://yevgendemotestorganization.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/PostConstruct.html)
+[Java Doc](https://BlyznytsiaOrg.github.io/bring-core-javadoc/com/bobocode/bring/core/annotation/PostConstruct.html)
