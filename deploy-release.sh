@@ -1,1 +1,1 @@
-./mvnw mvn clean deploy -P release
+./mvnw clean deploy -P release
