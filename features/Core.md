@@ -2,7 +2,7 @@
 
 ## General DI Flow Diagram
 
-![Bring DI diagram](https://github.com/YevgenDemoTestOrganization/bring/assets/73576438/0e8d074a-3d49-4099-bf8e-68b029056cce)
+![Bring DI diagram](https://github.com/BlyznytsiaOrg/bring/assets/73576438/0e8d074a-3d49-4099-bf8e-68b029056cce)
 
 1. The **BringApplication** provides a simple entry point to initialize and run a **BringApplicationContext**.
    It allows the user to create and configure a **BringApplicationContext** either by specifying a base package for component scanning or by providing a class that contains configuration information.
@@ -14,7 +14,7 @@ It initializes the list with default post-processors such as the **ScheduleBeanP
 
 ## Documentations
 
-- There are two types of documentation: Markdown (see below) and [JavaDoc](https://yevgendemotestorganization.github.io/bring-core-javadoc/)
+- There are two types of documentation: Markdown (see below) and [JavaDoc](https://blyznytsiaOrg.github.io/bring-core-javadoc/)
 
 
 ## Features:
