@@ -12,8 +12,6 @@
   <version>1.0.0</version>
   <name>web</name>
 
-  <url>https://maven.apache.org</url>
-
   <properties>
     <junit.version>5.9.2</junit.version>
     <asserj.version>3.24.2</asserj.version>
