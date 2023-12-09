@@ -24,7 +24,8 @@ Locate the pom.xml file in your project.
 
 - Add Repository Configuration:
 
-Inside the <repositories> section of your pom.xml, add the following repository configuration:
+Inside the <repositories> section of your pom.xml, add the following repository configuration 
+if you want to try latest Snapshot version of Bring project:
 
 ```
 <repositories>
@@ -59,7 +60,7 @@ Within the <dependencies> section of your pom.xml, add the Bring framework depen
     <dependency>
         <groupId>io.github.blyznytsiaorg.bring.web</groupId>
         <artifactId>web</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 
@@ -73,13 +74,41 @@ if you would like to work with core only then you need to add core dependency
     <dependency>
         <groupId>com.bobocode.bring.core</groupId>
         <artifactId>core</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
     </dependency>
 </dependencies>
 
 ```
 
 Ensure the groupId, artifactId, and version values are accurate for the Bring framework you intend to use.
+
+To obtain the release version, simply review the version we've released; there's no need for the repository section:
+
+
+```
+<dependencies>
+    <dependency>
+        <groupId>io.github.blyznytsiaorg.bring.web</groupId>
+        <artifactId>web</artifactId>
+        <version>1.0.0</version> <!-- or latest -->
+    </dependency>
+</dependencies>
+
+```
+
+if you would like to work with core only then you need to add core dependency
+
+
+```
+<dependencies>
+    <dependency>
+        <groupId>com.bobocode.bring.core</groupId>
+        <artifactId>core</artifactId>
+        <version>1.0.0</version> <!-- or latest -->
+    </dependency>
+</dependencies>
+
+```
 
 
 - Save Changes:
