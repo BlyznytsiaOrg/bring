@@ -28,11 +28,22 @@ Inside the <repositories> section of your pom.xml, add the following repository 
 
 ```
 <repositories>
-    <repository>
-        <id>repsy</id>
-        <name>My Private Maven Repository on Repsy</name>
-        <url>https://repo.repsy.io/mvn/levik/bring</url>
-    </repository>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</snapshots>
+			<name>Nexus Snapshots</name>
+			<id>snapshots-repo</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+			<layout>default</layout>
+		</repository>
 </repositories>
 
 ```
@@ -46,7 +57,7 @@ Within the <dependencies> section of your pom.xml, add the Bring framework depen
 ```
 <dependencies>
     <dependency>
-        <groupId>com.bobocode.bring.web</groupId>
+        <groupId>io.github.blyznytsiaorg.bring.web</groupId>
         <artifactId>web</artifactId>
         <version>1.0-SNAPSHOT</version>
     </dependency>
