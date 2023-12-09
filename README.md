@@ -1,3 +1,6 @@
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.blyznytsiaorg.bring.web/web.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.blyznytsiaorg.bring.web/web)
+
+
 # Bring Framework Documentation
 
 - [Overview](features/Overview.md)  History, Design Philosophy, Feedback, Getting Started.
