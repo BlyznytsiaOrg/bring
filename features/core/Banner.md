@@ -2,7 +2,7 @@
 
 The `Banner` class provides functionality for printing a banner to the console, either from a predefined string or custom banner by reading from a file.
 
-![DEFAULT_BANNER](https://github.com/BlyznytsiaOrg/bring/assets/114337016/9444e18e-e574-41a4-a41c-af72a4b0ef65)
+![DEFAULT_BANNER](https://github.com/BlyznytsiaOrg/bring/assets/114337016/56754bf7-2b49-414f-84cb-431c31f31f27)
 
 The `Banner` class supports dynamic profile configuration using VM parameters. 
 The default `Mode` value is `ON`, meaning the banner will be printed to the console. To configure the `Mode` to `OFF`, use the `-Dbring.main.banner=off` parameter during application launch. 
