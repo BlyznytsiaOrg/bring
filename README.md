@@ -1,4 +1,5 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.blyznytsiaorg.bring.web/web/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.blyznytsiaorg.bring.web/web)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.blyznytsiaorg.bring.web/web.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.blyznytsiaorg.bring.web/web)
+
 
 # Bring Framework Documentation
 
