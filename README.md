@@ -75,7 +75,7 @@ if you would like to work with core only then you need to add core dependency
 ```
 <dependencies>
     <dependency>
-        <groupId>com.bobocode.bring.core</groupId>
+        <groupId>io.github.blyznytsiaorg.bring.core</groupId>
         <artifactId>core</artifactId>
         <version>2.0.0-SNAPSHOT</version>
     </dependency>
@@ -105,7 +105,7 @@ if you would like to work with core only then you need to add core dependency
 ```
 <dependencies>
     <dependency>
-        <groupId>com.bobocode.bring.core</groupId>
+        <groupId>io.github.blyznytsiaorg.bring.core</groupId>
         <artifactId>core</artifactId>
         <version>1.0.0</version> <!-- or latest -->
     </dependency>
