@@ -1,3 +1,5 @@
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.blyznytsiaorg.bring.web/web.svg?label=Maven%20Central)](https://mvnrepository.com/artifact/io.github.blyznytsiaorg.bring.web/web/1.0.0)
+
 # Bring Framework Overview
 
 *The Bring Framework* simplifies the development of Java enterprise applications by providing support for leveraging the Java language within an enterprise setting. 

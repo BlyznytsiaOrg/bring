@@ -1,4 +1,4 @@
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.blyznytsiaorg.bring.web/web.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.blyznytsiaorg.bring.web/web)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.blyznytsiaorg.bring.web/web.svg?label=Maven%20Central)](https://mvnrepository.com/artifact/io.github.blyznytsiaorg.bring.web/web/1.0.0)
 
 # Bring Web
 
