@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ActuatorControllerIntegrationTest {
 
-    private static final String BRING_WEB_PACKAGE = "com.bobocode.bring.web";
+    private static final String BRING_WEB_PACKAGE = "io.github.blyznytsiaorg.bring.web";
     public static final String URL = "http://localhost:%s%s";
 
     private static ServerProperties serverProperties;

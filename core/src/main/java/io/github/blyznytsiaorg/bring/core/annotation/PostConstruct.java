@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * <p>Example:</p>
  * <pre>
  * {@code
- * import com.bobocode.bring.core.annotation.PostConstruct;
+ * import io.github.blyznytsiaorg.bring.core.annotation.PostConstruct;
  *
  * public class ExampleBean {
  *

@@ -19,19 +19,19 @@ Java logging frameworks typically support different log levels, each indicating 
 The level of Bring log can be configured in VM options
 
 ```
--Dcom.bobocode.bring.web.log.level
--Dcom.bobocode.bring.web.server.log.level
--Dcom.bobocode.bring.web.servlet.log.level
--Dcom.bobocode.bring.log.level
--Dcom.bobocode.bring.core.bfpp.log.level
--Dcom.bobocode.bring.core.bpp.log.level
--Dcom.bobocode.bring.core.context.log.level
--Dcom.bobocode.bring.core.env.log.level
+-Dio.github.blyznytsiaorg.bring.web.log.level
+-Dio.github.blyznytsiaorg.bring.web.server.log.level
+-Dio.github.blyznytsiaorg.bring.web.servlet.log.level
+-Dio.github.blyznytsiaorg.bring.log.level
+-Dio.github.blyznytsiaorg.bring.core.bfpp.log.level
+-Dio.github.blyznytsiaorg.bring.core.bpp.log.level
+-Dio.github.blyznytsiaorg.bring.core.context.log.level
+-Dio.github.blyznytsiaorg.bring.core.env.log.level
 ```
 
 ### Usage Example
 
 ```
--Dcom.bobocode.bring.web.log.level=TRACE
+-Dio.github.blyznytsiaorg.bring.web.log.level=TRACE
 ```
 ![Example of logging](https://github.com/BlyznytsiaOrg/bring/assets/66901090/c4aea013-15ca-4eab-9898-feb465937eb6)
