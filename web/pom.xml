@@ -13,12 +13,12 @@
   <name>web</name>
 
   <properties>
-    <junit.version>5.9.2</junit.version>
-    <asserj.version>3.24.2</asserj.version>
+    <junit.version>5.10.1</junit.version>
+    <asserj.version>3.25.1</asserj.version>
     <jakarta.servlet.jsp.api.version>3.1.1</jakarta.servlet.jsp.api.version>
-    <tomcat.embed.version>10.1.13</tomcat.embed.version>
+    <tomcat.embed.version>10.1.18</tomcat.embed.version>
     <jakarta.annotation.api.version>2.1.1</jakarta.annotation.api.version>
-    <jackson.datatype.version>2.15.3</jackson.datatype.version>
+    <jackson.datatype.version>2.16.1</jackson.datatype.version>
   </properties>
 
   <dependencies>
